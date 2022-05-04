@@ -4,7 +4,6 @@
 - lines differ from cell strains in that they have escaped the Hayflick limit and become immortalised.
 - the culture of cells originated from a primary cell culture
 
-
 ## Gene Expression
 - bezeichnet, wie die genetische Information (eines Gens (Abschnitt der DNA)) zum Ausdruck kommt und in Erscheinung tritt
 - also wie der Genotyp eines Organismus oder einer Zelle als Phaenotyp ausgepraegt ist
@@ -33,3 +32,7 @@
 
 - In parallel to the advances in highthroughput biology, machine learning applications to biomedical data analysis are flourishing. The integration of multi-omics data analysis and machine learning has led to the discovery of new biomarkers.
 - For example, one of the methods of the mixOmics project implements a method based on sparse Partial Least Squares regression for selection of features (putative biomarkers)
+
+## Gene-Gene Interaction
+
+> the effect of one gene on a disease modified by another gene or several other genes.
