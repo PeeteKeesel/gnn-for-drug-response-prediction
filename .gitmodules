@@ -1,0 +1,3 @@
+[submodule "external/gdsc_utils"]
+	path = external/gdsc_utils
+	url = git@github.com:PascalIversen/GDSC_utils.git
