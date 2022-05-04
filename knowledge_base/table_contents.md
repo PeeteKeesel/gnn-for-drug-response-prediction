@@ -1,11 +1,12 @@
 
-
+## GDSC Base 
 __Drug Screening - IC50s__: 
 
 - Origin: https://www.cancerrxgene.org/downloads/bulk_download 
+  - Screening Data > Drug Screening - IC50s
 - Datasets: 
-  - [GDSC1-dataset](ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/current_release/GDSC1_fitted_dose_response_25Feb20.xlsx): `GDSC1_fitted_dose_response_25Feb20.xlsx`
-  - [GDSC2-dataset](ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/current_release/GDSC2_fitted_dose_response_25Feb20.xlsx): `GDSC2_fitted_dose_response_25Feb20.xlsx`
+  - [GDSC1-dataset](ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/current_release/GDSC1_fitted_dose_response_25Feb20.xlsx): `GDSC1_fitted_dose_response_25Feb20.xlsx` (27,3 MB)
+  - [GDSC2-dataset](ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/current_release/GDSC2_fitted_dose_response_25Feb20.xlsx): `GDSC2_fitted_dose_response_25Feb20.xlsx` (11,9 MB)
 
 <details><summary>Click to see column descriptions:</summary>
 <p>
@@ -36,10 +37,11 @@ __Drug Screening - IC50s__:
 </details>
 
 __Drug Screening - Raw data__: 
-- Origin: https://www.cancerrxgene.org/downloads/bulk_download 
+- Origin: https://www.cancerrxgene.org/downloads/bulk_download
+  - Screening Data > Drug Screening - Raw data
 - Datasets: 
-  - [GDSC1-raw-data](ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/current_release/GDSC1_public_raw_data_25Feb20.csv): `GDSC1_public_raw_data_25Feb20.csv`
-  - [GDSC2-raw-data](ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/current_release/GDSC2_public_raw_data_25Feb20.csv): `GDSC2_public_raw_data_25Feb20.csv`
+  - [GDSC1-raw-data](ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/current_release/GDSC1_public_raw_data_25Feb20.csv): `GDSC1_public_raw_data_25Feb20.csv` (701,9 MB)
+  - [GDSC2-raw-data](ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/current_release/GDSC2_public_raw_data_25Feb20.csv): `GDSC2_public_raw_data_25Feb20.csv` (865,8 MB)
 
 <details>
   <summary>Click to see column descriptions:</summary>
@@ -66,3 +68,26 @@ __Drug Screening - Raw data__:
 | `INTENSITY` | Fluorescence measurement at the end of the assay. The fluorescence is a result of `ASSAY` and is an indicator of cell viability. | 
 
 </details>
+
+## Cell Features
+
+__Gene Expression__:
+- Origin: https://www.cancerrxgene.org/gdsc1000/GDSC1000_WebResources/Home.html 
+  - Omic: EXP > DataType: Preprocessed > Objects: Cell-lines > Keywords: RMA normalised expression data for cell-lines > Dataset
+- Dataset: [Cell_line_RMA_proc_basalExp.txt.zip](https://www.cancerrxgene.org/gdsc1000/GDSC1000_WebResources//Data/preprocessed/Cell_line_RMA_proc_basalExp.txt.zip)
+  - `Cell_line_RMA_proc_basalExp.txt` (306,3 MB)
+
+__Copy Number Variation__:
+- Origin: https://cellmodelpassports.sanger.ac.uk/downloads 
+  - Copy Number Data > Copy Number (SNP6) > Downloiad SNP6 CNV data (15.85 MB)
+- Dataset: [cnv_20191101.zip](https://cog.sanger.ac.uk/cmp/download/cnv_20191101.zip)
+  - `cnv_abs_copy_number_picnic_20191101.csv` (97 MB)
+  - `cnv_gistic_20191101.csv` (86,7 MB)
+- Additional Description: "PICNIC absolute copy numbers and GISTIC scores derived from Affymetrix SNP6.0 array data."
+
+__Mutations__
+- Origin: https://cellmodelpassports.sanger.ac.uk/downloads 
+  - Mutation Data > Mutations All > Download all mutations (94.8 MB)
+- Dataset: [mutations_all_20220315.zip](https://cog.sanger.ac.uk/cmp/download/mutations_all_20220315.zip)
+  - `mutations_all_20220315.csv` (749,6 MB)
+- Additional Description: "A list of all mutations present in all sequenced models."
