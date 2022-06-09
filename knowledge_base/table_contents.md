@@ -41,7 +41,9 @@ __Drug Screening - Raw data__:
   - Screening Data > Drug Screening - Raw data
 - Datasets: 
   - [GDSC1-raw-data](ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/current_release/GDSC1_public_raw_data_25Feb20.csv): `GDSC1_public_raw_data_25Feb20.csv` (701,9 MB)
+    - Shape: (5,837,703 , 18)
   - [GDSC2-raw-data](ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/current_release/GDSC2_public_raw_data_25Feb20.csv): `GDSC2_public_raw_data_25Feb20.csv` (865,8 MB)
+    - Shape: (6,646,430 , 18)
 
 <details>
   <summary>Click to see column descriptions:</summary>
@@ -85,9 +87,15 @@ __Copy Number Variation__:
   - `cnv_gistic_20191101.csv` (86,7 MB)
 - Additional Description: "PICNIC absolute copy numbers and GISTIC scores derived from Affymetrix SNP6.0 array data."
 
-__Mutations__
+__Mutations__:
 - Origin: https://cellmodelpassports.sanger.ac.uk/downloads 
   - Mutation Data > Mutations All > Download all mutations (94.8 MB)
+  - Mutation Data > Mutations Summary > Download driver mutations (288.08 kB)
 - Dataset: [mutations_all_20220315.zip](https://cog.sanger.ac.uk/cmp/download/mutations_all_20220315.zip)
-  - `mutations_all_20220315.csv` (749,6 MB)
-- Additional Description: "A list of all mutations present in all sequenced models."
+  - `mutations_all_20220315.csv` (749,6 MB) 
+    - Shape: (8,322,616 , 13)
+- Additional Description: "A list of all mutations present in all sequenced models." 
+- Dataset: [mutations_summary_20220315.zip](https://cog.sanger.ac.uk/cmp/download/mutations_summary_20220509.zip)
+  - `mutations_summary_20220315.csv` (1,2 MB) 
+    - Shape: (11,609 , 13)
+- Additional Description: "A list of cancer driver mutations present in all sequenced models."
