@@ -71,20 +71,21 @@ __Drug Screening - Raw data__:
 
 </details>
 
+---
 ## Cell Features
 
 __Gene Expression__:
 - Origin: https://www.cancerrxgene.org/gdsc1000/GDSC1000_WebResources/Home.html 
   - Omic: EXP > DataType: Preprocessed > Objects: Cell-lines > Keywords: RMA normalised expression data for cell-lines > Dataset
 - Dataset: [Cell_line_RMA_proc_basalExp.txt.zip](https://www.cancerrxgene.org/gdsc1000/GDSC1000_WebResources//Data/preprocessed/Cell_line_RMA_proc_basalExp.txt.zip)
-  - `Cell_line_RMA_proc_basalExp.txt` (306,3 MB)
+  - `Cell_line_RMA_proc_basalExp.txt` (306.3 MB)
 
 __Copy Number Variation__:
 - Origin: https://cellmodelpassports.sanger.ac.uk/downloads 
   - Copy Number Data > Copy Number (SNP6) > Downloiad SNP6 CNV data (15.85 MB)
 - Dataset: [cnv_20191101.zip](https://cog.sanger.ac.uk/cmp/download/cnv_20191101.zip)
   - `cnv_abs_copy_number_picnic_20191101.csv` (97 MB)
-  - `cnv_gistic_20191101.csv` (86,7 MB)
+  - `cnv_gistic_20191101.csv` (86.7 MB)
 - Additional Description: "PICNIC absolute copy numbers and GISTIC scores derived from Affymetrix SNP6.0 array data."
 
 __Mutations__:
@@ -92,10 +93,19 @@ __Mutations__:
   - Mutation Data > Mutations All > Download all mutations (94.8 MB)
   - Mutation Data > Mutations Summary > Download driver mutations (288.08 kB)
 - Dataset: [mutations_all_20220315.zip](https://cog.sanger.ac.uk/cmp/download/mutations_all_20220315.zip)
-  - `mutations_all_20220315.csv` (749,6 MB) 
+  - `mutations_all_20220315.csv` (749.6 MB) 
     - Shape: (8,322,616 , 13)
 - Additional Description: "A list of all mutations present in all sequenced models." 
 - Dataset: [mutations_summary_20220315.zip](https://cog.sanger.ac.uk/cmp/download/mutations_summary_20220509.zip)
-  - `mutations_summary_20220315.csv` (1,2 MB) 
+  - `mutations_summary_20220315.csv` (1.2 MB) 
     - Shape: (11,609 , 13)
 - Additional Description: "A list of cancer driver mutations present in all sequenced models."
+
+---
+## Link Interaction Data
+
+- Origin: https://string-db.org/cgi/download?sessionId=bUA6KHr2nITv&species_text=Homo+sapiens 
+  - Search "Homo Sapiens" > Interaction Data
+- Dataset: [9606.protein.links.detailed.v11.5.txt.gz](https://stringdb-static.org/download/protein.links.detailed.v11.5/9606.protein.links.detailed.v11.5.txt.gz)
+  - `9606.protein.links.detailed.v11.5.txt` (115.5 MB)
+- Additional Description: "protein network data (full network, incl. subscores per channel)"
