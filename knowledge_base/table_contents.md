@@ -108,4 +108,27 @@ __Mutations__:
   - Search "Homo Sapiens" > Interaction Data
 - Dataset: [9606.protein.links.detailed.v11.5.txt.gz](https://stringdb-static.org/download/protein.links.detailed.v11.5/9606.protein.links.detailed.v11.5.txt.gz)
   - `9606.protein.links.detailed.v11.5.txt` (115.5 MB)
+    - Shape: (11,938,498, 10)
 - Additional Description: "protein network data (full network, incl. subscores per channel)"
+
+neighborhood	fusion	cooccurence	coexpression	experimental	database	textmining	combined_score
+
+<details>
+  <summary>Click to see column descriptions:</summary>
+
+| Column | Range | Description |
+| ------ | ----- | ----------- | 
+| `protein1` | | Internal identifier of protein A. |
+| `protein2` | | Internal identifier of protein B. |
+| `neighborhood` | $\in [0, 385]$ | |
+| `fusion` | $\in [0, 900]$ | |
+| `cooccurence` | $\in [0, 448]$ | |
+| `coexpression` | $\in [0, 999]$ | |
+| `experimental` | $\in [0, 999]$ | |
+| `database` | $\in [0, 900]$ | |
+| `textmining` | $\in [0, 997]$ | |
+| `combined_score` | $\in [150, 999]$ | The combined score of all evidence scores (including transferred scores). Lies $\in [0, 1,000]$. |
+
+More descriptions can be found under https://string-db.org/cgi/help?sessionId=bUA6KHr2nITv . 
+
+</details>

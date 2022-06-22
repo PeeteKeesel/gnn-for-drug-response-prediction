@@ -21,7 +21,7 @@
 ## Multi-Omics
 - [Wikipedia](https://en.wikipedia.org/wiki/Multiomics#:~:text=Multiomics%2C%20multi%2Domics%2C%20integrative,it%20is%20sequenced\)%3B%20in)
 
-> biological analysis approach in which the data sets are multiple omes.
+> Biological analysis approach in which the data sets are multiple omes.
 
 - omes: genome, proteome, transcriptome, epigenomne, ...
 - By combining these omes, scientists can analyzse complex biological big data to 
@@ -35,4 +35,28 @@
 
 ## Gene-Gene Interaction
 
-> the effect of one gene on a disease modified by another gene or several other genes.
+> The effect of one gene on a disease modified by another gene or several other genes.
+
+### What are Genes? 
+
+A gene is a basic unit of heredity in a living organism that normally resides in long strands of DNA called chromosomes. Genes are coded instructions that decide what the organism is like, how it behaves in its environment and how it survives. They hold the information to build and maintain an organism’s cells and pass genetic traits to offspring. A gene consists of a long combination of four different nucleotide bases namely adenine, cytosine, guanine and thymine. All living things depend on genes as they specify all proteins and functional RNA chains.
+
+### What are Proteins?
+
+Proteins are large, complex molecules that play many critical roles in the body. They are necessary for building the structural components of the human body, such as muscles and organs. Proteins also determine how the organism looks, how well its body metabolises food or fights infection and sometimes even how it behaves. Proteins are chains of chemical building blocks called amino acids. A protein may contain a few amino acids or it could have several thousands.
+
+
+## Relationship Between Genes And Proteins
+
+> Genes direct the productions of proteins.
+
+- Gene and protein are two entities found inside the cell. A gene is a piece of DNA made up of nucleotides. Genes are encoded for functional proteins. Proteins serve as a structural, functional, and regulatory component of the cell.
+- Most genes contain the information needed to make functional molecules called proteins. (A few genes produce regulatory molecules that help the cell assemble proteins.) The journey from gene to protein is complex and tightly controlled within each cell. It consists of two major steps: transcription and translation.
+- Most genes contain the information require to make proteins. 
+  - The journey from gene to protein is one that is complex and controlled within each cell and it consists of two major steps – transcription and translation. Together, these two steps are known as gene expression.
+
+__Transcription__: Information stored in a gene’s DNA is transferred to a similar molecule called RNA in the cell nucleus. Although both DNA and RNA are made up of a chain of nucleotide bases, they have slightly different chemical properties. The type of RNA that contains the information needed to make protein is called a messenger RNA or mRNA and it carries the message from the DNA out of the nucleus into the cytoplasm.
+
+__Translation__: This is the second step in the production of proteins and it takes place in the cytoplasm. The mRNA interacts with a specialised complex known as a ribosome that reads the sequence of the mRNA bases. Each sequence has three bases called a codon, which codes for one particular amino acid. A transfer RNA or tRNA assembles the protein, one amino acid at a time. This continues until the ribosome meets a “stop” codon. The characterisation of different proteins can be conducted by Size Exclusion Chromatography as this technique can be used characterise molecular weight, structure and aggregation state.
+
+
