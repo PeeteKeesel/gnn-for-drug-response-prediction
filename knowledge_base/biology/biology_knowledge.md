@@ -59,4 +59,16 @@ __Transcription__: Information stored in a gene’s DNA is transferred to a simi
 
 __Translation__: This is the second step in the production of proteins and it takes place in the cytoplasm. The mRNA interacts with a specialised complex known as a ribosome that reads the sequence of the mRNA bases. Each sequence has three bases called a codon, which codes for one particular amino acid. A transfer RNA or tRNA assembles the protein, one amino acid at a time. This continues until the ribosome meets a “stop” codon. The characterisation of different proteins can be conducted by Size Exclusion Chromatography as this technique can be used characterise molecular weight, structure and aggregation state.
 
+__Note__: 
+- _Can 1 gene make different proteins?_
+  - A single gene can produce multiple protein sequences, depending on which exons are included in the mRNA transcript, which carries instructions to the cell's protein-building machinery. 
+  - Two different forms of the same protein, known as __isoforms__, can have different, even completely opposite functions
+  - Scientists have long known that it's possible for one gene to produce slightly different forms of the same protein by skipping or including certain sequences from the messenger RNA
+- _How can we make different proteins from the same gene?_
+  - through __gene splicing__
+  - Gene splicing is a post-transcriptional modification in which a single gene can code for multiple proteins. 
+  - Gene Splicing is done in eukaryotes, prior to mRNA translation, by the differential inclusion or exclusion of regions of pre-mRNA. 
+  - Gene splicing is an important source of protein diversity.
+- _Can different genes produce the same protein?_
+  - It can happen. We expect a duplicated gene to either evolve to a slightly different function or degrade to a pseudogene, but there may be circumstances where this does not happen. Maybe the duplication was so recent in evolutionary history that it just hasn't happened yet.
 

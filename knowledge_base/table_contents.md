@@ -1,6 +1,6 @@
 
 ## GDSC Base 
-__Drug Screening - IC50s__: 
+<ins>__Drug Screening - IC50s__:</ins>
 
 - Origin: https://www.cancerrxgene.org/downloads/bulk_download 
   - Screening Data > Drug Screening - IC50s
@@ -36,7 +36,7 @@ __Drug Screening - IC50s__:
 </p>
 </details>
 
-__Drug Screening - Raw data__: 
+<ins>__Drug Screening - Raw data__:</ins> 
 - Origin: https://www.cancerrxgene.org/downloads/bulk_download
   - Screening Data > Drug Screening - Raw data
 - Datasets: 
@@ -74,42 +74,43 @@ __Drug Screening - Raw data__:
 ---
 ## Cell Features
 
-__Gene Expression__:
+<ins>__Gene Expression__:</ins>
 - Origin: https://www.cancerrxgene.org/gdsc1000/GDSC1000_WebResources/Home.html 
   - Omic: EXP > DataType: Preprocessed > Objects: Cell-lines > Keywords: RMA normalised expression data for cell-lines > Dataset
 - Dataset: [Cell_line_RMA_proc_basalExp.txt.zip](https://www.cancerrxgene.org/gdsc1000/GDSC1000_WebResources//Data/preprocessed/Cell_line_RMA_proc_basalExp.txt.zip)
   - `Cell_line_RMA_proc_basalExp.txt` (306.3 MB)
 
-__Copy Number Variation__:
+<ins>__Copy Number Variation__:</ins>
 - Origin: https://cellmodelpassports.sanger.ac.uk/downloads 
   - Copy Number Data > Copy Number (SNP6) > Downloiad SNP6 CNV data (15.85 MB)
 - Dataset: [cnv_20191101.zip](https://cog.sanger.ac.uk/cmp/download/cnv_20191101.zip)
   - `cnv_abs_copy_number_picnic_20191101.csv` (97 MB)
   - `cnv_gistic_20191101.csv` (86.7 MB)
-- Additional Description: "PICNIC absolute copy numbers and GISTIC scores derived from Affymetrix SNP6.0 array data."
+  - Additional Description: "PICNIC absolute copy numbers and GISTIC scores derived from Affymetrix SNP6.0 array data."
 
-__Mutations__:
+<ins>__Mutations__:</ins>
 - Origin: https://cellmodelpassports.sanger.ac.uk/downloads 
   - Mutation Data > Mutations All > Download all mutations (94.8 MB)
   - Mutation Data > Mutations Summary > Download driver mutations (288.08 kB)
 - Dataset: [mutations_all_20220315.zip](https://cog.sanger.ac.uk/cmp/download/mutations_all_20220315.zip)
   - `mutations_all_20220315.csv` (749.6 MB) 
     - Shape: (8,322,616 , 13)
-- Additional Description: "A list of all mutations present in all sequenced models." 
+  - Additional Description: "A list of all mutations present in all sequenced models." 
 - Dataset: [mutations_summary_20220315.zip](https://cog.sanger.ac.uk/cmp/download/mutations_summary_20220509.zip)
   - `mutations_summary_20220315.csv` (1.2 MB) 
     - Shape: (11,609 , 13)
-- Additional Description: "A list of cancer driver mutations present in all sequenced models."
+  - Additional Description: "A list of cancer driver mutations present in all sequenced models."
 
 ---
 ## Link Interaction Data
 
+<ins>__Protein Links:__</ins>
 - Origin: https://string-db.org/cgi/download?sessionId=bUA6KHr2nITv&species_text=Homo+sapiens 
   - Search "Homo Sapiens" > Interaction Data
 - Dataset: [9606.protein.links.detailed.v11.5.txt.gz](https://stringdb-static.org/download/protein.links.detailed.v11.5/9606.protein.links.detailed.v11.5.txt.gz)
   - `9606.protein.links.detailed.v11.5.txt` (115.5 MB)
-    - Shape: (11,938,498, 10)
-- Additional Description: "protein network data (full network, incl. subscores per channel)"
+    - Shape: (11,938,498 , 10)
+  - Additional Description: "protein network data (full network, incl. subscores per channel)"
 
 neighborhood	fusion	cooccurence	coexpression	experimental	database	textmining	combined_score
 
@@ -130,5 +131,28 @@ neighborhood	fusion	cooccurence	coexpression	experimental	database	textmining	co
 | `combined_score` | $\in [150, 999]$ | The combined score of all evidence scores (including transferred scores). Lies $\in [0, 1,000]$. |
 
 More descriptions can be found under https://string-db.org/cgi/help?sessionId=bUA6KHr2nITv . 
+
+</details>
+
+<ins>__Protein Info:__</ins>
+- Origin: https://string-db.org/cgi/download?sessionId=bUA6KHr2nITv&species_text=Homo+sapiens
+  - Search "Homo Sapiens" > Interaction Data
+- Dataset: [9606.protein.info.v11.5.txt.gz](https://stringdb-static.org/download/protein.info.v11.5/9606.protein.info.v11.5.txt.gz)
+  - `9606.protein.info.v11.5.txt` (1.9 MB)
+    - Shape: (19,566 , 4)
+  - Additional Description: "list of STRING proteins incl. their display names and descriptions"
+
+<details>
+  <summary>Click to see column descriptions:</summary>
+
+| Column              | Description | Example |
+| ------------------- | ----------- | ------- |
+| `string_protein_id` | Protein identifier | `9606.ENSP00000000233	` |
+| `preferred_name`    | Gene identifier. Same as `GENE_SYMBOL`. | `M6PR` |
+| `protein_size`      | Size of the protein in aa (amino acids)| `277` |
+| `annotation`        | Full name of the protein. | `Cation-dependent mannose-6-phosphate receptor;...` |
+
+- The `string_protein_id` protein is encoded by the `preferred_name` gene
+- The `preferred_name` gene encodes the `string_protein_id` protein
 
 </details>
