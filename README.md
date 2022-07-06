@@ -4,6 +4,14 @@ Clemens Woest
 ## Introduction
 This repository contains the process and the final code for my master thesis.
 
+## Installation
+- [ ] TODO
+```bash
+conda create ...
+conda activate ...
+pip install ...
+```
+
 ## Contents
 ### Notebooks
 
