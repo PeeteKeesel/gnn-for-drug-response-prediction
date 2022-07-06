@@ -2,13 +2,10 @@
 Clemens Woest
 
 ## Introduction
----
 This repository contains the process and the final code for my master thesis.
 
 ## Contents
----
 ### Notebooks
----
 
 | Notebook | Content |
 | -------- | ------- |
