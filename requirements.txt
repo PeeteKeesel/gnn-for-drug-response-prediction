@@ -1,0 +1,5 @@
+# A pip requirements file should be placed at the root of the repository. 
+# It should specify the dependencies required to contribute to the project: testing, building, and generating documentation.
+numpy==1.22.3
+pandas==1.4.2
+pytorch==1.11.0

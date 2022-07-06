@@ -1,0 +1,2 @@
+
+- Regarding __Similarity Scores__ in https://string-db.org/cgi/help.pl?subpage=api%23retrieving-similarity-scores-of-the-protein-set they said that "STRING internally uses the Smith–Waterman bit scores as a proxy for protein homology". The original scores are computed by [SIMILARITY MATRIX OF PROTEINS](http://cube.univie.ac.at/resources/simap) (SIMAP) project. Using this API you can retrieve these similarity scores between your input proteins and proteins in all of the STRING's organisms. Only the best hit per organism for each protein will be retrieved.
