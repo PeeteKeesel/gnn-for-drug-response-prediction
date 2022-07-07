@@ -1,6 +1,8 @@
 import pandas as pd
+import torch_geometric
 
 from typing import List
+from torch_geometric.data import Data
 
 
 def map_gene_to_number(nodes_as_numbers: List[int], nodes_as_genes: List[str]): 
@@ -39,3 +41,21 @@ def map_gene_symbols_to_proteins(
                           right_on = 'string_protein_id') \
                     .rename(columns={'preferred_name': new_col_name}, inplace=True) \
                     .drop(['string_protein_id'], axis=1, inplace=True)
+
+
+# ------------------------------------ #
+# Graph Explainability Helper Methods. 
+# ------------------------------------ #
+def print_graph_information(data: torch_geometric.data.data.Data): 
+    print(f"""
+        General graph information:\n{data}
+        --------------------------
+        num_nodes          : {data.num_nodes}
+        num_edges          : {data.num_edges}
+        num_node_features  : {data.num_node_features}
+        num_edge_features  : {data.num_edge_features}
+        has_isolated_nodes : {data.has_isolated_nodes()}
+        has_self_loops     : {data.has_self_loops()}
+        is_directed        : {data.is_directed()}
+        is_undirected      : {data.is_undirected()}    
+    """)

@@ -1,7 +1,8 @@
 from my_utils.graph_generator_helper import (
     map_gene_to_number,
     map_number_to_gene,
-    map_gene_symbols_to_proteins
+    map_gene_symbols_to_proteins,
+    print_graph_information
 )
 
 from my_utils.global_vars import (
