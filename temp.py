@@ -62,8 +62,8 @@ for cln in uniq_cell_line_names:
 
     # Only take the neigbor tuples from the total neighborhood DataFrame which have both
     # genes in the set of genes of the node feature DataFrame's.
-    neighbors_as_genes = [[neigh[0], neigh[1]] for neigh in gene_symbol_tuples \ 
-        if ((neigh[0] in genes_with_index['gene_symbol'].values) & \ 
+    neighbors_as_genes = [[neigh[0], neigh[1]] for neigh in gene_symbol_tuples \
+        if ((neigh[0] in genes_with_index['gene_symbol'].values) & \
             (neigh[1] in genes_with_index['gene_symbol'].values))]
 
     # Transform genes to their corresponding indices.
