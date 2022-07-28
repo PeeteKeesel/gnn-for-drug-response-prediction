@@ -1,0 +1,103 @@
+
+Build GNN
+---------
+- Research on how to encode the drugs
+  - What molecular encoders exist? 
+  - Choose (an) appropriate representation(s) for the drugs
+  Options: 
+    1. De morgan fingerprints  
+    2. GNN out of the molecular graph 
+      - GIN structure to receive molecular graphs & generate drug representations.
+    3. Autoencoder 
+
+Cell line graph side
+  - map output of node and edge features to a cell-line feature vector
+    - ? shape same as for the drug representation vector
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Build Base Table 
+
+- [x] Build base GDSC table using GDSC1 and GDSC2 (04.05.22)
+
+__Cell Features__:
+  - [x] Add to the base GDSC table __gene expression__ information (04.05.22)
+  - [x] Add to the base GDSC table __copy number variation__ (CNV) information
+  - [x] Add to the base GDSC table __mutation__ information
+
+__Drug Features__: 
