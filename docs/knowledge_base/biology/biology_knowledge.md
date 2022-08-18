@@ -4,6 +4,11 @@
 - lines differ from cell strains in that they have escaped the Hayflick limit and become immortalised.
 - the culture of cells originated from a primary cell culture
 
+### Cancer Cell Line 
+- Cancer cells that keep dividing and growing over time, under certain conditions in a laboratory. 
+- Cancer cell lines are used in research to study the biology of cancer and to test cancer treatments.
+
+
 ## Gene Expression
 - bezeichnet, wie die genetische Information (eines Gens (Abschnitt der DNA)) zum Ausdruck kommt und in Erscheinung tritt
 - also wie der Genotyp eines Organismus oder einer Zelle als Phaenotyp ausgepraegt ist
@@ -41,6 +46,11 @@
 
 A gene is a basic unit of heredity in a living organism that normally resides in long strands of DNA called chromosomes. Genes are coded instructions that decide what the organism is like, how it behaves in its environment and how it survives. They hold the information to build and maintain an organism’s cells and pass genetic traits to offspring. A gene consists of a long combination of four different nucleotide bases namely adenine, cytosine, guanine and thymine. All living things depend on genes as they specify all proteins and functional RNA chains.
 
+- Genes are segments of DNA that contain code for a specific protein that functiuons in one or more types of cells in the body
+- Genes carry the instructions to make proteins, which do much of the work in our cells.
+- Certain gene changes can cause cells to evade normal growth controls and become cancer. 
+  - For example, some cancer-causing gene changes increase production of a protein that makes cells grow.
+
 ### What are Proteins?
 
 Proteins are large, complex molecules that play many critical roles in the body. They are necessary for building the structural components of the human body, such as muscles and organs. Proteins also determine how the organism looks, how well its body metabolises food or fights infection and sometimes even how it behaves. Proteins are chains of chemical building blocks called amino acids. A protein may contain a few amino acids or it could have several thousands.
@@ -72,3 +82,20 @@ __Note__:
 - _Can different genes produce the same protein?_
   - It can happen. We expect a duplicated gene to either evolve to a slightly different function or degrade to a pseudogene, but there may be circumstances where this does not happen. Maybe the duplication was so recent in evolutionary history that it just hasn't happened yet.
 
+### Relationship between genes and cell lines
+
+- Genes are segments of DNA that contain code for a specific protein that functiuons in one or more types of cells in the body
+- Chromosomes are structures within cells that contain a person's genes
+- Genes are contained in chromosomes, which are in the cell nucleus
+
+### The Genetics of Cancer
+
+- https://www.cancer.gov/about-cancer/causes-prevention/genetics#:~:text=Genetic%20Changes%20and%20Cancer,-View%20and%20Print&text=Genes%20carry%20the%20instructions%20to,protein%20that%20makes%20cells%20grow.
+
+Cancer is a genetic disease, that is, cancer is caused by certain changes to genes that control the way our cells function, especially how they grow and divide.
+
+- The proteins have specific functions and act as messengers for the cell. 
+- Each gene must have the correct instructions for making its protein. 
+- This allows the protein to perform the correct function for the cell.
+- All cancers begin when one or more genes in a cell mutate.
+- 

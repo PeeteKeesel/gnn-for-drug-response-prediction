@@ -1,3 +1,6 @@
+import pickle
+import pandas as pd
+
 
 # Paths.
 PATH_TO_SAVE_NODE_FEATURE_DATA_TO = '../../datasets/gdsc/my_datasets/'
@@ -12,3 +15,9 @@ DRUG_FPS_FINAL_FILE_NAME = 'drug_name_fingerprints_dataframe.pkl'
 # Specific paths.
 PATH_TO_SAVED_DRUG_FEATURES = '../../datasets/gdsc/my_datasets/'
 PATH_TO_SAVED_CL_FEATURES = '../../datasets/gdsc/my_datasets/'
+
+# --------------- #
+# GENERAL METHODS #
+# --------------- #
+def load_pickle(file_name):
+    return pd.read_pickle(file_name)
