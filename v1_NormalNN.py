@@ -4,8 +4,8 @@ import torch.nn as nn
 class Model(nn.Module):
     def __init__(self):
         super(Model, self).__init__()
-        print("\nCALLED: def __init__(self)")
-        print(100*"-")
+        # print("\nCALLED: def __init__(self)")
+        # print(100*"-")
         # --------------- #
         # Cell CNN branch #
         # --------------- #
@@ -26,10 +26,10 @@ class Model(nn.Module):
             # nn.Linear(in_features=294, out_features=128)
             #nn.ReLU()
         )
-        print(100*'-')
-        print("self.cell_branch")
-        print(self.cell_branch)
-        print(100*"-")
+        # print(100*'-')
+        # print("self.cell_branch")
+        # print(self.cell_branch)
+        # print(100*"-")
 
         # --------------- #
         # Drug CNN branch #
@@ -53,9 +53,9 @@ class Model(nn.Module):
             # nn.MaxPool1d(kernel_size=1, stride=1),
             # nn.Linear(in_features=77, out_features=128)
         )
-        print("self.drug_branch")
-        print(self.drug_branch)
-        print(100*"-")
+        # print("self.drug_branch")
+        # print(self.drug_branch)
+        # print(100*"-")
 
         # --- #
         # FCN #
@@ -67,40 +67,40 @@ class Model(nn.Module):
             nn.Linear(128, 1),
             nn.ReLU()
         )
-        print("\nself.fcn")
-        print(self.fcn)
-        print(100*"-")        
+        # print("\nself.fcn")
+        # print(self.fcn)
+        # print(100*"-")        
 
     def forward(self, cell, drug):
-        print("\nCALLED: forward(self, cell, drug)")
+        # print("\nCALLED: forward(self, cell, drug)")
         # Create cell gene vector.
-        print(torch.isnan(cell).sum())
-        print(torch.isinf(cell).sum())
-        print(f"\nCell line INPUT shape: {cell.shape}")
+        # print(torch.isnan(cell).sum())
+        # print(torch.isinf(cell).sum())
+        # print(f"\nCell line INPUT shape: {cell.shape}")
         out_cell = self.cell_branch(cell)
-        print(f"Cell line OUTPUT shape: {out_cell.shape}\n")
+        # print(f"Cell line OUTPUT shape: {out_cell.shape}\n")
 
         # Create compound vector.
-        print(f"\nDrug INPUT shape: {drug.shape}")
-        print(drug)
-        print(torch.isnan(drug).sum())
-        print(torch.isinf(drug).sum())
+        # print(f"\nDrug INPUT shape: {drug.shape}")
+        # print(drug)
+        # print(torch.isnan(drug).sum())
+        # print(torch.isinf(drug).sum())
         compound_vector = self.drug_branch(drug)
         out_drug = compound_vector
-        print(f"Drug OUTPUT shape: {drug.shape}\n")
+        # print(f"Drug OUTPUT shape: {drug.shape}\n")
 
-        print(f"\n\nSUMMARY\n{100*'+'}")
-        print(f"     out_cell.shape: {out_cell.shape}")
-        print(f"     out_drug.shape: {out_drug.shape}")
+        # print(f"\n\nSUMMARY\n{100*'+'}")
+        # print(f"     out_cell.shape: {out_cell.shape}")
+        # print(f"     out_drug.shape: {out_drug.shape}")
         # ----------------------------------------------------- #
         # Concatenate the outputs of the cell and drug branches #
         # ----------------------------------------------------- #
         #concat = torch.concat([out_cell, out_drug], dim=1)
         concat = torch.cat([out_cell, out_drug], 1)
         x_dim_batch, y_dim_branch, z_dim_features = concat.shape[0], concat.shape[1], concat.shape[2]
-        print(f"Before reshaping --> concat.shape: {concat.shape}")
+        # print(f"Before reshaping --> concat.shape: {concat.shape}")
         concat = torch.reshape(concat, (x_dim_batch, y_dim_branch*z_dim_features))
-        print(f"After reshaping --> concat.shape: {concat.shape}")
+        # print(f"After reshaping --> concat.shape: {concat.shape}")
         # Create vertical vector.
         # concat = torch.unsqueeze(concat, 2)
         # print(f"After unsqueezing --> concat.shape: {concat.shape}")
@@ -109,8 +109,8 @@ class Model(nn.Module):
         # Run the Fully Connected Network #
         # ------------------------------- #
         y_pred = self.fcn(concat)
-        print(f"Shape of y_pred : {y_pred.shape}")
-        print(y_pred)
+        # print(f"Shape of y_pred : {y_pred.shape}")
+        # print(y_pred)
         y_pred = y_pred.reshape(y_pred.shape[0])
-        print(f"Shape of y_pred : {y_pred.shape}")
+        # print(f"Shape of y_pred : {y_pred.shape}")
         return y_pred
