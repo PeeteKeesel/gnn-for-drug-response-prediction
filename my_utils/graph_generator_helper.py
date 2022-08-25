@@ -59,3 +59,4 @@ def print_graph_information(data: torch_geometric.data.data.Data):
         is_directed        : {data.is_directed()}
         is_undirected      : {data.is_undirected()}    
     """)
+    
