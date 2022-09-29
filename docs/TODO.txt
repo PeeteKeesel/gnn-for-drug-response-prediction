@@ -1,4 +1,17 @@
 
+- [ ] Decrease _learningRate_ after X epochs without any loss decrese
+- [ ] Add a drop out 
+- [ ] Add batch normalization
+- [ ] Add more evaluation metrics like 
+  - [ ] RMSE
+  - [ ] PCC 
+  - [ ] SCC
+- [ ] Add cross validation on the 80 20 split
+- [ ] Check if shuffling is necessary
+- [ ] Include CNV information in addition to the existing gene expression and compare
+- [ ] Implement a baseline of the baseline. Like e.g. a Logistic Regression.
+
+
 Build GNN
 ---------
 - Research on how to encode the drugs

@@ -9,6 +9,10 @@ from tqdm            import tqdm
 from sklearn.metrics import mean_squared_error
 
 
+# ------------------------------------- #
+# MAKE BATCH SIZE EQUAL FOR ALL BATCHES # 
+# INCLUDING THE LAST ONE                #
+# ------------------------------------- #
 def make_each_batch_same_size(test_loader, dataset):
     """Temporary helper method to make all batches equally sized by adding zeros
     to the last batch which might have a size smaller then the batch size.
@@ -32,6 +36,7 @@ def make_each_batch_same_size(test_loader, dataset):
                                           torch.zeros(1, test_loader.batch_size-len(dataset[i]))], dim=1)
     return result_tensor
 
+
 # ---------------------------- #
 # TRAINING & TESTING PER EPOCH #
 # ---------------------------- #
@@ -54,8 +59,12 @@ def train_and_test_model(
     for epoch in range(num_epochs): 
         running_loss_train = 0.0
         model.train()
+        # TODO: Pytorch lightening.
         for i, (X_batch, X_batch_cell, X_batch_drug, y_batch) in tqdm(enumerate(train_loader)):
             
+            # Set gradients to zero before starting backprop.
+            optimizer.zero_grad()
+
             # X_batch_cell, X_batch_drug
             # X_cell = X_batch_cell.to(device)
             # X_drug = X_batch_drug.to(device)
@@ -75,7 +84,6 @@ def train_and_test_model(
             # print(f"Running Loss: {running_loss_train}")
 
             # Backward and optimize.
-            optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
