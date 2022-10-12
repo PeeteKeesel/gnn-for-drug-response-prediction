@@ -16,6 +16,9 @@ DRUG_FPS_FINAL_FILE_NAME = 'drug_name_fingerprints_dataframe.pkl'
 PATH_TO_SAVED_DRUG_FEATURES = '../../datasets/gdsc/my_datasets/'
 PATH_TO_SAVED_CL_FEATURES = '../../datasets/gdsc/my_datasets/'
 
+# SPARSED FEATURE SETS
+PATH_TO_FEATURES = '../../datasets/datasets_for_model_building/'
+
 # --------------- #
 # GENERAL METHODS #
 # --------------- #
