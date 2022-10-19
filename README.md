@@ -34,10 +34,10 @@ pip install ...
 __Networks__:
 
 - [ ] 1. Build baseline using e.g. random forest or simple regression
-- [ ] 2. `Tab-Tab`: Build normal FFNN using tabular data for the drugs and for the cell-lines _(references: [MOLI-2019](https://academic.oup.com/bioinformatics/article/35/14/i501/5529255) ([code](https://github.com/hosseinshn/MOLI)))_
-- [ ] 3. `Graph-Tab`: Replace the cell-line branch with a GNN, while keeping the drug branch with tabular data _(references: [GraphGCN-2021]([file:///Users/cwoest/Downloads/mathematics-09-00772%20(7).pdf](https://www.mdpi.com/2227-7390/9/7/772/htm)) ([code](https://github.com/BML-cbnu/DrugGCN)))_
-- [ ] 4. `Tab-Graph`: Leave the cell-line branch using tabular data, while replacing the drug branch with a GNN _(references: [DrugDRP-2022](https://pubmed.ncbi.nlm.nih.gov/33606633/) ([code](https://github.com/hauldhut/GraphDRP)))_
-- [ ] 5. `Graph-Graph`: Replace both the cell-line branch and the drug branch with GNNs _(references: [TGSA-2022](https://academic.oup.com/bioinformatics/article/38/2/461/6374919) ([code](https://github.com/violet-sto/TGSA)))_
+- [ ] 2. `Tab-Tab`: General FFNN using tabular data for drugs and cell-lines _(refs: [MOLI-2019](https://academic.oup.com/bioinformatics/article/35/14/i501/5529255) ([code](https://github.com/hosseinshn/MOLI)))_
+- [ ] 3. `Graph-Tab`: Replace cell-line branch by a GNN, keep the drug branch with tabular data _(refs: [GraphGCN-2021]([file:///Users/cwoest/Downloads/mathematics-09-00772%20(7).pdf](https://www.mdpi.com/2227-7390/9/7/772/htm)) ([code](https://github.com/BML-cbnu/DrugGCN)))_
+- [ ] 4. `Tab-Graph`: Leave cell-line branch using tabular data, replace drug branch by a GNN _(refs: [DrugDRP-2022](https://pubmed.ncbi.nlm.nih.gov/33606633/) ([code](https://github.com/hauldhut/GraphDRP)))_
+- [ ] 5. `Graph-Graph`: Replace both cell-line branch & drug branch by GNNs _(refs: [TGSA-2022](https://academic.oup.com/bioinformatics/article/38/2/461/6374919) ([code](https://github.com/violet-sto/TGSA)))_
 - [ ] 6. Implement [`GNNExplainer-2019`](https://arxiv.org/abs/1903.03894) ([code](https://github.com/RexYing/gnn-model-explainer)) on the above network methods
   - [ ] Run on `Tab-Tab`
   - [ ] Run on `Graph-Tab`
