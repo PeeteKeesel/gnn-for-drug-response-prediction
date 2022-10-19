@@ -23,3 +23,4 @@ pip install ...
 | `05_DrugFeatures.ipynb` | |
 | `06_create_base_dataset.ipynb` | |
 | `07_Linking.ipynb` | Contains the code for the creation of the graph using the STRING database. |
+| `07_v1_2_get_linking_dataset.ipynb` | Creates the graph per cell-line with all 4 node features (gene expr, cnv gistic, cnv picnic and mutation). | 
