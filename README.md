@@ -1,5 +1,4 @@
-# Gene-Graph Neural Network for Cancer Cell Line Drug Response Prediction
-Clemens Woest
+# Gene-Interaction Graph Neural Network to Predict Cancer Drug Response
 
 ## Introduction
 This repository contains the process and the final code for my master thesis.
