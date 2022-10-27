@@ -76,3 +76,27 @@ for cln in uniq_cell_line_names:
                                                           dtype=torch.float),
                                 edge_index = torch.tensor(neighbors_as_indices, 
                                                           dtype=torch.long))
+
+gexpr.set_index('CELL_LINE_NAME', inplace=True)
+cnvg.set_index('CELL_LINE_NAME', inplace=True)
+cnvp.set_index('CELL_LINE_NAME', inplace=True)
+mut.set_index('CELL_LINE_NAME', inplace=True)
+
+Gs = {}
+
+GENES = gexpr.columns[1:]
+for cl in cls:
+    gexpr_cl = torch.tensor(gexpr.loc[cl][GENES].values[0, :], dtype=torch.float64)
+    cnvg_cl = torch.tensor(cnvg.loc[cl][GENES].values[0, :], dtype=torch.float64)
+    cnvp_cl = torch.tensor(cnvp.loc[cl][GENES].values[0, :], dtype=torch.float64)
+    mut_cl = torch.tensor(mut.loc[cl][GENES].values[0, :], dtype=torch.float64)
+
+    features = torch.stack([gexpr_cl, cnvg_cl, cnvp_cl, mut_cl])
+
+    edge_index = torch.tensor(NEIGHBOR_GENES_UNDIRECTED, dtype=torch.long).t().contiguous()
+    
+    G_cl = Data(x=features, edge_index=to_undirected(edge_index))
+
+    Gs[cl] = G_cl
+
+

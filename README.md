@@ -43,3 +43,5 @@ __Networks__:
   - [ ] Run on `Graph-Tab`
   - [ ] Run on `Tab-Graph`
   - [ ] Run on `Graph-Graph`
+  - [ ] Convert to non-notebook py code
+    - [ ] include setting of args from terminal
