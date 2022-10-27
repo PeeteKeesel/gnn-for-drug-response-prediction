@@ -18,6 +18,7 @@ PATH_TO_SAVED_CL_FEATURES = '../../datasets/gdsc/my_datasets/'
 
 # SPARSED FEATURE SETS
 PATH_TO_FEATURES = '../../datasets/datasets_for_model_building/'
+PATH_SUMMARY_DATASETS = PATH_TO_FEATURES + 'summary_datasets/'
 
 # --------------- #
 # GENERAL METHODS #
