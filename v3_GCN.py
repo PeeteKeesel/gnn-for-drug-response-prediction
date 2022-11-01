@@ -26,22 +26,24 @@ class GraphTab_v1(torch.nn.Module):
 
         # Cell-line graph branch. Obtains node embeddings.
         # https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html#torch_geometric.nn.sequential.Sequential
-        self.cell_emb = Sequential('x, edge_index', [
-            (GCNConv(in_channels=4, out_channels=256), 'x, edge_index -> x'), # TODO: try GATConv() vs GCNConv()
-            nn.ReLU(inplace=True),
-            ## nn.BatchNorm1d(num_features=128),
-            ## nn.Dropout(self.dropout_p),
-            (GCNConv(in_channels=256, out_channels=256), 'x, edge_index -> x'),
-            nn.ReLU(inplace=True),
-            (global_mean_pool, 'x, batch -> x'), 
-            # Start embedding
-            nn.Linear(256, 128),
-            nn.ReLU(),
-            ## nn.Dropout(self.dropout_p),
-            nn.Linear(128, 128),
-            nn.ReLU()
-            ## nn.Dropout(self.dropout_p)            
-        ])
+        self.cell_emb = Sequential('x, edge_index', 
+            [
+                (GCNConv(in_channels=4, out_channels=256), 'x, edge_index -> x1'), # TODO: try GATConv() vs GCNConv()
+                nn.ReLU(inplace=True),
+                ## nn.BatchNorm1d(num_features=128),
+                ## nn.Dropout(self.dropout_p),
+                (GCNConv(in_channels=256, out_channels=256), 'x1, edge_index -> x2'),
+                nn.ReLU(inplace=True),
+                (global_mean_pool, 'x2, batch -> x3'), 
+                # Start embedding
+                nn.Linear(256, 128),
+                nn.ReLU(),
+                ## nn.Dropout(self.dropout_p),
+                nn.Linear(128, 128),
+                nn.ReLU()
+                ## nn.Dropout(self.dropout_p)            
+            ]
+        )
         print(f"self.cell_emb: {self.cell_emb}")
 
         self.cell_embedding = nn.Sequential(
