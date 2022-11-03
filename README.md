@@ -28,8 +28,12 @@ pip install ...
 
 - [x] fix error with mutations dataset 
 - [x] include mutation features in tensor
-- [x] build bi-modal network structure and build simple NN
-  - [ ] TO FIX: For now I included only the features separately. And for each feature it performs nearly equally. Why is that? Doesn't it learn anything? However, it's still better then for example just predicting the mean. 
+- [x] start building building bi-modal network structure and build simple NN
+- [x] correct `DataLoader` to access cell-line-gene-drug-ic50 tuple correctly
+- [x] shuffle
+- [ ] include GDSC 1 data as well; check shift in ln(IC50)'s and think about strategy to meaningful combine both in single dataset
+- [ ] once all models are running, convert to `.py` files instead of notebooks
+- [ ] run GNNExplainer on the graph branches of the bi-modal networks
 
 __Networks__:
 
