@@ -26,7 +26,7 @@ class GraphTab_v1(torch.nn.Module):
 
         # Cell-line graph branch. Obtains node embeddings.
         # https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html#torch_geometric.nn.sequential.Sequential
-        self.cell_emb = Sequential('x, edge_index', 
+        self.cell_emb = Sequential('x, edge_index, batch', 
             [
                 (GCNConv(in_channels=4, out_channels=256), 'x, edge_index -> x1'), # TODO: GATConv() vs GCNConv()
                 nn.ReLU(inplace=True),
@@ -66,27 +66,27 @@ class GraphTab_v1(torch.nn.Module):
         )
 
     def forward(self, cell, drug):
-        print(drug)
+        # print(drug)
         drug_emb = self.drug_nn(drug)
-        print(f"drug_emb.shape: {drug_emb.shape}")
-        print(f"drug_emb: {drug_emb}")
+        # print(f"drug_emb.shape: {drug_emb.shape}")
+        # print(f"drug_emb: {drug_emb}")
 
         # cell_gnn_out = self.cell_gnn(cell.x, cell.edge_index)
         # print(f"cell_gnn_out: {cell_gnn_out}")
         # # Readout layer.
         # cell_gnn = global_mean_pool(cell_gnn_out, cell) # [batch_size, hidden_channels]
         # cell_emb = self.cell_emb(cell_gnn)
-        cell_emb = self.cell_emb(cell.x, cell.edge_index)
-        print(f"cell_emb: {cell_emb}")
+        cell_emb = self.cell_emb(cell.x.float(), cell.edge_index, cell.batch)
+        # print(f"cell_emb: {cell_emb}")
 
 
         # ----------------------------------------------------- #
         # Concatenate the outputs of the cell and drug branches #
         # ----------------------------------------------------- #
-        concat = torch.cat([cell_emb, drug_emb], 1)
-        x_dim_batch, y_dim_branch, z_dim_features = concat.shape[0], concat.shape[1], concat.shape[2]
-        print(f"concat.shape: {concat.shape}")
-        concat = torch.reshape(concat, (x_dim_batch, y_dim_branch*z_dim_features))
+        concat = torch.cat([cell_emb, drug_emb], -1)
+        # x_dim_batch, y_dim_branch, z_dim_features = concat.shape[0], concat.shape[1], concat.shape[2]
+        # print(f"concat.shape: {concat.shape}")
+        # concat = torch.reshape(concat, (x_dim_batch, y_dim_branch*z_dim_features))
         
         # ------------------------------- #
         # Run the Fully Connected Network #
