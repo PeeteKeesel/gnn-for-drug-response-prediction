@@ -22,7 +22,8 @@ pip install ...
 | `05_DrugFeatures.ipynb` | |
 | `06_create_base_dataset.ipynb` | |
 | `07_Linking.ipynb` | Contains the code for the creation of the graph using the STRING database. |
-| `07_v1_2_get_linking_dataset.ipynb` | Creates the graph per cell-line with all 4 node features (gene expr, cnv gistic, cnv picnic and mutation). | 
+| `07_v1_2_get_linking_dataset.ipynb` | Creates the graph per cell-line with all 4 node features (gene expr, cnv gistic, cnv picnic and mutation). |
+| `07_v2_graph_dataset.ipynb` | Used only the gene-gene tuples with a `combined_score` value of more then 950. Ended up with only 458 genes per cell-line for now (instead of 858 as of before). | 
 
 ### Todos 
 
