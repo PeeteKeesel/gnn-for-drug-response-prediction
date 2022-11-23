@@ -48,8 +48,9 @@ def map_gene_symbols_to_proteins(
 # ------------------------------------ #
 def print_graph_information(data: torch_geometric.data.data.Data): 
     print(f"""
-        General graph information:\n{data}
-        --------------------------
+        General graph information:
+        ==========================
+        topology           : {data}
         num_nodes          : {data.num_nodes}
         num_edges          : {data.num_edges}
         num_node_features  : {data.num_node_features}
