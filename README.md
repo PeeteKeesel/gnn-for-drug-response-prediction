@@ -63,3 +63,6 @@ __Networks__:
   - [ ] Run on `Graph-Graph`
   - [ ] Convert to non-notebook `.py` code
     - [ ] include setting of args from terminal
+
+## Questions 
+- [ ] Why is each cell-line graph still `G.is_undirected()==False` even though I included manual checks for it? Does this matter?

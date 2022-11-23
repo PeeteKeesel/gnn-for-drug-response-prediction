@@ -10,5 +10,6 @@ from my_utils.global_vars import (
     PATH_TO_SAVE_STRING_DATA_TO, 
     GENE_EXPR_FINAL_FILE_NAME, 
     CNV_GISTIC_FINAL_FILE_NAME,
-    CNV_PICNIC_FINAL_FILE_NAME
+    CNV_PICNIC_FINAL_FILE_NAME,
+    PlottingParameters
 )
