@@ -4,3 +4,4 @@ numpy==1.22.3
 pandas==1.4.2
 pytorch==1.11.0
 pyg==2.0.4
+torch-geometric=2.1.0
