@@ -55,7 +55,7 @@ class GraphTabDataset(Dataset):
         print(f"# genes        : {self.cell_line_graphs[next(iter(self.cell_line_graphs))].x.shape[0]}")
 
 
-def create_datasets(drm, cl_graphs, drug_mat, args):
+def create_graph_tab_datasets(drm, cl_graphs, drug_mat, args):
     print(f"Full     shape: {drm.shape}")
     train_set, test_val_set = train_test_split(drm, 
                                                test_size=args.TEST_VAL_RATIO, 
@@ -89,7 +89,7 @@ def create_datasets(drm, cl_graphs, drug_mat, args):
     return train_loader, test_loader, val_loader    
 
 
-class BuildModel():
+class BuildGraphTabModel():
     def __init__(self, model, criterion, optimizer, num_epochs, 
         train_loader, test_loader, val_loader, device):
         self.train_losses = []
