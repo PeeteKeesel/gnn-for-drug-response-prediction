@@ -6,9 +6,15 @@ This repository contains the process and the final code for my master thesis "_G
 ## Installation
 
 ```bash
-conda create ...
-conda activate ...
-pip install ...
+# To create a conda virtual environment run
+conda env create -f environment.yml
+# or 
+conda create --name environment --file requirements.txt
+
+# To create a pip virtual environment run
+python3 -m venv env
+source env/bin/activate
+pip install -r requirements.txt
 ```
 
 ## Contents
