@@ -3,3 +3,4 @@
 *.xlsx
 *.csv
 *.txt
+/data
