@@ -1,3 +1,5 @@
 *.pdf
 *.pkl
 *.xlsx
+*.csv
+*.txt
