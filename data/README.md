@@ -244,6 +244,17 @@ The following subsection will provide information about these root datasets.
     - Shape: (11,609 , 13)
   - Additional Description: "A list of cancer driver mutations present in all sequenced models."
 
+<details>
+  <summary>Click to see top three rows of mutations dataset:</summary>
+
+|    | gene_id   | gene_symbol   | model_id   | protein_mutation   | rna_mutation   | cdna_mutation   | cancer_driver   | cancer_predisposition_variant   | effect   |    vaf | coding   | source   | model_name        |
+|---:|:----------|:--------------|:-----------|:-------------------|:---------------|:----------------|:----------------|:--------------------------------|:---------|-------:|:---------|:---------|:------------------|
+|  0 | SIDG36104 | SOX30         | SIDM02021  | -                  | r.?            | -               | False           | False                           | intronic | 0.2703 | False    | Sanger   | HCM-SANG-1082-C15 |
+|  1 | SIDG37647 | THG1L         | SIDM02021  | -                  | r.?            | -               | False           | False                           | intronic | 0.75   | False    | Sanger   | HCM-SANG-1082-C15 |
+|  2 | SIDG16920 | LSM11         | SIDM02021  | -                  | r.?            | -               | False           | False                           | intronic | 0.6452 | False    | Sanger   | HCM-SANG-1082-C15 |
+
+</details>
+
 ---
 ### Link Interaction Data
 
