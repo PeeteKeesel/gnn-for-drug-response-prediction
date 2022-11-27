@@ -186,14 +186,50 @@ The following subsection will provide information about these root datasets.
   - Omic: EXP > DataType: Preprocessed > Objects: Cell-lines > Keywords: RMA normalised expression data for cell-lines > Dataset
 - Dataset: [Cell_line_RMA_proc_basalExp.txt.zip](https://www.cancerrxgene.org/gdsc1000/GDSC1000_WebResources//Data/preprocessed/Cell_line_RMA_proc_basalExp.txt.zip)
   - `Cell_line_RMA_proc_basalExp.txt` (306.3 MB)
+    - Shape: (17,737 , 1,020)
+
+<details>
+  <summary>Click to see top three rows and ten columns of copy number variation picnic dataset:</summary>
+
+|    | GENE_SYMBOLS | GENE_title |   DATA.906826 |   DATA.687983 |   DATA.910927 |   DATA.1240138 |   DATA.1240139 |   DATA.906792 |   DATA.910688 |   DATA.1240135 |
+|---:|:---------------|:---------------------------------------------|--------------:|--------------:|--------------:|---------------:|---------------:|--------------:|--------------:|---------------:|
+|  0 | TSPAN6         | tetraspanin 6 [Source:HGNC Symbol;Acc:11858] |       7.63202 |       7.54867 |       8.71234 |        7.79714 |        7.72927 |       7.07453 |        3.2852 |        6.96161 |
+|  1 | TNMD           | tenomodulin [Source:HGNC Symbol;Acc:17757]   |       2.96459 |       2.77772 |       2.64351 |        2.81792 |        2.95774 |       2.88968 |        2.8282 |        2.87475 |
+
+</details>
+
 
 #### <ins>__Copy Number Variation__:</ins>
 - Origin: https://cellmodelpassports.sanger.ac.uk/downloads 
   - Copy Number Data > Copy Number (SNP6) > Downloiad SNP6 CNV data (15.85 MB)
 - Dataset: [cnv_20191101.zip](https://cog.sanger.ac.uk/cmp/download/cnv_20191101.zip)
   - `cnv_abs_copy_number_picnic_20191101.csv` (97 MB)
+    - Shape: (24,502 , 988)
   - `cnv_gistic_20191101.csv` (86.7 MB)
+    - Shape: (20,669 , 980)
   - Additional Description: "PICNIC absolute copy numbers and GISTIC scores derived from Affymetrix SNP6.0 array data."
+
+<details>
+  <summary>Click to see top three rows and ten columns of copy number variation picnic dataset:</summary>
+
+|    | GENE_ID   | GENE_SYMBOL   |   M14 |   TE-12 |   TMK-1 |   STS-0421 |   PL4 |   PCI-4B |   PCI-30 |   HSC-39 |
+|---:|:----------|:--------------|------:|--------:|--------:|-----------:|------:|---------:|---------:|---------:|
+|  1 | SIDG00001 | A1BG          |     3 |       3 |       3 |          4 |     6 |        3 |        2 |        3 |
+|  2 | SIDG00003 | A1CF          |     3 |       3 |       3 |          4 |     3 |        3 |        3 |        3 |
+|  3 | SIDG00004 | A2M           |     3 |       3 |       2 |          4 |     9 |        3 |        3 |        3 |
+
+</details>
+
+<details>
+  <summary>Click to see top three rows and ten columns of copy number variation gistic dataset:</summary>
+
+|    | GENE_ID   | GENE_SYMBOL   |   M14 |   TE-12 |   TMK-1 |   STS-0421 |   PL4 |   PCI-4B |   PCI-30 |   HSC-39 |
+|---:|:----------|:--------------|------:|--------:|--------:|-----------:|------:|---------:|---------:|---------:|
+|  1 | SIDG00001 | A1BG          |     0 |      -1 |       0 |          0 |     1 |       -1 |        0 |        0 |
+|  2 | SIDG00002 | A1BG-AS1      |     0 |      -1 |       0 |          0 |     1 |       -1 |        0 |        0 |
+|  3 | SIDG00003 | A1CF          |    -1 |       0 |       0 |          1 |    -1 |        0 |        1 |        0 |
+
+</details>
 
 #### <ins>__Mutations__:</ins>
 - Origin: https://cellmodelpassports.sanger.ac.uk/downloads 
