@@ -14,6 +14,7 @@ class DownloadLinks(Enum):
     CNV = 'https://cog.sanger.ac.uk/cmp/download/cnv_20191101.zip'
     MUT = 'https://cog.sanger.ac.uk/cmp/download/mutations_all_20220315.zip'
     PROTEIN_LINKS = 'https://stringdb-static.org/download/protein.links.detailed.v11.5/9606.protein.links.detailed.v11.5.txt.gz'
+    PROTEIN_INFO = 'https://stringdb-static.org/download/protein.info.v11.5/9606.protein.info.v11.5.txt.gz'
 
     @classmethod
     def get_names(self):
@@ -35,11 +36,13 @@ class Processor:
         self.raw_gdsc1_file = None
         self.raw_gdsc2_file = None
         self.raw_landmark_file = 'landmark_genes.csv'
-        self.raw_gexpr_file = None # 'Cell_line_RMA_proc_basalExp.txt'
-        self.raw_cl_details_file = None # 'Cell_Lines_Details.xlsx'
-        self.raw_cnvp_file = None # 'cnv_abs_copy_number_picnic_20191101.csv'
-        self.raw_cnvg_file = None  # 'cnv_gistic_20191101.csv'
-        self.raw_mut_file = None # 'mutations_all_20220315.csv'
+        self.raw_gexpr_file = 'Cell_line_RMA_proc_basalExp.txt'
+        self.raw_cl_details_file = 'Cell_Lines_Details.xlsx'
+        self.raw_cnvp_file = 'cnv_abs_copy_number_picnic_20191101.csv'
+        self.raw_cnvg_file = 'cnv_gistic_20191101.csv'
+        self.raw_mut_file = 'mutations_all_20220315.csv'
+        self.raw_protein_links_file = '9606.protein.links.detailed.v11.5.txt.gz'
+        self.raw_protein_info_file = '9606.protein.info.v11.5.txt.gz'
 
         self.landmark_genes = {}
         self.landmark_genes_df = None # pd.Series?
@@ -76,7 +79,8 @@ class Processor:
                 case 'CL_DETAILS': self.raw_cl_details_file = file_name
                 case 'CNV': self.raw_cnvg_file = file_name # TODO: change this cause files will be different to file name
                 case 'MUT': self.raw_cnvp_file = file_name 
-
+                case 'PROTEIN_LINKS': self.raw_protein_links_file = file_name
+                case 'PROTEIN_INFO': self.raw_protein_info_file = file_name
 
     @classmethod
     def download_additional(self, dataset: str):
@@ -249,14 +253,13 @@ class Processor:
         # Get mutational information per cell in the drug-response matrix.
         mut_full = drm.merge(right=mut6,
                              on=['CELL_LINE_NAME'],
-                             how='left',
+                             how='inner',
                              suffixes=['_gdsc', '_mut'])
         
         mut_full.to_pickle(self.process_path + 'mut_full.pkl')
         print(f"Successfully saved full Mutations dataset in `{self.process_path + 'mut_full.pkl'}`.")
 
         del mut6, drm, mut_full         
-
 
     @classmethod
     def process_raw(self):
@@ -266,3 +269,7 @@ class Processor:
         self._process_copy_number_variation('cnvp')
         self._process_copy_number_variation('cnvg')
         self._process_mutations()
+
+    @staticmethod
+    def _process_proteins(self):
+        return NotImplementedError
