@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 from enum import Enum
-from src.preprocess.build_drug_response_matrix import get_gdsc_gene_expression
+from src.utils.preprocess_helper import get_gdsc_gene_expression
 
 class DownloadLinks(Enum):
     GDSC1 = 'ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/current_release/GDSC1_fitted_dose_response_25Feb20.xlsx'
@@ -219,16 +219,14 @@ class Processor:
                           right_on='Symbol')        
         del mut3
 
-        mut5 = mut4[[
-            'CELL_LINE_NAME',
-            'gene_symbol',
-            'model_id',
-            'protein_mutation',
-            'rna_mutation',
-            'cdna_mutation',
-            'cancer_driver',
-            'vaf'
-        ]]
+        mut5 = mut4[['CELL_LINE_NAME',
+                     'gene_symbol',
+                     'model_id',
+                     'protein_mutation',
+                     'rna_mutation',
+                     'cdna_mutation',
+                     'cancer_driver',
+                     'vaf']]
         del mut4
 
         mut6 = pd.pivot_table(data=mut5,
