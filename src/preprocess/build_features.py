@@ -16,6 +16,8 @@ class DownloadLinks(Enum):
     PROTEIN_LINKS = 'https://stringdb-static.org/download/protein.links.detailed.v11.5/9606.protein.links.detailed.v11.5.txt.gz'
     PROTEIN_INFO = 'https://stringdb-static.org/download/protein.info.v11.5/9606.protein.info.v11.5.txt.gz'
 
+    DRUG = 'GDSC_compounds_inchi_key_with_smiles.csv'
+
     @classmethod
     def get_names(self):
         return [data.name for data in self]

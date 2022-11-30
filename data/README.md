@@ -390,6 +390,24 @@ More descriptions can be found under https://string-db.org/cgi/help?sessionId=bU
 
 </details>
 
+#### <ins>Drug INCHI keys with SMILES:</ins>
+- File name: [`GDSC_compounds_inchi_key_with_smiles.csv`](data/raw/GDSC_compounds_inchi_key_with_smiles.csv)
+- Description: SMILES strings and inchi keys for a set of drug names.
+- Origin: TODO
+- Dataset: TODO
+  - Shape: (425, 3)
+
+<details>
+  <summary>Click to see top three rows of the SMILES dataset:</summary>
+
+|    | drug_name         | inchi_key                   | smiles                                                     |
+|---:|:------------------|:----------------------------|:-----------------------------------------------------------|
+|  0 | (5Z)-7-Oxozeaenol | NEQZWEXWOFPKOT-BYRRXHGESA-N | C[C@H]1CC=CC(=O)[C@H]([C@H](CC=Cc2cc(cc(c2C(=O)O1)O)OC)O)O |
+|  1 | 5-Fluorouracil    | GHASVSINZRGABV-UHFFFAOYSA-N | c1c(c(nc(n1)O)O)F                                          |
+|  2 | A-443654          | YWTBGJGMTBHQTM-IBGZPJMESA-N | Cc1c2cc(ccc2n[nH]1)c1cc(cnc1)OC[C@H](Cc1c[nH]c2ccccc12)N   |
+
+</details>
+
 # Todos
 
 - [ ] provide links in the dataset summary table for each approach and to each folder
