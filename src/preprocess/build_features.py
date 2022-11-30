@@ -259,7 +259,7 @@ class Processor:
 
 
     @classmethod
-    def process(self):
+    def process_raw(self):
         self._process_gdsc_fitted()
         self._set_landmark_genes()
         self._process_gene_expression()
