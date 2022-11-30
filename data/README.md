@@ -269,6 +269,18 @@ The following subsection will provide information about these root datasets.
 neighborhood	fusion	cooccurence	coexpression	experimental	database	textmining	combined_score
 
 <details>
+  <summary>Click to see top three rows of the protein links:</summary>
+
+|    | protein1        | protein2        |   neighborhood |   fusion |   cooccurence |   coexpression |   experimental |   database |   textmining |   combined_score |
+|---:|:----------------|:----------------|---------------:|---------:|--------------:|---------------:|---------------:|-----------:|-------------:|-----------------:|
+|  0 | ENSP00000000233 | ENSP00000379496 |              0 |        0 |             0 |             54 |              0 |          0 |          144 |              155 |
+|  1 | ENSP00000000233 | ENSP00000314067 |              0 |        0 |             0 |              0 |            180 |          0 |           61 |              197 |
+|  2 | ENSP00000000233 | ENSP00000263116 |              0 |        0 |             0 |             62 |            152 |          0 |          101 |              222 |
+
+</details>
+
+
+<details>
   <summary>Click to see column descriptions:</summary>
 
 | Column | Range | Description |
@@ -295,6 +307,17 @@ More descriptions can be found under https://string-db.org/cgi/help?sessionId=bU
   - `9606.protein.info.v11.5.txt` (1.9 MB)
     - Shape: (19,566 , 4)
   - Additional Description: "list of STRING proteins incl. their display names and descriptions"
+
+<details>
+  <summary>Click to see top three rows of the protein links:</summary>
+
+|    | string_protein_id   | preferred_name   |   protein_size | annotation |
+|---:|:--------------------|:-----------------|---------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|  0 | ENSP00000000233     | ARF5             |            180 | ADP-ribosylation factor 5; GTP-binding protein that functions as an allosteric activator of the cholera toxin catalytic subunit, an ADP- ribosyltransferase. Involved in protein trafficking; may modulate vesicle budding and uncoating within the Golgi apparatus; ARF GTPase family |
+|  1 | ENSP00000000412     | M6PR             |            277 | Cation-dependent mannose-6-phosphate receptor; Transport of phosphorylated lysosomal enzymes from the Golgi complex and the cell surface to lysosomes. Lysosomal enzymes bearing phosphomannosyl residues bind specifically to mannose-6- phosphate receptors in the Golgi apparatus and the resulting receptor-ligand complex is transported to an acidic prelyosomal compartment where the low pH mediates the dissociation of the complex; MRH domain containing |
+|  2 | ENSP00000001008     | FKBP4            |            459 | Peptidyl-prolyl cis-trans isomerase FKBP4; Immunophilin protein with PPIase and co-chaperone activities. Component of steroid receptors heterocomplexes through interaction with heat-shock protein 90 (HSP90). May play a role in the intracellular trafficking of heterooligomeric forms of steroid hormone receptors between cytoplasm and nuclear compartments. The isomerase activity controls neuronal growth cones via regulation of TRPC1 channel opening. Acts also as a regulator of microtubule dynamics by inhibiting MAPT/TAU ability to promote microtubule assembly. May have a protective role a [...] |
+
+</details>
 
 <details>
   <summary>Click to see column descriptions:</summary>
