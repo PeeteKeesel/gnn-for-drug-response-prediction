@@ -1,9 +1,9 @@
 # Graph Neural Networks for Drug Response Prediction in Cancer
 
-## Introduction
+## :bulb: Introduction
 This repository contains the process and the final code for my master thesis "_Gene-Interaction Graph Neural Network to Predict Cancer Drug Response_".
 
-## Installation
+## :computer: Environment Setup
 ### Using conda
 To create the virtual environment via `conda` run
 ```bash
@@ -29,7 +29,7 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-## Download Raw Datasets
+## :arrow_down_small: Download Raw Datasets
 To download the raw datasets which can be used to create the training datasets run
 ```python
 # Choose the following two paths by yourself! Here are just examples.
@@ -51,7 +51,7 @@ For `raw_path` and `processed_path` we recommend to choose a folder outside of t
 - For details on the dataset sizes and contents read [data/README.md](data/README.md). 
 - For an example of how to run this code refer to [notebooks/download_raw_datasets.ipynb](notebooks/download_raw_datasets.ipynb).
 
-## Contents
+## :books: Contents
 ### Notebooks
 
 | Notebook | Content |
