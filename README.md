@@ -4,21 +4,33 @@
 This repository contains the process and the final code for my master thesis "_Gene-Interaction Graph Neural Network to Predict Cancer Drug Response_".
 
 ## Installation
-
+### Using conda
+To create the virtual environment via `conda` run
 ```bash
-# To create a conda virtual environment run
-conda env create -f environment.yml
-# or 
-conda create --name environment --file requirements.txt
+# Option 1: by using the environment.yml file
+conda env create -n ENVNAME --file environment.yml
 
-# To create a pip virtual environment run
+# Option 2: by using the requirement.txt file
+conda create -n ENVNAME --file requirements.txt
+```
+Now activate the environment.
+```bash
+conda activate ENVNAME
+```
+
+### Using pip
+
+- [ ] This may not work yet. I have only tested the conda method yet.
+
+To create and activate the virtual environment via `pip` run
+```bash
 python3 -m venv env
 source env/bin/activate
 pip install -r requirements.txt
 ```
 
 ## Download Raw Datasets
-To download the raw dataset which have been used to create the training datasets run the following.
+To download the raw datasets which can be used to create the training datasets run
 ```python
 # Choose the following two paths by yourself! Here are just examples.
 RAW_PATH = '../../datatest/raw/'
@@ -35,7 +47,9 @@ processor = Processor(raw_path=RAW_PATH,
 processor.download_raw_datasets()
 ```
 
-For `raw_path` and `processed_path` we recommend to choose a folder outside of this repository since some files are very large (>100MB). For details on the dataset sizes read [data/README.md](data/README.md). For an example of how to this refer to [notebooks/download_raw_datasets.ipynb](notebooks/download_raw_datasets.ipynb).
+For `raw_path` and `processed_path` we recommend to choose a folder outside of this repository since some files are very large (>100MB). 
+- For details on the dataset sizes and contents read [data/README.md](data/README.md). 
+- For an example of how to run this code refer to [notebooks/download_raw_datasets.ipynb](notebooks/download_raw_datasets.ipynb).
 
 ## Contents
 ### Notebooks

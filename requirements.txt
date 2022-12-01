@@ -47,14 +47,14 @@ jupyterlab-widgets @ file:///home/conda/feedstock_root/build_artifacts/jupyterla
 kiwisolver @ file:///Users/runner/miniforge3/conda-bld/kiwisolver_1648854667437/work
 locket==1.0.0
 MarkupSafe @ file:///Users/runner/miniforge3/conda-bld/markupsafe_1648737610588/work
--e git+ssh://git@github.com/PeeteKeesel/GNN-material.git@b6c7d975d3893b2b3c876ac71c68d7cbc8c05c7f#egg=MasterThesisWoestClemens
+-e git+ssh://git@github.com/PeeteKeesel/GNN-material.git@8c206f6189835c35615035f6f91a84c86d7ddc1e#egg=MasterThesisWoestClemens
 matplotlib @ file:///Users/runner/miniforge3/conda-bld/matplotlib-suite_1639359003068/work
 matplotlib-inline @ file:///home/conda/feedstock_root/build_artifacts/matplotlib-inline_1631080358261/work
 mistune @ file:///Users/runner/miniforge3/conda-bld/mistune_1635844814827/work
 nbclient @ file:///home/conda/feedstock_root/build_artifacts/nbclient_1649785910383/work
 nbconvert @ file:///home/conda/feedstock_root/build_artifacts/nbconvert-meta_1649676641343/work
 nbformat @ file:///home/conda/feedstock_root/build_artifacts/nbformat_1649105480291/work
-nest-asyncio==1.5.5
+nest-asyncio @ file:///opt/concourse/worker/volumes/live/4c28d7d6-d544-4f26-7811-eac0cb2a490e/volume/nest-asyncio_1649847935212/work
 networkx @ file:///home/conda/feedstock_root/build_artifacts/networkx_1649567584534/work
 notebook @ file:///home/conda/feedstock_root/build_artifacts/notebook_1650363291341/work
 numexpr @ file:///Users/runner/miniforge3/conda-bld/numexpr_1658076481052/work

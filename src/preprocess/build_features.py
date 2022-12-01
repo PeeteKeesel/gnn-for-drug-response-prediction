@@ -59,7 +59,7 @@ class Processor:
         return file_name
 
     
-    def download_raw_features(self):
+    def download_raw_datasets(self):
         """Downloads provided dataset into the raw path.
 
         Args
