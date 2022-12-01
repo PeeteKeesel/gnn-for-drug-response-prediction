@@ -3,7 +3,7 @@
 
 For the creation of training datasets multiple resources have been used. All of the mentioned datasets are open-source and free for download.
 
-## Final Datasets
+## :dart:	Final Datasets
 The following datasets have been created:
 
 | Dataset | Description | Used For | Code | Folder |
@@ -45,7 +45,7 @@ To get a rough overview of how the final datasets are looking like, the followin
 #### <ins>`drug_graphs.pkl`</ins>
 
 
-## Root Datasets
+## :dna: Root Datasets
 ---
 Mainly three resources have been used to create the datasets used for modeling. 
 
@@ -334,7 +334,7 @@ More descriptions can be found under https://string-db.org/cgi/help?sessionId=bU
 
 </details>
 
-## Additional Datasets
+## :pill: Additional Datasets
 
 #### <ins>Cell Line Details:</ins>
 - File Name: [`Cell_Lines_Details.xlsx`](data/raw/Cell_Lines_Details.xlsx)

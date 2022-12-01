@@ -29,7 +29,7 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-## :arrow_down_small: Download Raw Datasets
+## :arrow_double_down: Download Raw Datasets
 To download the raw datasets which can be used to create the training datasets run
 ```python
 # Choose the following two paths by yourself! Here are just examples.
