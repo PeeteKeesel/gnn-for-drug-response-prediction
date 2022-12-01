@@ -17,7 +17,7 @@ class DownloadLinks(Enum):
 
     # TODO: find from where the below are coming?    
     # DRUG = 'GDSC_compounds_inchi_key_with_smiles.csv'
-    # LANDMARK_GENES = ''
+    # LANDMARK_GENES = 'landmark_genes.csv'
     
     @classmethod
     def get_names(cls):

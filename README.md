@@ -32,7 +32,7 @@ from src.preprocess.build_features import Processor
 processor = Processor(raw_path=RAW_PATH,
                       processed_path=PROCESSED_PATH)
 
-processor.download_raw_features()
+processor.download_raw_datasets()
 ```
 
 For `raw_path` and `processed_path` we recommend to choose a folder outside of this repository since some files are very large (>100MB). For details on the dataset sizes read [data/README.md](data/README.md). For an example of how to this refer to [notebooks/download_raw_datasets.ipynb](notebooks/download_raw_datasets.ipynb).
