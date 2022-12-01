@@ -6,21 +6,22 @@ from enum import Enum
 from src.utils.preprocess_helper import get_gdsc_gene_expression
 
 class DownloadLinks(Enum):
-    GDSC1 = 'ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/current_release/GDSC1_fitted_dose_response_25Feb20.xlsx'
-    GDSC2 = 'ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/current_release/GDSC2_fitted_dose_response_25Feb20.xlsx'
-    # LANDMARK_GENES = ''
+    GDSC1 = 'ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/release-8.4/GDSC1_fitted_dose_response_24Jul22.xlsx'
+    GDSC2 = 'ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/release-8.4/GDSC2_fitted_dose_response_24Jul22.xlsx'
     GEXPR = 'https://www.cancerrxgene.org/gdsc1000/GDSC1000_WebResources//Data/preprocessed/Cell_line_RMA_proc_basalExp.txt.zip'
-    CL_DETAILS = ''    
+    CL_DETAILS = 'ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/release-8.4/Cell_Lines_Details.xlsx'  
     CNV = 'https://cog.sanger.ac.uk/cmp/download/cnv_20191101.zip'
     MUT = 'https://cog.sanger.ac.uk/cmp/download/mutations_all_20220315.zip'
     PROTEIN_LINKS = 'https://stringdb-static.org/download/protein.links.detailed.v11.5/9606.protein.links.detailed.v11.5.txt.gz'
     PROTEIN_INFO = 'https://stringdb-static.org/download/protein.info.v11.5/9606.protein.info.v11.5.txt.gz'
 
-    DRUG = 'GDSC_compounds_inchi_key_with_smiles.csv'
-
+    # TODO: find from where the below are coming?    
+    # DRUG = 'GDSC_compounds_inchi_key_with_smiles.csv'
+    # LANDMARK_GENES = ''
+    
     @classmethod
-    def get_names(self):
-        return [data.name for data in self]
+    def get_names(cls):
+        return [data.name for data in cls]
 
 
 class Processor:
@@ -49,14 +50,15 @@ class Processor:
         self.landmark_genes = {}
         self.landmark_genes_df = None # pd.Series?
 
-    @staticmethod
+    
     def _download_zip(self, name: str, value: str):
         file_name = value.split('/')[-1]
-        urllib.request.urlretrieve(value, file_name)
-        print(f"Finished download into `{self.raw_path+name.split('/')[-1]}`.")
+        print(f"Downloading from {value}")
+        urllib.request.urlretrieve(value, self.raw_path + file_name)
+        print(f"Finished download into `{self.raw_path + file_name}`.")
         return file_name
 
-    @classmethod
+    
     def download_raw_features(self):
         """Downloads provided dataset into the raw path.
 
@@ -71,7 +73,7 @@ class Processor:
                 - 'proteinlinks', for the protein protein interaction database.
         """
         for name in self.download_links.get_names():
-            print(f"Downloading {name}...")
+            print(f"{20*'='}\nDownloading {name}...")
             file_name = self._download_zip(name.lower(), self.download_links[name].value)
             match name:
                 case 'GDSC1': self.raw_gdsc1_file = file_name 
@@ -84,7 +86,7 @@ class Processor:
                 case 'PROTEIN_LINKS': self.raw_protein_links_file = file_name
                 case 'PROTEIN_INFO': self.raw_protein_info_file = file_name
 
-    @classmethod
+    
     def download_additional(self, dataset: str):
         """Downloads additional datasets into the raw path.
 
@@ -98,7 +100,7 @@ class Processor:
         """
         return NotImplementedError
 
-    @staticmethod
+    
     def _process_gdsc_fitted(self):
         gdsc1 = pd.read_excel(self.raw_path + self.raw_gdsc1_file, header=0)
         gdsc2 = pd.read_excel(self.raw_path + self.raw_gdsc2_file, header=0)
@@ -117,7 +119,7 @@ class Processor:
 
         del gdsc1, gdsc2, gdsc_join, cols_to_keep, gdsc_base
 
-    @staticmethod
+    
     def _set_landmark_genes(self):
         landmark_genes = pd.read_csv(self.raw_path + self.raw_landmark_file, sep="\t")   
         self.landmark_genes = set(landmark_genes.Symbol.values.tolist())
@@ -125,7 +127,7 @@ class Processor:
 
         del landmark_genes
 
-    @staticmethod
+    
     def _process_gene_expression(self):
         gexpr = get_gdsc_gene_expression(path_cell_annotations=self.raw_path + self.raw_cl_details_file,
                                          path_gene_expression=self.raw_path + self.raw_gexpr_file)
@@ -148,7 +150,7 @@ class Processor:
 
         del gexpr, gexpr_sparse, drm, gdsc_full
 
-    @staticmethod
+    
     def _process_copy_number_variation(self, cnv_type: str):
         # Process copy number picnic.
         cnv = None
@@ -191,7 +193,7 @@ class Processor:
 
         del cnv3, drm, cnv_full
 
-    @staticmethod
+    
     def _process_mutations(self):
         mut = pd.read_csv(self.raw_path + self.raw_mut_file, sep=",", header=0)
 
@@ -263,7 +265,7 @@ class Processor:
 
         del mut6, drm, mut_full         
 
-    @classmethod
+    
     def process_raw(self):
         self._process_gdsc_fitted()
         self._set_landmark_genes()
@@ -272,6 +274,6 @@ class Processor:
         self._process_copy_number_variation('cnvg')
         self._process_mutations()
 
-    @staticmethod
+    
     def _process_proteins(self):
         return NotImplementedError

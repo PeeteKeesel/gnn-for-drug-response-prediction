@@ -17,6 +17,26 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
+## Download Raw Datasets
+To download the raw dataset which have been used to create the training datasets run the following.
+```python
+# Choose the following two paths by yourself! Here are just examples.
+RAW_PATH = '../../datatest/raw/'
+PROCESSED_PATH = '../../datatest/processed/'
+
+from pathlib import Path
+Path(RAW_PATH).mkdir(parents=True, exist_ok=True)
+Path(PROCESSED_PATH).mkdir(parents=True, exist_ok=True)
+
+from src.preprocess.build_features import Processor
+processor = Processor(raw_path=RAW_PATH,
+                      processed_path=PROCESSED_PATH)
+
+processor.download_raw_features()
+```
+
+For `raw_path` and `processed_path` we recommend to choose a folder outside of this repository since some files are very large (>100MB). For details on the dataset sizes read [data/README.md](data/README.md). For an example of how to this refer to [notebooks/download_raw_datasets.ipynb](notebooks/download_raw_datasets.ipynb).
+
 ## Contents
 ### Notebooks
 
