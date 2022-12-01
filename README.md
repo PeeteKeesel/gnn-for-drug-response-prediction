@@ -32,15 +32,17 @@ pip install -r requirements.txt
 ## :arrow_double_down: Download Raw Datasets
 To download the raw datasets which can be used to create the training datasets run
 ```python
+from pathlib import Path
+from src.preprocess.build_features import Processor
+
 # Choose the following two paths by yourself! Here are just examples.
 RAW_PATH = '../../datatest/raw/'
 PROCESSED_PATH = '../../datatest/processed/'
 
-from pathlib import Path
 Path(RAW_PATH).mkdir(parents=True, exist_ok=True)
 Path(PROCESSED_PATH).mkdir(parents=True, exist_ok=True)
 
-from src.preprocess.build_features import Processor
+
 processor = Processor(raw_path=RAW_PATH,
                       processed_path=PROCESSED_PATH)
 
