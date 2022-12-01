@@ -5,13 +5,15 @@ import pandas as pd
 import pickle
 import torch
 from config import PATH_SUMMARY_DATASETS
-from models.GraphTab.graph_tab import GraphTabDataset, create_graph_tab_datasets, BuildGraphTabModel, GraphTab_v1
-from models.TabGraph.tab_graph import TabGraphDataset, create_tab_graph_datasets, BuildTabGraphModel, TabGraph_v1
+from src.models.GraphTab.graph_tab import GraphTabDataset, create_graph_tab_datasets, BuildGraphTabModel, GraphTab_v1
+from src.models.TabGraph.tab_graph import TabGraphDataset, create_tab_graph_datasets, BuildTabGraphModel, TabGraph_v1
 
 import torch.nn as nn
 from sklearn.model_selection import train_test_split
 
 from torch_geometric.loader import DataLoader
+
+PROCESSED_FOLDER = '../data/processed/'
 
 
 def parse_args():
@@ -24,7 +26,7 @@ def parse_args():
     parser.add_argument('--num_epochs', type=int, default=2, help='number of epochs (default: )')
     parser.add_argument('--num_workers', type=int, default=8, help='number of workers for DataLoader (default: 3)')
     parser.add_argument('--dropout', type=float, default=0.1, help='dropout probability (default: 0.1)')
-    parser.add_argument('--model', type=str, default='TabGraph', 
+    parser.add_argument('--model', type=str, default='GraphTab', 
                         help='name of the model to run, options: [`TabTab`, `GraphTab`, `TabGraph`, `GraphGraph`]')
 
     parser.add_argument('--version', type=str, default='v3', help='model version to run')
@@ -54,23 +56,27 @@ def main():
     # Read datasets #
     # ------------- #
     # TODO: Assert that the given version is a folder and that the file exists
-    with open(f'{PATH_SUMMARY_DATASETS}{args.model}/drug_response_matrix__gdsc2.pkl', 'rb') as f: 
+    with open(PROCESSED_FOLDER + 'gdsc2_drm.pkl', 'rb') as f: 
         drm = pickle.load(f)
         print(f"Finished reading drug response matrix: {drm.shape}")
 
     if args.model == 'GraphTab':
-        with open(f'{PATH_SUMMARY_DATASETS}{args.model}/{args.version}/drug_response_matrix__gdsc2.pkl', 'rb') as f: 
-            drm = pickle.load(f)
-            print(f"Finished reading drug response matrix: {drm.shape}")        
+        # with open(f'{PATH_SUMMARY_DATASETS}{args.model}/{args.version}/drug_response_matrix__gdsc2.pkl', 'rb') as f: 
+        #     drm = pickle.load(f)
+        #     print(f"Finished reading drug response matrix: {drm.shape}")        
         # Read cell line gene-gene interaction graphs.
-        with open(f'{PATH_SUMMARY_DATASETS}{args.model}/{args.version}/cl_graphs_dict.pkl', 'rb') as f:
+        with open(PROCESSED_FOLDER + 'thresh_700_gdsc2_gene_graphs.pkl', 'rb') as f:
             cl_graphs = pd.read_pickle(f)
             print(f"Finished reading cell-line graphs: {cl_graphs['22RV1']}")
         # Read drug SMILES fingerprint matrix.
-        with open(f'{PATH_SUMMARY_DATASETS}{args.model}/{args.version}/drug_smiles_fingerprints_matrix.pkl', 'rb') as f:
-            drug_name_smiles = pickle.load(f) 
-            print(f"Finished reading drug SMILES matrix: {drug_name_smiles.shape}")
-            fingerprints_dict = drug_name_smiles.set_index('DRUG_ID').T.to_dict('list')      
+        with open(PROCESSED_FOLDER + 'gdsc2_smiles_dict.pkl', 'rb') as f:
+            # drug_name_smiles = pickle.load(f)
+            # print(f"Finished reading drug SMILES matrix: {drug_name_smiles.shape}")
+
+            fingerprints_dict = pickle.load(f)
+            print(f"Finished reading drug SMILES dict: {len(fingerprints_dict.keys())}")
+            
+            # fingerprints_dict = drug_name_smiles.set_index('DRUG_ID').T.to_dict('list')      
     # TODO: add else for other models.
     # TODO: add folder with corresponding datasets for each model type. each folder contains subfolder with dev version
     elif args.model == 'TabGraph':
@@ -83,6 +89,10 @@ def main():
             drug_graphs = pickle.load(f)
             print("Finished reading drug SMILES graphs:", drug_graphs[1003])
 
+
+    # --------------- #
+    # Train the model #
+    # --------------- #
     if args.model == 'GraphTab':
         # Build pytorch dataset.
         graph_tab_dataset = GraphTabDataset(cl_graphs=cl_graphs, drugs=fingerprints_dict, drug_response_matrix=drm)
