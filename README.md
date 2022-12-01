@@ -42,7 +42,6 @@ PROCESSED_PATH = '../../datatest/processed/'
 Path(RAW_PATH).mkdir(parents=True, exist_ok=True)
 Path(PROCESSED_PATH).mkdir(parents=True, exist_ok=True)
 
-
 processor = Processor(raw_path=RAW_PATH,
                       processed_path=PROCESSED_PATH)
 
