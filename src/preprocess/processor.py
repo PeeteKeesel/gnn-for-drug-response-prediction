@@ -1,9 +1,13 @@
+import os        
+import shutil
 import urllib.request
 import pandas as pd
 import numpy as np
-
+ 
+from zipfile import ZipFile
 from enum import Enum
 from src.utils.preprocess_helper import get_gdsc_gene_expression
+
 
 class DownloadLinks(Enum):
     GDSC1 = 'ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/release-8.4/GDSC1_fitted_dose_response_24Jul22.xlsx'
@@ -14,10 +18,6 @@ class DownloadLinks(Enum):
     MUT = 'https://cog.sanger.ac.uk/cmp/download/mutations_all_20220315.zip'
     PROTEIN_LINKS = 'https://stringdb-static.org/download/protein.links.detailed.v11.5/9606.protein.links.detailed.v11.5.txt.gz'
     PROTEIN_INFO = 'https://stringdb-static.org/download/protein.info.v11.5/9606.protein.info.v11.5.txt.gz'
-
-    # TODO: find from where the below are coming?    
-    # DRUG = 'GDSC_compounds_inchi_key_with_smiles.csv'
-    # LANDMARK_GENES = 'landmark_genes.csv'
     
     @classmethod
     def get_names(cls):
@@ -36,8 +36,9 @@ class Processor:
         self.download_links = download_links
 
         # File names of the saved raw datasets.
-        self.raw_gdsc1_file = None
-        self.raw_gdsc2_file = None
+        # 1. Files which need to be downloaded.
+        self.raw_gdsc1_file = 'GDSC1_fitted_dose_response_24Jul22.xlsx'
+        self.raw_gdsc2_file = 'GDSC2_fitted_dose_response_24Jul22.xlsx'
         self.raw_landmark_file = 'landmark_genes.csv'
         self.raw_gexpr_file = 'Cell_line_RMA_proc_basalExp.txt'
         self.raw_cl_details_file = 'Cell_Lines_Details.xlsx'
@@ -46,61 +47,99 @@ class Processor:
         self.raw_mut_file = 'mutations_all_20220315.csv'
         self.raw_protein_links_file = '9606.protein.links.detailed.v11.5.txt.gz'
         self.raw_protein_info_file = '9606.protein.info.v11.5.txt.gz'
-
+        
+        # 2. Additional file names which don't need to be downloaded.
+        self.raw_smiles_file = 'GDSC_compounds_inchi_key_with_smiles.csv'
+        self.raw_landmark_genes_file = 'landmark_genes.csv'        
+        
         self.landmark_genes = {}
         self.landmark_genes_df = None # pd.Series?
 
-    
-    def _download_zip(self, name: str, value: str):
+    # ---------- #
+    # DOWNLOADER #
+    # ---------- #
+    def _download_from_link(self, name: str, value: str):
+        """Download file(s) from the given list and return the saved file name."""
         file_name = value.split('/')[-1]
         print(f"Downloading from {value}")
         urllib.request.urlretrieve(value, self.raw_path + file_name)
-        print(f"Finished download into `{self.raw_path + file_name}`.")
+        print(f"Finished download into {self.raw_path + file_name}.")
         return file_name
-
     
-    def download_raw_datasets(self):
-        """Downloads provided dataset into the raw path.
+    def _extract_zip_if_necessary(self, file_name):
+        """Extract the given file if it is a zip and return the extracted files
+        if there are any."""
+        extracted_files = []
+        if file_name.endswith('.zip'):
+            with ZipFile(self.raw_path + file_name, 'r') as zipf:
+                print(f"{4*' '}Extrating zip file {self.raw_path + file_name} ...")
+                zipf.extractall(self.raw_path)
+                extracted_files = zipf.namelist()
+                for ef in extracted_files:
+                    print(f"{8*' '}Extracted file: {os.path.join(self.raw_path, ef)}")
+        return extracted_files
 
-        Args
-        ----
-            dataset (str): Name of the dataset to download. Options:
-                - 'all', if all raw datasets should be downloaded.  
-                - 'gdsc', for the GDSC datasets.
-                - 'gexpr', for the gene expression data.
-                - 'cnv', for the copy number variation datasets.
-                - 'mut', for the mutational dataset.
-                - 'proteinlinks', for the protein protein interaction database.
-        """
+    def download_raw_datasets(self):
+        """Downloads provided dataset into the raw path."""
         for name in self.download_links.get_names():
             print(f"{20*'='}\nDownloading {name}...")
-            file_name = self._download_zip(name.lower(), self.download_links[name].value)
+            file_name = self._download_from_link(name.lower(), self.download_links[name].value)
+            
+            # If the file is a zip, extract it.
+            extracted_files = self._extract_zip_if_necessary(file_name)
+            
             match name:
-                case 'GDSC1': self.raw_gdsc1_file = file_name 
-                case 'GDSC2': self.raw_gdsc2_file = file_name
+                case 'GDSC1': 
+                    self.raw_gdsc1_file = file_name 
+                case 'GDSC2': 
+                    self.raw_gdsc2_file = file_name
+                case 'GEXPR':
+                    assert len(extracted_files) == 1, \
+                        f"Gene expression zip {name} should contain only 1 " \
+                        + f"file but countains {len(extracted_files)}."
+                    self.raw_gexpr_file = extracted_files[0]
+                case 'CL_DETAILS': 
+                    self.raw_cl_details_file = file_name
+                case 'CNV': 
+                    assert len(extracted_files) == 2, \
+                        f"Copy number variation zip {name} should contain 2 " \
+                        + f"files but contains {len(extracted_files)}."
+                    self.raw_cnvg_file = [f for f in extracted_files if 'gistic' in f]
+                    self.raw_cnvp_file = [f for f in extracted_files if 'picnic' in f]                    
+                case 'MUT': 
+                    assert len(extracted_files) == 1, \
+                        f"Mutations zip {name} should contain only 1 " \
+                        + f"file but countains {len(extracted_files)}."
+                    self.raw_mut_file = extracted_files[0]
+                case 'PROTEIN_LINKS': 
+                    self.raw_protein_links_file = file_name
+                case 'PROTEIN_INFO': 
+                    self.raw_protein_info_file = file_name
                 # case 'LANDMARK_GENES': self.raw_landmark_file = file_name # TODO: are these coming from a download?
-                case 'GEXPR': self.raw_gexpr_file = file_name
-                case 'CL_DETAILS': self.raw_cl_details_file = file_name
-                case 'CNV': self.raw_cnvg_file = file_name # TODO: change this cause files will be different to file name
-                case 'MUT': self.raw_cnvp_file = file_name 
-                case 'PROTEIN_LINKS': self.raw_protein_links_file = file_name
-                case 'PROTEIN_INFO': self.raw_protein_info_file = file_name
 
-    
-    def download_additional(self, dataset: str):
-        """Downloads additional datasets into the raw path.
+    def _add_additional_datasets(self):
+        """Copies the additional datasets to the raw dataset folder which 
+        now holds all the raw datasets. This includes the downloaded raw
+        datasets, as well as the additional datasets."""
+        raw_path_additional = 'data/additional/' 
+        
+        print(f"{20*'='}\nCopying already existing {self.raw_smiles_file} from {raw_path_additional} ...")
+        shutil.copyfile(raw_path_additional + self.raw_smiles_file, 
+                        self.raw_path + self.raw_smiles_file)
+        print(f"Finished copying into {self.raw_path + self.raw_smiles_file}")
+        
+        print(f"{20*'='}\nCopying already existing {self.raw_landmark_genes_file} from {raw_path_additional} ...")
+        shutil.copyfile(raw_path_additional + self.raw_landmark_genes_file, 
+                        self.raw_path + self.raw_landmark_genes_file)
+        print(f"Finished copying into {self.raw_path + self.raw_landmark_genes_file}")
+                
+    def create_raw_datasets(self):
+        self.download_raw_datasets()
+        self._add_additional_datasets()
 
-        Args
-        ----
-            dataset (str): Name of the additional dataset to download. Options:
-                - 'all', if all additional datasets should be downloaded.
-                - 'landmark', for the landmark genes.
-                - 'cldetails', for the cell-line details.
-        TODO: Get download links from pascal.
-        """
-        return NotImplementedError
-
-    
+    # ------------ #
+    # PREPROCESSOR #
+    # ------------ #    
     def _process_gdsc_fitted(self):
         gdsc1 = pd.read_excel(self.raw_path + self.raw_gdsc1_file, header=0)
         gdsc2 = pd.read_excel(self.raw_path + self.raw_gdsc2_file, header=0)
