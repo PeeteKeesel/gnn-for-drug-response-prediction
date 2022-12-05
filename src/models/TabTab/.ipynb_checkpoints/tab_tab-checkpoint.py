@@ -4,7 +4,8 @@ import numpy    as np
 
 from torch_geometric.data    import Dataset
 from sklearn.model_selection import train_test_split
-from torch_geometric.loader  import DataLoader as PyG_DataLoader
+# from torch_geometric.loader  import DataLoader as PyG_DataLoader
+from torch.utils.data import DataLoader
 from torch_geometric.nn      import Sequential, GCNConv, global_mean_pool, global_max_pool
 from tqdm                    import tqdm
 from time                    import sleep
@@ -38,7 +39,14 @@ class TabTabDataset(Dataset):
             `Tuple[np.ndarray, np.ndarray, np.float64]]`: Tuple of cell-line 
                 gene feature values, drug SMILES fingerprints and the 
                 corresponding ln(IC50) target values.
-        """
+        """  
+#         print(f"For idx: {idx}")
+#         print(f"CELLLINE {idx}")
+#         print(self.cl_mat.loc[self.cls.iloc[idx]][:10])
+#         print(f"DRUG {idx}")
+#         print(self.drug_mat.loc[self.drug_ids.iloc[idx]][:10])
+#         print(f"IC50 {idx}")
+#         print(self.ic50s.iloc[idx])
         return (self.cl_mat.loc[self.cls.iloc[idx]], 
                 self.drug_mat.loc[self.drug_ids.iloc[idx]],
                 self.ic50s.iloc[idx])
@@ -53,11 +61,11 @@ class TabTabDataset(Dataset):
 
 
 def _collate_tab_tab(samples):
-    cls, drugs, ic50s = map(list, zip(*samples))
-    cls = [torch.tensor(cl, dtype=torch.float64) for cl in cls]
+    cell_lines, drugs, ic50s = map(list, zip(*samples))
+    cell_lines = [torch.tensor(cl, dtype=torch.float64) for cl in cell_lines]
     drugs = [torch.tensor(drug, dtype=torch.float64) for drug in drugs]
     
-    return torch.stack(cls, 0), torch.stack(drugs, 0), torch.tensor(ic50s)
+    return torch.stack(cell_lines, 0), torch.stack(drugs, 0), torch.tensor(ic50s)
 
 def create_tab_tab_datasets(drm, cl_mat, drug_mat, args):
     train_set, test_val_set = train_test_split(drm, 
@@ -87,21 +95,21 @@ def create_tab_tab_datasets(drm, cl_mat, drug_mat, args):
     print("\ntest_dataset"); test_dataset.print_dataset_summary()
     print("\nval_dataset"); val_dataset.print_dataset_summary()
 
-    train_loader = PyG_DataLoader(dataset=train_dataset, 
+    train_loader = DataLoader(dataset=train_dataset, 
                               batch_size=args.BATCH_SIZE, 
                               shuffle=True, 
                               collate_fn=_collate_tab_tab, 
                               num_workers=args.NUM_WORKERS)
-    test_loader = PyG_DataLoader(dataset=test_dataset, 
+    test_loader = DataLoader(dataset=test_dataset, 
                              batch_size=args.BATCH_SIZE, 
                              shuffle=True, 
                              collate_fn=_collate_tab_tab, 
                              num_workers=args.NUM_WORKERS)
-    val_loader = PyG_DataLoader(dataset=val_dataset, 
+    val_loader = DataLoader(dataset=val_dataset, 
                             batch_size=args.BATCH_SIZE, 
                             shuffle=True, 
                             collate_fn=_collate_tab_tab, 
-                            num_workers=args.NUM_WORKERS)
+                            num_workers=args.NUM_WORKERS)  
 
     return train_loader, test_loader, val_loader          
 
@@ -204,9 +212,8 @@ class BuildTabTabModel():
             for data in tqdm(loader, desc='Iteration (Val)'):
                 sleep(0.01)
                 cl, dr, ic50 = data
-                dr = torch.stack(dr, 0).transpose(1, 0)
 
-                preds = self.model(clf.float(), dr.float()).unsqueeze(1)
+                preds = self.model(cl.float(), dr.float()).unsqueeze(1)
                 ic50 = ic50.to(self.device)
                 total_loss += self.criterion(preds, ic50.view(-1,1).float())
                 y_true.append(ic50.view(-1, 1))
@@ -229,7 +236,7 @@ class TabTab_v1(torch.nn.Module):
         super(TabTab_v1, self).__init__()
 
         self.cell_emb = nn.Sequential(
-            nn.Linear(3432, 516),
+            nn.Linear(2784, 516),
             nn.BatchNorm1d(516),
             nn.ReLU(),
             nn.Dropout(p=0.1),

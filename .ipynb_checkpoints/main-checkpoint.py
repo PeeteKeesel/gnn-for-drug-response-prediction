@@ -1,4 +1,5 @@
 import random
+import logging
 import numpy as np
 import pandas as pd
 import pickle
@@ -15,28 +16,50 @@ from src.preprocess.processor      import Processor
 from sklearn.model_selection       import train_test_split
 from torch_geometric.loader        import DataLoader
 
+PERFORMANCES = 'performances/'
+
 
 def parse_args():
     parser = ArgumentParser(description='GNNs for Drug Response Prediction in Cancer')
-    parser.add_argument('--seed', type=int, default=42, help='random seed (default: 42)')
-    parser.add_argument('--batch_size', type=int, default=2, help='the batch size (default: 10)')
-    parser.add_argument('--lr', type=int, default=0.0001, help='learning rate (default: 0.0001)')
-    parser.add_argument('--train_ratio', type=float, default=0.8, help='training set ratio (default: 0.8)')
-    parser.add_argument('--val_ratio', type=float, default=0.5, help='validation set ratio inside the test set (default: 0.5)')
-    parser.add_argument('--num_epochs', type=int, default=2, help='number of epochs (default: )')
-    parser.add_argument('--num_workers', type=int, default=24, help='number of workers for DataLoader (default: 3)')
-    parser.add_argument('--dropout', type=float, default=0.1, help='dropout probability (default: 0.1)')
-    parser.add_argument('--model', type=str, default='TabTab', 
-                        help='name of the model to run, options: [`TabTab`, `GraphTab`, `TabGraph`, `GraphGraph`]')
-    parser.add_argument('--version', type=str, default='v3', help='model version to run')
+    parser.add_argument('--seed', type=int, default=42, 
+                        help='random seed (default: 42)')
+    parser.add_argument('--batch_size', type=int, default=1_000, 
+                        help='the batch size (default: 10)')
+    parser.add_argument('--lr', type=int, default=0.0001, 
+                        help='learning rate (default: 0.0001)')
+    parser.add_argument('--train_ratio', type=float, default=0.8, 
+                        help='training set ratio (default: 0.8)')
+    parser.add_argument('--val_ratio', type=float, default=0.5, 
+                        help='validation set ratio inside the test set (default: 0.5)')
+    parser.add_argument('--num_epochs', type=int, default=2, 
+                        help='number of epochs (default: )')
+    parser.add_argument('--num_workers', type=int, default=8, 
+                        help='number of workers for DataLoader (default: 3)')
+    parser.add_argument('--dropout', type=float, default=0.1, 
+                        help='dropout probability (default: 0.1)')
+    parser.add_argument('--model', type=str, default='GraphTab', 
+                        help='name of the model to run, options: ' + \
+                             '[`TabTab`, `GraphTab`, `TabGraph`, `GraphGraph`,' + \
+                             ' `tabtab`, `graphtab`, `tabgraph`, `graphgraph`, ' + \
+                             ' `TT`, `GT`, `TG`, `GG`, `tt`, `gt`, `tg`, `gg` ]')
+    parser.add_argument('--version', type=str, default='v3', 
+                        help='model version to run') # TODO: this is not used currently
     parser.add_argument('--download', type=str, default='n', 
                         help="If raw data should be downloaded press either [`y`, `yes`, `1`]. " \
                            + "If no data should be downloaded press either [`n`, `no`, `0`]")
-    parser.add_argument('--process', type=str, default='y', 
+    parser.add_argument('--process', type=str, default='n', 
                         help="If data should be processed press either [`y`, `yes`, `1`]. " \
                            + "If no data should be processed press either [`n`, `no`, `0`]")   
-    parser.add_argument('--raw_path', type=str, default='../data/raw/', help='path of the raw datasets')
-    parser.add_argument('--processed_path', type=str, default='../data/processed/', help='path of the processed datasets')    
+    parser.add_argument('--raw_path', type=str, default='../data/raw/', 
+                        help='path of the raw datasets')
+    parser.add_argument('--processed_path', type=str, default='../data/processed/', 
+                        help='path of the processed datasets')
+    
+    # Additional optional parameters for processing.
+    parser.add_argument('--combined_score_thresh', type=int, default=700,
+                        help='threshold below which to cut of gene-gene interactions')
+    parser.add_argument('--gdsc', type=str, default='gdsc2',
+                        help='filter for GDSC database, options: [`gdsc1`, `gdsc2`, `both`]')
     
     return parser.parse_args()
 
@@ -62,6 +85,10 @@ def main():
     # Create folder if they don't exist yet.
     Path(args.raw_path).mkdir(parents=True, exist_ok=True)
     Path(args.processed_path).mkdir(parents=True, exist_ok=True)
+    
+    # File to save logging output to.
+    logging.basicConfig(level=logging.DEBUG, filename='arm_1st_v2_logfile', filemode="a+",
+                        format="%(asctime)-15s %(levelname)-8s %(message)s")    
 
     # Initialize processor used for downloading and creation of training datasets.
     processor = Processor(raw_path=args.raw_path, 
@@ -82,18 +109,18 @@ def main():
         print(f"Finished reading drug response matrix: {drm.shape}")
 
     
-    if args.model == 'TabTab':
+    if args.model in ['TabTab', 'tabtab', 'TT', 'tt']:
         # Read cell-line gene matrix.
         with open(processor.processed_path + 'thresh_700_gdsc2_gene_mat.pkl', 'rb') as f: 
             cl_gene_mat = pickle.load(f)
             print("Finished readin cell-line gene matrix:", cl_gene_mat.shape)
             
         # Read drug SMILES fingerprint matrix.
-        with open(processor.processed_path + 'gdsc2_smiles_dict.pkl', 'rb') as f:
-            fingerprints_dict = pickle.load(f)
-            print(f"Finished reading drug SMILES dict: {len(fingerprints_dict.keys())}")                
+        with open(processor.processed_path + 'gdsc2_smiles_mat.pkl', 'rb') as f:
+            smiles_mat = pickle.load(f)
+            print(f"Finished reading drug SMILES matrix: {smiles_mat.shape}")                
         
-    elif args.model == 'GraphTab':
+    elif args.model in ['GraphTab', 'graphtab', 'GT', 'gt']:
         # with open(f'{PATH_SUMMARY_DATASETS}{args.model}/{args.version}/drug_response_matrix__gdsc2.pkl', 'rb') as f: 
         #     drm = pickle.load(f)
         #     print(f"Finished reading drug response matrix: {drm.shape}")        
@@ -114,7 +141,7 @@ def main():
     # TODO: add folder with corresponding datasets for each model type. each folder contains subfolder with dev version
     
     
-    elif args.model == 'TabGraph':
+    elif args.model in ['TabGraph', 'tabgraph', 'TG', 'tg']:
         # Read cell-line gene matrix.
         with open(processor.processed_path + 'thresh_700_gdsc2_gene_mat.pkl', 'rb') as f: 
             cl_gene_mat = pickle.load(f)
@@ -124,12 +151,17 @@ def main():
             drug_graphs = pickle.load(f)
             print("Finished reading drug SMILES graphs:", drug_graphs[1003])
 
+    print(f"DRM Number of unique cell-lines: {len(drm.CELL_LINE_NAME.unique())}")
+
 
     # --------------- #
     # Train the model #
     # --------------- #
-    if args.model == 'TabTab':
-        dataset = TabTabDataset(cl_gene_mat, fingerprints_dict, drm)
+    if args.model in ['TabTab', 'tabgraph', 'TG', 'tg']:
+        cl_gene_mat.set_index('CELL_LINE_NAME', inplace=True)
+        smiles_mat.set_index('DRUG_ID', inplace=True)
+
+        dataset = TabTabDataset(cl_gene_mat, smiles_mat, drm)
         print("Finished building TabTabDataset!")
         dataset.print_dataset_summary() 
 
@@ -143,7 +175,10 @@ def main():
 
         # Create pytorch geometric DataLoader datasets.
         # TODO: make some args as separate input parameters
-        train_loader, test_loader, val_loader = create_tab_tab_datasets(drm, cl_gene_mat, fingerprints_dict, hyper_params)
+        train_loader, test_loader, val_loader = create_tab_tab_datasets(drm, 
+                                                                        cl_gene_mat,
+                                                                        smiles_mat,
+                                                                        hyper_params)
         print("Finished creating pytorch training datasets!")
         print("Number of batches per dataset:")
         print(f"  train : {len(train_loader)}")
@@ -168,6 +203,7 @@ def main():
                                         device=device)
 
         # Train the model.
+        print("TRAINING the model")
         performance_stats = build_model.train(build_model.train_loader)        
     
     
@@ -223,6 +259,8 @@ def main():
         # sample_loader = DataLoader(dataset=sample_dataset, batch_size=2, shuffle=True) 
         # performance_stats = build_model.train(sample_loader)
     elif args.model == 'TabGraph':
+        cl_gene_mat.set_index('CELL_LINE_NAME', inplace=True)
+        
         dataset = TabGraphDataset(cl_gene_mat, drug_graphs, drm)
         print("Finished building TabGraphDataset!")
         dataset.print_dataset_summary() 
@@ -277,7 +315,7 @@ def main():
         'optimizer_state_dict': build_model.optimizer.state_dict(),
         'train_performances': performance_stats['train'],
         'val_performances': performance_stats['val']
-    }, processor.processed_path + f'model_performance_{args.model}.pth')
+    }, PERFORMANCES + f'model_performance_{args.model}.pth')
         
 
 
