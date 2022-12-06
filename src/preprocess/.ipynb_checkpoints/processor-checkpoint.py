@@ -45,9 +45,24 @@ class Processor:
                  combined_score_thresh: int=700,
                  gdsc: str='gdsc2'):
         """Created class to download, process and create all raw files.
+        Notes: 
+            - all datasets which are independent of the GDSC database and the threshold 
+                are saved in the `processed_path` folder.
+            - all datasets which are dependent on the GDSC database but not on the
+                threshold are saved in the `processed_path/gdsc/` folder. This includes
+                the 
+                - SMILES dataset and the 
+                - Drug-Response Matrix.
+            - all datasets which are dependent on the GDSC database and on the
+                threshold are saved in the `processed_path/gdsc/combined_score_thresh/` 
+                folder. This includes the 
+                - Feature Datasets
         """
         self.raw_path = raw_path
         self.processed_path = processed_path
+        self.gdsc_path = self.processed_path + gdsc.lower() + '/'
+        self.gdsc_thresh_path = self.gdsc_path + str(combined_score_thresh) + '/'
+        
         self.download_links = download_links
 
         # File names of the saved raw datasets.
@@ -70,7 +85,7 @@ class Processor:
         self.landmark_genes_df = None # pd.Series?
         
         self.combined_score_thresh = combined_score_thresh
-        self.gdsc = gdsc
+        self.gdsc = gdsc.lower()
 
     # ---------- #
     # DOWNLOADER #
@@ -206,7 +221,7 @@ class Processor:
                               how='left',
                               suffixes=['_gdsc', '_geneexpr'])
         
-        print(f"Shape of gdsc_full: {gdsc_full.shape}")        
+        print(f"Shape of gdsc_full: {self.gdsc_full.shape}")        
         gdsc_full.to_pickle(self.processed_path + 'gexpr_full.pkl')
         print(f"Successfully saved full Gene Expression dataset in {self.processed_path + 'gexpr_full.pkl'}.")
 
@@ -757,12 +772,7 @@ class Processor:
         assert merged.shape == (features[0].shape[0], 4*(features[0].shape[1]-1) + 1)
         return merged    
     
-    def create_gene_gene_interaction_graph(self, 
-                                           combined_score_thresh: int=700,
-                                           gdsc: str='GDSC2'):
-        self.combined_score_thresh = combined_score_thresh 
-        self.gdsc = gdsc.lower()
-        
+    def create_gene_gene_interaction_graph(self):        
         plinks = self._read_protein_links(self.raw_path + self.raw_protein_links_file)
         pinfos = self._read_protein_info(self.raw_path + self.raw_protein_info_file)        
         pinfos2 = self._shrink_to_only_singely_occuring_proteins(pinfos)
@@ -778,15 +788,15 @@ class Processor:
         
         # Select only the rows above the chose threshold.
         # -----------------------------------------------
-        print(f"{4*' '}combined_score threshold: {combined_score_thresh}")
+        print(f"{4*' '}combined_score threshold: {self.combined_score_thresh}")
         proteins3, gene_sub = self._get_proteins_and_genes_above_thresh(proteins2, 
                                                                         inter_genes, 
-                                                                        combined_score_thresh)
+                                                                        self.combined_score_thresh)
 
         # Select only the gene symbols with a combined_score > combined_score_thresh.
         # ---------------------------------------------------------------------------
         inter_genes_above = self._get_inter_genes_with_score_above_threshold(
-            combined_score_thresh,
+            self.combined_score_thresh,
             gene_sub.GENE_SYMBOL.values.tolist(),
             inter_genes
         )
@@ -823,39 +833,40 @@ class Processor:
         inter_genes = self._get_intersecting_genes(gexpr, cnvg, cnvp, mut)
         print(f"{8*' '}Intersecting cell-lines: {len(inter_cls)}")
         print(f"{8*' '}Intersecting genes.    : {len(inter_genes)}")        
-        gexpr.set_index('CELL_LINE_NAME', inplace=True)
-        cnvg.set_index('CELL_LINE_NAME', inplace=True)
-        cnvp.set_index('CELL_LINE_NAME', inplace=True)
-        mut.set_index('CELL_LINE_NAME', inplace=True)   
+  
         
-        # Build gene-gene interaction graph.
-        # ----------------------------------
-        print(f"{4*' '}Creating gene-gene interaction graph...")
-        cl_graphs = self._create_cell_line_gene_graphs(
-            NODES_AS_SYMBOLS, 
-            [
-                gexpr, 
-                cnvg, 
-                cnvp, 
-                mut
-            ],
-            inter_cls,
-            neighbor_gene_tuples_undirected) 
-        print(f"{4*' '}Finished creating gene-gene interaction graph.")
-        # Showcase topology for some cell-line examples.
-        for cl in gexpr.index[:5].tolist():
-            print(f"{8*' '}Cell-line: {cl:8s}   Graph: {cl_graphs[cl]}")        
+#         # Build gene-gene interaction graph.
+#         # ----------------------------------
+#         gexpr.set_index('CELL_LINE_NAME', inplace=True)
+#         cnvg.set_index('CELL_LINE_NAME', inplace=True)
+#         cnvp.set_index('CELL_LINE_NAME', inplace=True)
+#         mut.set_index('CELL_LINE_NAME', inplace=True) 
+#         print(f"{4*' '}Creating gene-gene interaction graph...")
+#         cl_graphs = self._create_cell_line_gene_graphs(
+#             NODES_AS_SYMBOLS, 
+#             [
+#                 gexpr, 
+#                 cnvg, 
+#                 cnvp, 
+#                 mut
+#             ],
+#             inter_cls,
+#             neighbor_gene_tuples_undirected) 
+#         print(f"{4*' '}Finished creating gene-gene interaction graph.")
+#         # Showcase topology for some cell-line examples.
+#         for cl in gexpr.index[:5].tolist():
+#             print(f"{8*' '}Cell-line: {cl:8s}   Graph: {cl_graphs[cl]}")        
         
-        with open(self.processed_path + f'thresh_{combined_score_thresh}_gene_graphs.pkl', 'wb') as f:
-            pickle.dump(cl_graphs, f, protocol=pickle.HIGHEST_PROTOCOL)  
-        print(f"Successfully saved full gene-gene graphs in {self.processed_path + f'thresh_{combined_score_thresh}_gene_graphs.pkl'}.")
+#         with open(self.processed_path + f'thresh_{self.combined_score_thresh}_gene_graphs.pkl', 'wb') as f:
+#             pickle.dump(cl_graphs, f, protocol=pickle.HIGHEST_PROTOCOL)  
+#         print(f"Successfully saved full gene-gene graphs in {self.processed_path + f'thresh_{self.combined_score_thresh}_gene_graphs.pkl'}.")
             
         # Feature subset with only the genes over the chosen threshold.
         # -------------------------------------------------------------
-        gexpr.reset_index(inplace=True)
-        cnvg.reset_index(inplace=True)
-        cnvp.reset_index(inplace=True)
-        mut.reset_index(inplace=True)    
+#         gexpr.reset_index(inplace=True)
+#         cnvg.reset_index(inplace=True)
+#         cnvp.reset_index(inplace=True)
+#         mut.reset_index(inplace=True)    
         
         gexpr2 = gexpr.loc[:, gexpr.columns.isin(['CELL_LINE_NAME'] + inter_genes_above.GENE_SYMBOL.values.tolist())]
         cnvg2 = cnvg.loc[:, cnvg.columns.isin(['CELL_LINE_NAME'] + inter_genes_above.GENE_SYMBOL.values.tolist())]
@@ -865,30 +876,30 @@ class Processor:
             "ERROR: The shapes of all feature dataframes are not equal." 
         print(f"{4*' '}Each new feature dataset has shape: {gexpr2.shape}")
         
-        # These dataframe have been sparsed by intersecting genes after chosing 
-        # only the genes with combined_score > 700.
-        gexpr2.to_pickle(self.processed_path + f'thresh_{combined_score_thresh}_gexpr.pkl')
-        cnvg2.to_pickle(self.processed_path + f'thresh_{combined_score_thresh}_cnvg.pkl')
-        cnvp2.to_pickle(self.processed_path + f'thresh_{combined_score_thresh}_cnvp.pkl')
-        mut2.to_pickle(self.processed_path + f'thresh_{combined_score_thresh}_mut.pkl')        
+#         # These dataframe have been sparsed by intersecting genes after chosing 
+#         # only the genes with combined_score > 700.
+#         gexpr2.to_pickle(self.processed_path + f'thresh_{combined_score_thresh}_gexpr.pkl')
+#         cnvg2.to_pickle(self.processed_path + f'thresh_{combined_score_thresh}_cnvg.pkl')
+#         cnvp2.to_pickle(self.processed_path + f'thresh_{combined_score_thresh}_cnvp.pkl')
+#         mut2.to_pickle(self.processed_path + f'thresh_{combined_score_thresh}_mut.pkl')        
         
-        assert gdsc in list(drm.DATASET.unique()),\
-            f"ERROR: The chosen GDSC database {gdsc} is not in the given drug response matrix. "\
+        assert self.gdsc.upper() in list(drm.DATASET.unique()),\
+            f"ERROR: The chosen GDSC database {self.gdsc.upper()} is not in the given drug response matrix. "\
             + f"Only {list(drm.DATASET.unique())} are available."
 
-        inter_cls_gdsc = set(drm[drm.DATASET==gdsc].CELL_LINE_NAME.unique())\
+        inter_cls_gdsc = set(drm[drm.DATASET==self.gdsc.upper()].CELL_LINE_NAME.unique())\
             .intersection(set(gexpr2.CELL_LINE_NAME.unique()))\
             .intersection(set(cnvg2.CELL_LINE_NAME.unique()))\
             .intersection(set(cnvp2.CELL_LINE_NAME.unique()))\
             .intersection(set(mut2.CELL_LINE_NAME.unique()))
 
-        print(f"Since GDSC {gdsc[-1]} database was chosen the number of intersecting cell-lines is {len(list(inter_cls_gdsc))}")
+        print(f"Since GDSC {self.gdsc[-1]} database was chosen the number of intersecting cell-lines is {len(list(inter_cls_gdsc))}")
         
         pd.DataFrame({'CELL_LINE_NAME': list(inter_cls_gdsc)})\
-            .to_csv(self.processed_path + f'thresh_{combined_score_thresh}_{gdsc.lower()}_inter_cls.csv', 
+            .to_csv(self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_inter_cls.csv', 
                     header=True, index=False) 
         
-        drmGDSC = drm[drm.DATASET==gdsc]
+        drmGDSC = drm[drm.DATASET==self.gdsc.upper()]
         drmGDSC = drmGDSC[drmGDSC.CELL_LINE_NAME.isin(inter_cls_gdsc)]
         gexprGDSC = gexpr2[gexpr2.CELL_LINE_NAME.isin(inter_cls_gdsc)]
         cnvgGDSC = cnvg2[cnvg2.CELL_LINE_NAME.isin(inter_cls_gdsc)]
@@ -896,10 +907,10 @@ class Processor:
         mutGDSC = mut2[mut2.CELL_LINE_NAME.isin(inter_cls_gdsc)] 
 
         # Sparsed by combined score > 700 and intersecting cell-lines for only GDSC2
-        gexprGDSC.to_pickle(self.processed_path + f'thresh_{combined_score_thresh}_{gdsc.lower()}_gexpr.pkl')
-        cnvgGDSC.to_pickle(self.processed_path + f'thresh_{combined_score_thresh}_{gdsc.lower()}_cnvg.pkl')
-        cnvpGDSC.to_pickle(self.processed_path + f'thresh_{combined_score_thresh}_{gdsc.lower()}_cnvp.pkl')
-        mutGDSC.to_pickle(self.processed_path + f'thresh_{combined_score_thresh}_{gdsc.lower()}_mut.pkl') 
+        gexprGDSC.to_pickle(self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_gexpr.pkl')
+        cnvgGDSC.to_pickle(self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_cnvg.pkl')
+        cnvpGDSC.to_pickle(self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_cnvp.pkl')
+        mutGDSC.to_pickle(self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_mut.pkl') 
         
         # As graph.
         # ---------
@@ -907,7 +918,7 @@ class Processor:
         cnvgGDSC.set_index('CELL_LINE_NAME', inplace=True)
         cnvpGDSC.set_index('CELL_LINE_NAME', inplace=True)
         mutGDSC.set_index('CELL_LINE_NAME', inplace=True)  
-        print(f"{4*' '}Creating gene-gene interaction graph for {gdsc}...")        
+        print(f"{4*' '}Creating gene-gene interaction graph for {self.gdsc}...")        
         cl_graphs_GDSC = self._create_cell_line_gene_graphs(
             inter_genes_above.GENE_SYMBOL.values.tolist(), 
             [
@@ -919,14 +930,14 @@ class Processor:
             inter_cls_gdsc,
             neighbor_gene_tuples_undirected
         )         
-        print(f"{4*' '}Finished creating gene-gene interaction graph for {gdsc}.")
+        print(f"{4*' '}Finished creating gene-gene interaction graph for {self.gdsc}.")
         # Showcase topology for some cell-line examples.
         for cl in gexprGDSC.index[:5].tolist():
             print(f"{8*' '}Cell-line: {cl:8s}   Graph: {cl_graphs_GDSC[cl]}") 
             
-        with open(self.processed_path + f'thresh_{combined_score_thresh}_{gdsc.lower()}_gene_graphs.pkl', 'wb') as f:
+        with open(self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_gene_graphs.pkl', 'wb') as f:
             pickle.dump(cl_graphs_GDSC, f, protocol=pickle.HIGHEST_PROTOCOL) 
-        print(f"Successfully saved full gene-gene graphs for {gdsc} in {self.processed_path + f'thresh_{combined_score_thresh}_{gdsc.lower()}_gene_graphs.pkl'}.")            
+        print(f"Successfully saved full gene-gene graphs for {self.gdsc} in {self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_gene_graphs.pkl'}.")            
         
         # As table.
         # ---------
@@ -954,8 +965,8 @@ class Processor:
         print(f"{8*' '}Number of      genes: {len([col for col in merged.columns if '_gexpr' in col])}")  
         print(f"{8*' '}Number of cell-lines: {len(merged.CELL_LINE_NAME.unique())}")        
         
-        merged.to_pickle(self.processed_path + f"thresh_{combined_score_thresh}_{gdsc.lower()}_gene_mat.pkl") 
-        print(f"Successfully saved full gene-gene matrix for {gdsc} in {self.processed_path + f'thresh_{combined_score_thresh}_{gdsc.lower()}_gene_mat.pkl'}.")                 
+        merged.to_pickle(self.gdsc_thresh_path + f"thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_gene_mat.pkl") 
+        print(f"Successfully saved full gene-gene matrix for {self.gdsc.upper()} in {self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_gene_mat.pkl'}.")                 
         
         
     # ---------------------------- #
@@ -1021,7 +1032,7 @@ class Processor:
         # As table.
         # ---------
         drm = pd.read_pickle(self.processed_path + 'drm_full.pkl')
-        cell_lines = pd.read_csv(self.processed_path + f'thresh_{self.combined_score_thresh}_{self.gdsc}_inter_cls.csv')
+        cell_lines = pd.read_csv(self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_inter_cls.csv')
         drmGDSC = drm[drm.DATASET==self.gdsc.upper()]
         drmGDSC = drmGDSC[drmGDSC.CELL_LINE_NAME.isin(cell_lines.CELL_LINE_NAME.values.tolist())]       
         uniq_drug_names = list(drmGDSC.DRUG_NAME.unique())
@@ -1034,8 +1045,8 @@ class Processor:
 
         # Returns a list of fingerprints or nans.
         fps = self._get_demorgen_fingerprints(drugs=uniq_drug_names,
-                                        n_bits=N_BITS,
-                                        path_drug_smiles=self.raw_path + self.raw_smiles_file)
+                                              n_bits=N_BITS,
+                                              path_drug_smiles=self.raw_path + self.raw_smiles_file)
 
         # Append the fingerprints to the corresponding drug names. 
         drug_name_fps_full = {uniq_drug_name: fps[i] for i, uniq_drug_name in enumerate(uniq_drug_names)}
@@ -1096,19 +1107,17 @@ class Processor:
             .set_index('DRUG_ID').T.to_dict('list')   
     
         # Save the DRUG_NAME - fingerprint dictionary to a file.
-        with open(self.processed_path + f'{self.gdsc}_smiles_dict.pkl', 'wb') as f:
+        with open(self.gdsc_path + f'{self.gdsc.lower()}_smiles_dict.pkl', 'wb') as f:
             pickle.dump(drug_id_fps_dict, f) # As dictionary.
-        drug_id_fps_df.to_pickle(self.processed_path + f'{self.gdsc}_smiles_mat.pkl') # As matrix.
-        print(f"Successfully saved full SMILES matrix for {self.gdsc} in {self.processed_path + f'{self.gdsc}_smiles_mat.pkl'}.")  
+        drug_id_fps_df.to_pickle(self.gdsc_path + f'{self.gdsc.lower()}_smiles_mat.pkl') # As matrix.
+        print(f"Successfully saved full SMILES matrix for {self.gdsc} in {self.gdsc_path + f'{self.gdsc.lower()}_smiles_mat.pkl'}.")  
         
         # Save the new drug response matrix with only DRUG_ID's which have a fingerprint.
-        drmGDSC_v3.to_pickle(self.processed_path + f'{self.gdsc}_drm.pkl')    
-        print(f"Successfully saved new drug response matrix which has FP for each row for {self.gdsc} in {self.processed_path + f'{self.gdsc}_drm.pkl'}.")    
+        drmGDSC_v3.to_pickle(self.gdsc_path + f'{self.gdsc.lower()}_drm.pkl')    
+        print(f"Successfully saved new drug response matrix which has FP for each row for {self.gdsc} in {self.gdsc_path + f'{self.gdsc.lower()}_drm.pkl'}.")    
         
         # As graph.
         # ---------
-        drug_id_fps_df
-        drmGDSC_v3
         assert drug_name_fps_df.shape[0] == len(drmGDSC_v3.DRUG_NAME.unique()) == len(drmGDSC_v3.DRUG_ID.unique()),\
             "ERROR: mismatch in the number of unique DRUG_NAME's."
         
@@ -1131,9 +1140,9 @@ class Processor:
         smiles2 = smiles2[smiles2.SMILES != 'not_found']        
         
         smiles2[['DRUG_NAME', 'DRUG_ID']].to_csv(
-            self.processed_path + f'{self.gdsc}_drug_name_id_map.csv', 
+            self.gdsc_path + f'{self.gdsc.lower()}_drug_name_id_map.csv', 
             header=True, index=False)
-        print(f"Successfully saved {self.processed_path + f'{self.gdsc}_drug_name_id_map.csv'}.")       
+        print(f"Successfully saved {self.gdsc_path + f'{self.gdsc.lower()}_drug_name_id_map.csv'}.")       
 
         # Create dictionary with DRUG_ID as key and smiles molecular graph as value.
         smiles_graphs = {}
@@ -1146,9 +1155,9 @@ class Processor:
         for i in range(5):
             print(f"{4*' '}drug_id: {smiles2.iloc[i].DRUG_ID:5.0f} | drug_name: {smiles2.iloc[i].DRUG_NAME:15s} | graph: {smiles_graphs[smiles2.iloc[i].DRUG_ID]}")        
         
-        with open(self.processed_path + f'{self.gdsc}_smiles_graphs.pkl', 'wb') as f:
+        with open(self.gdsc_path + f'{self.gdsc.lower()}_smiles_graphs.pkl', 'wb') as f:
             pickle.dump(smiles_graphs, f, protocol=pickle.HIGHEST_PROTOCOL)
-        print(f"Successfully saved SMILES graphs in {self.processed_path + f'{self.gdsc}_smiles_graphs.pkl'}.")       
+        print(f"Successfully saved SMILES graphs in {self.gdsc_path + f'{self.gdsc.lower()}_smiles_graphs.pkl'}.")       
         
     
     # Create final datasets.

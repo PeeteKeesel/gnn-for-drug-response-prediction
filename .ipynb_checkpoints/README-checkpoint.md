@@ -103,17 +103,20 @@ python3 main.py \
   - problem: number of genes got decreased to 484 from 858
   - [x] Filter first by landmark genes and than by the `combined_score` (and not the other way around as done in [`07_v2_graph_dataset.ipynb`](07_v2_graph_dataset.ipynb)) (see TODO)
 - [x] Save also the other performance metrics per epoch (r, r2, mae, rmse)
-- [ ] include GDSC 1 data as well; check shift in ln(IC50)'s and think about strategy to meaningful combine both in single dataset (see TODO)
-  - [ ] Combine both GDSC1 and GDSC2 in an complete dataset to increase training data (see TODO)
 - [x] Parallelize code using `num_workers > 0`
   - [x] once all models are running, convert to `.py` files instead of notebooks
+- [x] Convert to non-notebook `.py` code
+    - [x] include setting of args from terminal  
+- [ ] include GDSC 1 data as well; check shift in ln(IC50)'s and think about strategy to meaningful combine both in single dataset (see TODO)
+  - [ ] Combine both GDSC1 and GDSC2 in an complete dataset to increase training data (see TODO)    
 - [ ] run GNNExplainer on the graph branches of the bi-modal networks
 - [ ] Log the outputs to a different file in the `performances` folder instead of printing
 - [ ] Include `dropout` parameter from args to the networks
 - [ ] Include args to performe multiple experiments for different seeds per model
-- [ ] track and save run-time per epoch in the performance output
-- [x] Convert to non-notebook `.py` code
-    - [x] include setting of args from terminal
+- [x] track and save run-time per epoch in the performance output
+- [ ] Include `combined_score` threshold in the args & in the processor
+- [ ] Include `gdsc` database filter in the args & in the processor
+ 
 
 __Networks__:
 

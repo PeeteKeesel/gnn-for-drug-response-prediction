@@ -1,3 +1,5 @@
+import logging
+import time
 import torch
 import torch.nn as nn
 import numpy    as np
@@ -10,6 +12,8 @@ from tqdm                    import tqdm
 from time                    import sleep
 from sklearn.metrics         import r2_score, mean_absolute_error
 from scipy.stats             import pearsonr
+
+torch.multiprocessing.set_sharing_strategy('file_system')
 
 
 class GraphTabDataset(Dataset): 
@@ -42,21 +46,25 @@ class GraphTabDataset(Dataset):
             Tuple of a cell-line graph, drug SMILES fingerprint and the 
             corresponding ln(IC50) value.
         """
+        assert self.cell_lines.iloc[idx] in self.cell_line_graphs.keys(), \
+            f"Didn't find CELLLINE: {self.cell_line_graphs.iloc[idx]}"        
+        assert self.drug_ids.iloc[idx] in self.drugs.keys(), \
+            f"Didn't find DRUG: {self.drug_ids.iloc[idx]}"
         return (self.cell_line_graphs[self.cell_lines.iloc[idx]], 
                 self.drugs[self.drug_ids.iloc[idx]],
                 self.ic50s.iloc[idx])
 
     def print_dataset_summary(self):
-        print(f"GraphTabDataset Summary")
-        print(f"{23*'='}")
-        print(f"# observations : {len(self.ic50s)}")
-        print(f"# cell-lines   : {len(np.unique(self.cell_lines))}")
-        print(f"# drugs        : {len(np.unique(self.drug_names))}")
-        print(f"# genes        : {self.cell_line_graphs[next(iter(self.cell_line_graphs))].x.shape[0]}")
+        logging.info(f"GraphTabDataset Summary")
+        logging.info(f"{23*'='}")
+        logging.info(f"# observations : {len(self.ic50s)}")
+        logging.info(f"# cell-lines   : {len(np.unique(self.cell_lines))}")
+        logging.info(f"# drugs        : {len(np.unique(self.drug_names))}")
+        logging.info(f"# genes        : {self.cell_line_graphs[next(iter(self.cell_line_graphs))].x.shape[0]}")
 
 
 def create_graph_tab_datasets(drm, cl_graphs, drug_mat, args):
-    print(f"Full     shape: {drm.shape}")
+    logging.info(f"Full     shape: {drm.shape}")
     train_set, test_val_set = train_test_split(drm, 
                                                test_size=args.TEST_VAL_RATIO, 
                                                random_state=args.RANDOM_SEED,
@@ -65,20 +73,20 @@ def create_graph_tab_datasets(drm, cl_graphs, drug_mat, args):
                                          test_size=args.VAL_RATIO,
                                          random_state=args.RANDOM_SEED,
                                          stratify=test_val_set['CELL_LINE_NAME'])
-    print(f"train    shape: {train_set.shape}")
-    print(f"test_val shape: {test_val_set.shape}")
-    print(f"test     shape: {test_set.shape}")
-    print(f"val      shape: {val_set.shape}")
+    logging.info(f"train    shape: {train_set.shape}")
+    logging.info(f"test_val shape: {test_val_set.shape}")
+    logging.info(f"test     shape: {test_set.shape}")
+    logging.info(f"val      shape: {val_set.shape}")
 
     train_dataset = GraphTabDataset(cl_graphs=cl_graphs, drugs=drug_mat, drug_response_matrix=train_set)
     test_dataset = GraphTabDataset(cl_graphs=cl_graphs, drugs=drug_mat, drug_response_matrix=test_set)
     val_dataset = GraphTabDataset(cl_graphs=cl_graphs, drugs=drug_mat, drug_response_matrix=val_set)
 
-    print("\ntrain_dataset:")
+    logging.info("train_dataset:")
     train_dataset.print_dataset_summary()
-    print("\n\ntest_dataset:")
+    logging.info("test_dataset:")
     test_dataset.print_dataset_summary()
-    print("\n\nval_dataset:")
+    logging.info("val_dataset:")
     val_dataset.print_dataset_summary()
 
     # TODO: try out different `num_workers`.
@@ -110,11 +118,13 @@ class BuildGraphTabModel():
         train_epoch_mae, val_epoch_mae = [], []
         train_epoch_r2, val_epoch_r2 = [], []
         train_epoch_pcorr, val_epoch_pcorr = [], []
+        train_epoch_time = []
         all_batch_losses = [] # TODO: this is just for monitoring
         n_batches = len(loader)
 
         self.model = self.model.float() # TODO: maybe remove
-        for epoch in range(self.num_epochs):
+        for epoch in range(1, self.num_epochs+1):
+            tic = time.time()
             self.model.train()
             batch_losses = []
             y_true, y_pred = [], []
@@ -157,10 +167,12 @@ class BuildGraphTabModel():
             val_epoch_mae.append(mae)
             val_epoch_r2.append(r2)
             val_epoch_pcorr.append(pcorr)
+            
+            train_epoch_time.append(time.time() - tic)            
 
-            print("=====Epoch ", epoch)
-            print(f"Train      | MSE: {train_mse:2.5f}")
-            print(f"Validation | MSE: {mse:2.5f}")
+            logging.info(f"=====Epoch {epoch}")
+            logging.info(f"Train      | MSE: {train_mse:2.5f}")
+            logging.info(f"Validation | MSE: {mse:2.5f}")
 
         performance_stats = {
             'train': {
@@ -168,7 +180,8 @@ class BuildGraphTabModel():
                 'rmse': train_epoch_rmse,
                 'mae': train_epoch_mae,
                 'r2': train_epoch_r2,
-                'pcorr': train_epoch_pcorr
+                'pcorr': train_epoch_pcorr,
+                'epoch_times': train_epoch_time
             },
             'val': {
                 'mse': val_epoch_losses,

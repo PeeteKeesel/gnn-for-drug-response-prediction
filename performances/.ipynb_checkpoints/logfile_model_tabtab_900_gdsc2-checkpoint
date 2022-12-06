@@ -1,0 +1,42 @@
+2022-12-05 13:32:25,790 INFO     Finished reading drug response matrix: (137835, 9)
+2022-12-05 13:32:25,798 INFO     Finished readin cell-line gene matrix: (856, 2257)
+2022-12-05 13:32:25,799 INFO     Finished reading drug SMILES matrix: (181, 257)
+2022-12-05 13:32:25,805 INFO     DRM Number of unique cell-lines: 856
+2022-12-05 13:32:25,806 INFO     Finished building TabTabDataset!
+2022-12-05 13:32:25,806 INFO     TabTabDataset Summary
+2022-12-05 13:32:25,806 INFO     =====================
+2022-12-05 13:32:25,806 INFO     # observations : 137835
+2022-12-05 13:32:25,886 INFO     # cell-lines   : 856
+2022-12-05 13:32:25,949 INFO     # drugs        : 181
+2022-12-05 13:32:25,950 INFO     # genes        : 564
+2022-12-05 13:32:26,116 INFO     train_set.shape: (110268, 9)
+2022-12-05 13:32:26,116 INFO     test_set.shape: (13783, 9)
+2022-12-05 13:32:26,116 INFO     val_set.shape: (13784, 9)
+2022-12-05 13:32:26,116 INFO     train_dataset
+2022-12-05 13:32:26,116 INFO     TabTabDataset Summary
+2022-12-05 13:32:26,116 INFO     =====================
+2022-12-05 13:32:26,116 INFO     # observations : 110268
+2022-12-05 13:32:26,178 INFO     # cell-lines   : 856
+2022-12-05 13:32:26,235 INFO     # drugs        : 181
+2022-12-05 13:32:26,236 INFO     # genes        : 564
+2022-12-05 13:32:26,236 INFO     test_dataset
+2022-12-05 13:32:26,236 INFO     TabTabDataset Summary
+2022-12-05 13:32:26,236 INFO     =====================
+2022-12-05 13:32:26,236 INFO     # observations : 13783
+2022-12-05 13:32:26,243 INFO     # cell-lines   : 856
+2022-12-05 13:32:26,250 INFO     # drugs        : 181
+2022-12-05 13:32:26,250 INFO     # genes        : 564
+2022-12-05 13:32:26,250 INFO     val_dataset
+2022-12-05 13:32:26,250 INFO     TabTabDataset Summary
+2022-12-05 13:32:26,250 INFO     =====================
+2022-12-05 13:32:26,250 INFO     # observations : 13784
+2022-12-05 13:32:26,258 INFO     # cell-lines   : 856
+2022-12-05 13:32:26,264 INFO     # drugs        : 181
+2022-12-05 13:32:26,264 INFO     # genes        : 564
+2022-12-05 13:32:26,265 INFO     Finished creating pytorch training datasets!
+2022-12-05 13:32:26,265 INFO     Number of batches per dataset:
+2022-12-05 13:32:26,265 INFO       train : 111
+2022-12-05 13:32:26,265 INFO       test  : 14
+2022-12-05 13:32:26,265 INFO       val   : 14
+2022-12-05 13:32:26,265 INFO     device: cpu
+2022-12-05 13:32:26,299 INFO     TRAINING the model

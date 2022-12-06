@@ -1,3 +1,5 @@
+import logging
+import time
 import torch
 import torch.nn as nn
 import numpy    as np
@@ -5,7 +7,7 @@ import numpy    as np
 from torch_geometric.data    import Dataset
 from sklearn.model_selection import train_test_split
 # from torch_geometric.loader  import DataLoader as PyG_DataLoader
-from torch.utils.data import DataLoader
+from torch.utils.data        import DataLoader
 from torch_geometric.nn      import Sequential, GCNConv, global_mean_pool, global_max_pool
 from tqdm                    import tqdm
 from time                    import sleep
@@ -40,24 +42,17 @@ class TabTabDataset(Dataset):
                 gene feature values, drug SMILES fingerprints and the 
                 corresponding ln(IC50) target values.
         """  
-#         print(f"For idx: {idx}")
-#         print(f"CELLLINE {idx}")
-#         print(self.cl_mat.loc[self.cls.iloc[idx]][:10])
-#         print(f"DRUG {idx}")
-#         print(self.drug_mat.loc[self.drug_ids.iloc[idx]][:10])
-#         print(f"IC50 {idx}")
-#         print(self.ic50s.iloc[idx])
         return (self.cl_mat.loc[self.cls.iloc[idx]], 
                 self.drug_mat.loc[self.drug_ids.iloc[idx]],
                 self.ic50s.iloc[idx])
 
     def print_dataset_summary(self):
-        print(f"TabTabDataset Summary")
-        print(21*'=')
-        print(f"# observations :", len(self.ic50s))
-        print(f"# cell-lines   :", len(np.unique(self.cls)))
-        print(f"# drugs        :", len(np.unique(self.drug_names)))
-        print(f"# genes        :", len([col for col in self.cl_mat.columns[1:] if '_cnvg' in col]))
+        logging.info(f"TabTabDataset Summary")
+        logging.info(21*'=')
+        logging.info(f"# observations : {len(self.ic50s)}")
+        logging.info(f"# cell-lines   : {len(np.unique(self.cls))}")
+        logging.info(f"# drugs        : {len(np.unique(self.drug_names))}")
+        logging.info(f"# genes        : {len([col for col in self.cl_mat.columns[1:] if '_cnvg' in col])}")
 
 
 def _collate_tab_tab(samples):
@@ -77,9 +72,9 @@ def create_tab_tab_datasets(drm, cl_mat, drug_mat, args):
                                          random_state=args.RANDOM_SEED,
                                          stratify=test_val_set['CELL_LINE_NAME'])
 
-    print("train_set.shape:", train_set.shape)
-    print("test_set.shape:", test_set.shape)
-    print("val_set.shape:", val_set.shape)
+    logging.info(f"train_set.shape: {train_set.shape}")
+    logging.info(f"test_set.shape: {test_set.shape}")
+    logging.info(f"val_set.shape: {val_set.shape}")
 
     train_dataset = TabTabDataset(cl_mat=cl_mat, 
                                   drug_mat=drug_mat, 
@@ -91,9 +86,9 @@ def create_tab_tab_datasets(drm, cl_mat, drug_mat, args):
                                 drug_mat=drug_mat, 
                                 drm=val_set)
 
-    print("\ntrain_dataset"); train_dataset.print_dataset_summary()
-    print("\ntest_dataset"); test_dataset.print_dataset_summary()
-    print("\nval_dataset"); val_dataset.print_dataset_summary()
+    logging.info("train_dataset"); train_dataset.print_dataset_summary()
+    logging.info("test_dataset"); test_dataset.print_dataset_summary()
+    logging.info("val_dataset"); val_dataset.print_dataset_summary()
 
     train_loader = DataLoader(dataset=train_dataset, 
                               batch_size=args.BATCH_SIZE, 
@@ -135,11 +130,13 @@ class BuildTabTabModel():
         train_epoch_mae, val_epoch_mae = [], []
         train_epoch_r2, val_epoch_r2 = [], []
         train_epoch_pcorr, val_epoch_pcorr = [], []
+        train_epoch_time = []
         all_batch_losses = [] # TODO: this is just for monitoring
         n_batches = len(loader)
 
         self.model = self.model.float() # TODO: maybe remove
-        for epoch in range(self.num_epochs):
+        for epoch in range(1, self.num_epochs+1):
+            tic = time.time()            
             self.model.train()
             batch_losses = []
             y_true, y_pred = [], []
@@ -180,10 +177,12 @@ class BuildTabTabModel():
             val_epoch_mae.append(mae)
             val_epoch_r2.append(r2)
             val_epoch_pcorr.append(pcorr)
+            
+            train_epoch_time.append(time.time() - tic)
 
-            print("=====Epoch ", epoch)
-            print(f"Train      | MSE: {train_mse:2.5f}")
-            print(f"Validation | MSE: {mse:2.5f}")
+            logging.info(f"=====Epoch {epoch}")
+            logging.info(f"Train      | MSE: {train_mse:2.5f}")
+            logging.info(f"Validation | MSE: {mse:2.5f}")
 
         performance_stats = {
             'train': {
@@ -191,7 +190,8 @@ class BuildTabTabModel():
                 'rmse': train_epoch_rmse,
                 'mae': train_epoch_mae,
                 'r2': train_epoch_r2,
-                'pcorr': train_epoch_pcorr
+                'pcorr': train_epoch_pcorr,
+                'epoch_times': train_epoch_time
             },
             'val': {
                 'mse': val_epoch_losses,
@@ -232,11 +232,11 @@ class BuildTabTabModel():
 
 
 class TabTab_v1(torch.nn.Module):
-    def __init__(self):
+    def __init__(self, cell_inp_dim: int):
         super(TabTab_v1, self).__init__()
 
         self.cell_emb = nn.Sequential(
-            nn.Linear(2784, 516),
+            nn.Linear(cell_inp_dim, 516),
             nn.BatchNorm1d(516),
             nn.ReLU(),
             nn.Dropout(p=0.1),

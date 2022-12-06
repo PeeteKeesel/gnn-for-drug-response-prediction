@@ -113,9 +113,9 @@ python3 main.py \
 - [ ] Log the outputs to a different file in the `performances` folder instead of printing
 - [ ] Include `dropout` parameter from args to the networks
 - [ ] Include args to performe multiple experiments for different seeds per model
-- [ ] track and save run-time per epoch in the performance output
-- [ ] Include `combined_score` threshold in the args
-- [ ] Include `gdsc` database filter in the args
+- [x] track and save run-time per epoch in the performance output
+- [ ] Include `combined_score` threshold in the args & in the processor
+- [ ] Include `gdsc` database filter in the args & in the processor
  
 
 __Networks__:

@@ -1,0 +1,100 @@
+2022-12-05 19:48:12,696 INFO     Finished reading drug response matrix: (137835, 9)
+2022-12-05 19:48:12,835 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2022-12-05 19:48:12,835 INFO     Finished reading drug SMILES dict: 181
+2022-12-05 19:48:12,841 INFO     DRM Number of unique cell-lines: 856
+2022-12-05 19:48:12,841 INFO     Finished building GraphTabDataset!
+2022-12-05 19:48:12,841 INFO     GraphTabDataset Summary
+2022-12-05 19:48:12,841 INFO     =======================
+2022-12-05 19:48:12,842 INFO     # observations : 137835
+2022-12-05 19:48:12,919 INFO     # cell-lines   : 856
+2022-12-05 19:48:12,982 INFO     # drugs        : 181
+2022-12-05 19:48:12,982 INFO     # genes        : 293
+2022-12-05 19:48:12,982 INFO     Full     shape: (137835, 9)
+2022-12-05 19:48:13,148 INFO     train    shape: (110268, 9)
+2022-12-05 19:48:13,148 INFO     test_val shape: (27567, 9)
+2022-12-05 19:48:13,148 INFO     test     shape: (13783, 9)
+2022-12-05 19:48:13,148 INFO     val      shape: (13784, 9)
+2022-12-05 19:48:13,148 INFO     train_dataset:
+2022-12-05 19:48:13,148 INFO     GraphTabDataset Summary
+2022-12-05 19:48:13,148 INFO     =======================
+2022-12-05 19:48:13,148 INFO     # observations : 110268
+2022-12-05 19:48:13,209 INFO     # cell-lines   : 856
+2022-12-05 19:48:13,266 INFO     # drugs        : 181
+2022-12-05 19:48:13,266 INFO     # genes        : 293
+2022-12-05 19:48:13,267 INFO     test_dataset:
+2022-12-05 19:48:13,267 INFO     GraphTabDataset Summary
+2022-12-05 19:48:13,267 INFO     =======================
+2022-12-05 19:48:13,267 INFO     # observations : 13783
+2022-12-05 19:48:13,274 INFO     # cell-lines   : 856
+2022-12-05 19:48:13,281 INFO     # drugs        : 181
+2022-12-05 19:48:13,281 INFO     # genes        : 293
+2022-12-05 19:48:13,281 INFO     val_dataset:
+2022-12-05 19:48:13,281 INFO     GraphTabDataset Summary
+2022-12-05 19:48:13,281 INFO     =======================
+2022-12-05 19:48:13,281 INFO     # observations : 13784
+2022-12-05 19:48:13,288 INFO     # cell-lines   : 856
+2022-12-05 19:48:13,295 INFO     # drugs        : 181
+2022-12-05 19:48:13,295 INFO     # genes        : 293
+2022-12-05 19:48:13,295 INFO     Finished creating pytorch training datasets!
+2022-12-05 19:48:13,296 INFO     Number of batches per dataset:
+2022-12-05 19:48:13,296 INFO       train : 111
+2022-12-05 19:48:13,296 INFO       test  : 14
+2022-12-05 19:48:13,296 INFO       val   : 14
+2022-12-05 19:48:13,296 INFO     device: cpu
+2022-12-05 19:57:39,108 INFO     =====Epoch 1
+2022-12-05 19:57:39,109 INFO     Train      | MSE: 10.28269
+2022-12-05 19:57:39,109 INFO     Validation | MSE: 8.25364
+2022-12-05 20:06:45,500 INFO     =====Epoch 2
+2022-12-05 20:06:45,501 INFO     Train      | MSE: 7.84286
+2022-12-05 20:06:45,501 INFO     Validation | MSE: 10.41616
+2022-12-05 20:15:51,095 INFO     =====Epoch 3
+2022-12-05 20:15:51,095 INFO     Train      | MSE: 6.92456
+2022-12-05 20:15:51,095 INFO     Validation | MSE: 4.45943
+2022-12-05 20:25:12,444 INFO     =====Epoch 4
+2022-12-05 20:25:12,444 INFO     Train      | MSE: 6.13061
+2022-12-05 20:25:12,444 INFO     Validation | MSE: 8.06911
+2022-12-05 20:34:25,272 INFO     =====Epoch 5
+2022-12-05 20:34:25,273 INFO     Train      | MSE: 5.44101
+2022-12-05 20:34:25,273 INFO     Validation | MSE: 3.18638
+2022-12-05 20:43:55,830 INFO     =====Epoch 6
+2022-12-05 20:43:55,831 INFO     Train      | MSE: 4.80679
+2022-12-05 20:43:55,831 INFO     Validation | MSE: 3.12395
+2022-12-05 20:53:26,262 INFO     =====Epoch 7
+2022-12-05 20:53:26,262 INFO     Train      | MSE: 4.23644
+2022-12-05 20:53:26,262 INFO     Validation | MSE: 6.75392
+2022-12-05 21:02:34,329 INFO     =====Epoch 8
+2022-12-05 21:02:34,329 INFO     Train      | MSE: 3.72610
+2022-12-05 21:02:34,329 INFO     Validation | MSE: 4.67162
+2022-12-05 21:12:07,884 INFO     =====Epoch 9
+2022-12-05 21:12:07,884 INFO     Train      | MSE: 3.27761
+2022-12-05 21:12:07,884 INFO     Validation | MSE: 2.34640
+2022-12-05 21:21:21,493 INFO     =====Epoch 10
+2022-12-05 21:21:21,493 INFO     Train      | MSE: 2.91653
+2022-12-05 21:21:21,493 INFO     Validation | MSE: 3.33203
+2022-12-05 21:30:52,569 INFO     =====Epoch 11
+2022-12-05 21:30:52,569 INFO     Train      | MSE: 2.62894
+2022-12-05 21:30:52,569 INFO     Validation | MSE: 2.37138
+2022-12-05 21:40:13,272 INFO     =====Epoch 12
+2022-12-05 21:40:13,272 INFO     Train      | MSE: 2.40873
+2022-12-05 21:40:13,272 INFO     Validation | MSE: 2.34382
+2022-12-05 21:49:25,753 INFO     =====Epoch 13
+2022-12-05 21:49:25,753 INFO     Train      | MSE: 2.26131
+2022-12-05 21:49:25,753 INFO     Validation | MSE: 2.19878
+2022-12-05 21:58:31,638 INFO     =====Epoch 14
+2022-12-05 21:58:31,638 INFO     Train      | MSE: 2.15727
+2022-12-05 21:58:31,638 INFO     Validation | MSE: 2.13526
+2022-12-05 22:07:48,039 INFO     =====Epoch 15
+2022-12-05 22:07:48,039 INFO     Train      | MSE: 2.08472
+2022-12-05 22:07:48,039 INFO     Validation | MSE: 2.21562
+2022-12-05 22:17:00,672 INFO     =====Epoch 16
+2022-12-05 22:17:00,672 INFO     Train      | MSE: 2.04873
+2022-12-05 22:17:00,672 INFO     Validation | MSE: 2.72964
+2022-12-05 22:26:12,875 INFO     =====Epoch 17
+2022-12-05 22:26:12,875 INFO     Train      | MSE: 2.00980
+2022-12-05 22:26:12,875 INFO     Validation | MSE: 3.95023
+2022-12-05 22:35:35,025 INFO     =====Epoch 18
+2022-12-05 22:35:35,025 INFO     Train      | MSE: 1.98437
+2022-12-05 22:35:35,025 INFO     Validation | MSE: 2.23468
+2022-12-05 22:44:47,651 INFO     =====Epoch 19
+2022-12-05 22:44:47,652 INFO     Train      | MSE: 1.96049
+2022-12-05 22:44:47,652 INFO     Validation | MSE: 2.06718

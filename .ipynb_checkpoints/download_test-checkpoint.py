@@ -1,7 +1,7 @@
 from processor import Processor
 
 
-class DownloadLinks(Enum):
+class Downloader(Enum):
     GDSC1 = 'ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/release-8.4/GDSC1_fitted_dose_response_24Jul22.xlsx'
     GDSC2 = 'ftp://ftp.sanger.ac.uk/pub/project/cancerrxgene/releases/release-8.4/GDSC2_fitted_dose_response_24Jul22.xlsx'
     GEXPR = 'https://www.cancerrxgene.org/gdsc1000/GDSC1000_WebResources//Data/preprocessed/Cell_line_RMA_proc_basalExp.txt.zip'

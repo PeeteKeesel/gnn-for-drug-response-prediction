@@ -1,3 +1,5 @@
+import logging
+import time
 import torch
 import torch.nn as nn
 import numpy    as np
@@ -11,6 +13,8 @@ from tqdm                    import tqdm
 from time                    import sleep
 from sklearn.metrics         import r2_score, mean_absolute_error
 from scipy.stats             import pearsonr
+
+torch.multiprocessing.set_sharing_strategy('file_system')
 
 
 class TabGraphDataset(Dataset): 
@@ -48,16 +52,16 @@ class TabGraphDataset(Dataset):
                 self.ic50s.iloc[idx])
 
     def print_dataset_summary(self):
-        print(f"TabGraphDataset Summary")
-        print(f"{23*'='}")
-        print(f"# observations : {len(self.ic50s)}")
-        print(f"# cell-lines   : {len(np.unique(self.cell_lines))}")
-        print(f"# drugs        : {len(self.drug_graphs.keys())}")
-        print(f"# genes        : {len(self.cl_gene_mat.columns)/4}")
+        logging.info(f"TabGraphDataset Summary")
+        logging.info(f"{23*'='}")
+        logging.info(f"# observations : {len(self.ic50s)}")
+        logging.info(f"# cell-lines   : {len(np.unique(self.cell_lines))}")
+        logging.info(f"# drugs        : {len(self.drug_graphs.keys())}")
+        logging.info(f"# genes        : {len(self.cl_gene_mat.columns)/4}")
 
 
 def create_tab_graph_datasets(drm, cl_gene_mat, drug_graphs, args):
-    print(f"Full     shape: {drm.shape}")
+    logging.info(f"Full     shape: {drm.shape}")
     train_set, test_val_set = train_test_split(drm, 
                                                test_size=args.TEST_VAL_RATIO, 
                                                random_state=args.RANDOM_SEED,
@@ -66,20 +70,20 @@ def create_tab_graph_datasets(drm, cl_gene_mat, drug_graphs, args):
                                          test_size=args.VAL_RATIO,
                                          random_state=args.RANDOM_SEED,
                                          stratify=test_val_set['CELL_LINE_NAME'])
-    print(f"train    shape: {train_set.shape}")
-    print(f"test_val shape: {test_val_set.shape}")
-    print(f"test     shape: {test_set.shape}")
-    print(f"val      shape: {val_set.shape}")
+    logging.info(f"train    shape: {train_set.shape}")
+    logging.info(f"test_val shape: {test_val_set.shape}")
+    logging.info(f"test     shape: {test_set.shape}")
+    logging.info(f"val      shape: {val_set.shape}")
 
     train_dataset = TabGraphDataset(cl_gene_mat=cl_gene_mat, drug_graphs=drug_graphs, drm=train_set)
     test_dataset = TabGraphDataset(cl_gene_mat=cl_gene_mat, drug_graphs=drug_graphs, drm=test_set)
     val_dataset = TabGraphDataset(cl_gene_mat=cl_gene_mat, drug_graphs=drug_graphs, drm=val_set)
 
-    print("\ntrain_dataset:")
+    logging.info("train_dataset:")
     train_dataset.print_dataset_summary()
-    print("\n\ntest_dataset:")
+    logging.info("test_dataset:")
     test_dataset.print_dataset_summary()
-    print("\n\nval_dataset:")
+    logging.info("val_dataset:")
     val_dataset.print_dataset_summary()
 
     # TODO: try out different `num_workers`.
@@ -111,11 +115,13 @@ class BuildTabGraphModel():
         train_epoch_mae, val_epoch_mae = [], []
         train_epoch_r2, val_epoch_r2 = [], []
         train_epoch_pcorr, val_epoch_pcorr = [], []
+        train_epoch_time = []
         all_batch_losses = [] # TODO: this is just for monitoring
         n_batches = len(loader)
 
         self.model = self.model.float() # TODO: maybe remove
-        for epoch in range(self.num_epochs):
+        for epoch in range(1, self.num_epochs+1):
+            tic = time.time()
             self.model.train()
             batch_losses = []
             y_true, y_pred = [], []
@@ -158,10 +164,12 @@ class BuildTabGraphModel():
             val_epoch_mae.append(mae)
             val_epoch_r2.append(r2)
             val_epoch_pcorr.append(pcorr)
+            
+            train_epoch_time.append(time.time() - tic)
 
-            print("=====Epoch ", epoch)
-            print(f"Train      | MSE: {train_mse:2.5f}")
-            print(f"Validation | MSE: {mse:2.5f}")
+            logging.info(f"=====Epoch {epoch}")
+            logging.info(f"Train      | MSE: {train_mse:2.5f}")
+            logging.info(f"Validation | MSE: {mse:2.5f}")
 
         performance_stats = {
             'train': {
@@ -169,7 +177,8 @@ class BuildTabGraphModel():
                 'rmse': train_epoch_rmse,
                 'mae': train_epoch_mae,
                 'r2': train_epoch_r2,
-                'pcorr': train_epoch_pcorr
+                'pcorr': train_epoch_pcorr,
+                'epoch_times': train_epoch_time
             },
             'val': {
                 'mse': val_epoch_losses,
@@ -212,13 +221,13 @@ class BuildTabGraphModel():
 
 
 class TabGraph_v1(torch.nn.Module):
-    def __init__(self):
+    def __init__(self, cell_inp_dim: int):
         super(TabGraph_v1, self).__init__()
         # torch.manual_seed(12345)
 
         self.cell_emb = nn.Sequential(
             # TODO: the 2784 needs to be an arguments! provide it in the main!
-            nn.Linear(2784, 516),
+            nn.Linear(cell_inp_dim, 516),
             nn.BatchNorm1d(516),
             nn.ReLU(),
             nn.Dropout(p=0.1),
