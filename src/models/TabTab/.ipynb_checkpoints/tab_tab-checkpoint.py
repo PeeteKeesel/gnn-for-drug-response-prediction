@@ -228,7 +228,7 @@ class BuildTabTabModel():
         pearson_corr_coef, _ = pearsonr(y_true.detach().numpy().flatten(), 
                                         y_pred.detach().numpy().flatten())
 
-        return mse, rmse, mae, r2, pearson_corr_coef
+        return mse, rmse, mae, r2, pearson_corr_coef, y_true, y_pred
 
 
 class TabTab_v1(torch.nn.Module):
