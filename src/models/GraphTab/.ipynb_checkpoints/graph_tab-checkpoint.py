@@ -7,7 +7,7 @@ import numpy    as np
 from torch_geometric.data    import Dataset
 from sklearn.model_selection import train_test_split
 from torch_geometric.loader  import DataLoader as PyG_DataLoader
-from torch_geometric.nn      import Sequential, GCNConv, global_mean_pool, global_max_pool
+from torch_geometric.nn      import Sequential, GCNConv, GATConv, global_mean_pool, global_max_pool
 from tqdm                    import tqdm
 from time                    import sleep
 from sklearn.metrics         import r2_score, mean_absolute_error
@@ -222,19 +222,24 @@ class BuildGraphTabModel():
 
         return mse, rmse, mae, r2, pearson_corr_coef
 
-
+"""
+GraphTab model using 
+    - GCNConv
+    - global mean pooling
+    - no Batch normalization between the GCNConv layers
+References:
+    - https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html#torch_geometric.nn.conv.GCNConv
+    - https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html#torch_geometric.nn.sequential.Sequential
+"""
 class GraphTab_v1(torch.nn.Module):
     def __init__(self):
         super(GraphTab_v1, self).__init__()
 
         # Cell-line graph branch. Obtains node embeddings.
-        # https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html#torch_geometric.nn.sequential.Sequential
         self.cell_emb = Sequential('x, edge_index, batch', 
             [
                 (GCNConv(in_channels=4, out_channels=256), 'x, edge_index -> x1'), # TODO: GATConv() vs GCNConv()
                 nn.ReLU(inplace=True),
-                ## nn.BatchNorm1d(num_features=128),
-                ## nn.Dropout(self.dropout_p),
                 (GCNConv(in_channels=256, out_channels=256), 'x1, edge_index -> x2'),
                 nn.ReLU(inplace=True),
                 (global_mean_pool, 'x2, batch -> x3'), 
@@ -277,3 +282,64 @@ class GraphTab_v1(torch.nn.Module):
         y_pred = self.fcn(concat)
         y_pred = y_pred.reshape(y_pred.shape[0])
         return y_pred        
+    
+      
+"""
+GraphTab model using 
+    - GATConv
+    - global max pooling
+    - Batch normalization between the GCNConv layers
+References:
+    - https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html#torch_geometric.nn.conv.GATConv
+    - https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html#torch_geometric.nn.sequential.Sequential
+"""
+class GraphTab_v2(torch.nn.Module):
+    def __init__(self):
+        super(GraphTab_v2, self).__init__()
+
+        self.cell_emb = Sequential('x, edge_index, batch', 
+            [
+                (GATConv(in_channels=4, out_channels=256), 'x, edge_index -> x1'),
+                nn.ReLU(inplace=True),
+                nn.Dropout(p=0.1),
+                (GATConv(in_channels=256, out_channels=128), 'x1, edge_index -> x2'),
+                nn.ReLU(inplace=True),                
+                (global_max_pool, 'x2, batch -> x3'), 
+                nn.Linear(128, 128),
+                nn.BatchNorm1d(128),
+                nn.ReLU(),
+                nn.Dropout(p=0.1),
+                nn.Linear(128, 128),
+                nn.ReLU()
+            ]
+        )
+
+        self.drug_emb = nn.Sequential(
+            nn.Linear(256, 128),
+            nn.BatchNorm1d(128),
+            nn.ReLU(),
+            nn.Dropout(p=0.1),
+            nn.Linear(128, 128),
+            nn.BatchNorm1d(128),
+            nn.ReLU()          
+        )
+
+        self.fcn = nn.Sequential(
+            nn.Linear(2*128, 128),
+            nn.BatchNorm1d(128),
+            nn.ELU(),
+            nn.Dropout(p=0.1),
+            nn.Linear(128, 64),
+            nn.BatchNorm1d(64),
+            nn.ELU(),
+            nn.Dropout(p=0.1),
+            nn.Linear(64, 1)
+        )
+
+    def forward(self, cell, drug):
+        drug_emb = self.drug_emb(drug)
+        cell_emb = self.cell_emb(cell.x.float(), cell.edge_index, cell.batch)
+        concat = torch.cat([cell_emb, drug_emb], -1)
+        y_pred = self.fcn(concat)
+        y_pred = y_pred.reshape(y_pred.shape[0])
+        return y_pred      

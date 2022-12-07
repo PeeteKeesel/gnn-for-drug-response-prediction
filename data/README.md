@@ -3,7 +3,7 @@
 
 For the creation of training datasets multiple resources have been used. All of the mentioned datasets are open-source and free for download.
 
-## :dart:	Final Datasets
+## :dart: Final Datasets
 The following datasets have been created:
 
 | Dataset | Description | Used For | Code | Folder |

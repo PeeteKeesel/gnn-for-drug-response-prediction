@@ -1,16 +1,27 @@
-# Graph Neural Networks for Drug Response Prediction in Cancer
+# Graph Neural Networks for Drug Response Prediction in Cancer :dna:
 
 ## :bulb: Introduction
 This repository contains the process and the final code for my master thesis "_Gene-Interaction Graph Neural Network to Predict Cancer Drug Response_".
 
-## :computer: Environment Setup
-### Using conda
+## Table of Contents
+* [Environment Setup](#environment-setup)
+    * [Using conda](#using-conda)
+    * [Using pip](#using-pip)
+* [Download Raw Datasets](#download-raw-datasets)
+* [How to Run](#how-to-run)
+* [Contents](#contents)
+    * [Notebooks](#notebooks)
+* [Todos](#todos)
+* [Questions](#questions)
+
+## :computer: Environment Setup <a name="environment-setup"/>
+### Using conda <a name="using-conda"/>
 To create the virtual environment via `conda` run
 ```bash
-# Option 1: by using the environment.yml file
+# Option 1: by using the environment.yml file (recommended).
 conda env create -n ENVNAME --file environment.yml
 
-# Option 2: by using the requirement.txt file
+# Option 2: by using the requirement.txt file.
 conda create -n ENVNAME --file requirements.txt
 ```
 Now activate the environment.
@@ -18,7 +29,7 @@ Now activate the environment.
 conda activate ENVNAME
 ```
 
-### Using pip
+### Using pip <a name="using-pip"/>
 
 - [ ] This may not work yet. I have only tested the conda method yet.
 
@@ -29,7 +40,7 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-## :arrow_double_down: Download Raw Datasets
+## :arrow_double_down: Download Raw Datasets <a name="download-raw-datasets"/>
 To download the raw datasets which can be used to create the training datasets run
 ```python
 from pathlib import Path
@@ -52,7 +63,7 @@ For `raw_path` and `processed_path` we recommend to choose a folder outside of t
 - For details on the dataset sizes and contents read [data/README.md](data/README.md). 
 - For an example of how to run this code refer to [notebooks/download_raw_datasets.ipynb](notebooks/download_raw_datasets.ipynb).
 
-## :runner: How To Run
+## :runner: How To Run <a name="how-to-run"/>
 
 There are multiple parameters which can be chosen to set when running the `main.py`. An example call would look like this:
 
@@ -74,8 +85,8 @@ python3 main.py \
 | `--raw_path` | `../data/raw/` | Any path | Path to save the raw datasets to. | The default is lying out of this repository since the raw files are very large. | 
 | `--processed_path` | `../data/raw/` | Any path | Path to save the processed datasets to. | The default is also lying out of this repository to have a joined `data` folder which contains raw and processed datasets. |
 
-## :books: Contents
-### Notebooks
+## :books: Contents <a name="contents"/>
+### Notebooks <a name="notebooks"/>
 
 | Notebook | Content |
 | -------- | ------- |
@@ -91,7 +102,7 @@ python3 main.py \
 | [`11_v1_GraphTab_sparse_1.ipynb`](11_v1_GraphTab_sparse_1.ipynb) | Used the dataset from [`07_v2_graph_dataset.ipynb`](07_v2_graph_dataset.ipynb) having topology per cell-line graph of `Data(x=[458, 4], edge_index=[2, 4760])` |
 | [`11_v1_GraphTab_nonsparse.ipynb`](11_v1_GraphTab_nonsparse.ipynb) | Used the dataset from [`07_v1_2_get_linking_dataset.ipynb`](07_v1_2_get_linking_dataset.ipynb) having topology per cell-line graph of `Data(x=[858, 4], edge_index=[2, 83126])`. Took too long per epoch, which is why different approaches needed to be found to sparse the number of edges in the graph (see `combined_score` approach). | 
 
-## :calendar: Todos 
+## :calendar: Todos <a name="todos"/>
 
 - [x] fix error with mutations dataset 
 - [x] include mutation features in tensor
@@ -107,15 +118,18 @@ python3 main.py \
   - [x] once all models are running, convert to `.py` files instead of notebooks
 - [x] Convert to non-notebook `.py` code
     - [x] include setting of args from terminal  
-- [ ] include GDSC 1 data as well; check shift in ln(IC50)'s and think about strategy to meaningful combine both in single dataset (see TODO)
+- [x] Log the outputs to a different file in the `performances` folder instead of printing
+- [x] track and save run-time per epoch in the performance output
+- [x] Include `combined_score` threshold in the args & in the processor
+- [x] Include `gdsc` database filter in the args & in the processor
+    - for now working for GDSC2
+- [ ] (optional for now) include GDSC 1 data as well; check shift in ln(IC50)'s and think about strategy to meaningful combine both in single dataset (see TODO)
   - [ ] Combine both GDSC1 and GDSC2 in an complete dataset to increase training data (see TODO)    
 - [ ] run GNNExplainer on the graph branches of the bi-modal networks
-- [ ] Log the outputs to a different file in the `performances` folder instead of printing
 - [ ] Include `dropout` parameter from args to the networks
 - [ ] Include args to performe multiple experiments for different seeds per model
-- [x] track and save run-time per epoch in the performance output
-- [ ] Include `combined_score` threshold in the args & in the processor
-- [ ] Include `gdsc` database filter in the args & in the processor
+- [x] Run Graph-Tab approach with GAT instead of GCN
+    - model is not overfitted anymore; also remved batch normalization between the GAT layers and replaced global_mean_pool with global_max_pool
  
 
 __Networks__:
@@ -129,10 +143,11 @@ __Networks__:
 - [x] `Tab-Graph`: Cell-line branch by tabular data, drug branch by GNN _(refs: [DrugDRP-2022](https://pubmed.ncbi.nlm.nih.gov/33606633/) ([code](https://github.com/hauldhut/GraphDRP)))_
 - [ ] `Graph-Graph`: Replace both cell-line branch & drug branch by GNNs _(refs: [TGSA-2022](https://academic.oup.com/bioinformatics/article/38/2/461/6374919) ([code](https://github.com/violet-sto/TGSA)))_
 - [ ] Implement [`GNNExplainer-2019`](https://arxiv.org/abs/1903.03894) ([code](https://github.com/RexYing/gnn-model-explainer)) on the above network methods
-  - [x] Run on `Tab-Tab` (see [`12_v1_TabTab.ipynb`](12_v1_TabTab.ipynb))
-  - [x] Run on `Graph-Tab` (see TODO)
-  - [x] Run on `Tab-Graph` (see [`13_v1_TabGraph.ipynb`](13_v1_TabGraph.ipynb))
+  - [x] Run on `Tab-Tab`
+  - [x] Run on `Graph-Tab`
+  - [x] Run on `Tab-Graph`
   - [ ] Run on `Graph-Graph`
 
-## :eyes: Questions 
-- [ ] Currently setting `num_workers` doesn't make a significant difference compared to net setting it. How can otherwise the code be fasten up? 
+## :eyes: Questions <a name="questions"/>
+ 
+- [ ] Why is cell-line graph approach overfitting a lot and not really improving in epochs? 

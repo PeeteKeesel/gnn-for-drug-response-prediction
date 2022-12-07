@@ -1,20 +1,17 @@
 import random
 import logging
-import numpy as np
-import pandas as pd
 import pickle
 import torch
 import torch.nn as nn
+import numpy    as np
+import pandas   as pd
 
 from argparse                      import ArgumentParser
 from pathlib                       import Path
-from config                        import PATH_SUMMARY_DATASETS
 from src.models.TabTab.tab_tab     import TabTabDataset, create_tab_tab_datasets, BuildTabTabModel, TabTab_v1
-from src.models.GraphTab.graph_tab import GraphTabDataset, create_graph_tab_datasets, BuildGraphTabModel, GraphTab_v1
+from src.models.GraphTab.graph_tab import GraphTabDataset, create_graph_tab_datasets, BuildGraphTabModel, GraphTab_v1, GraphTab_v2
 from src.models.TabGraph.tab_graph import TabGraphDataset, create_tab_graph_datasets, BuildTabGraphModel, TabGraph_v1
 from src.preprocess.processor      import Processor
-from sklearn.model_selection       import train_test_split
-from torch_geometric.loader        import DataLoader
 
 PERFORMANCES = 'performances/'
 
@@ -31,7 +28,7 @@ def parse_args():
                         help='training set ratio (default: 0.8)')
     parser.add_argument('--val_ratio', type=float, default=0.5, 
                         help='validation set ratio inside the test set (default: 0.5)')
-    parser.add_argument('--num_epochs', type=int, default=10, 
+    parser.add_argument('--num_epochs', type=int, default=5, 
                         help='number of epochs (default: )')
     parser.add_argument('--num_workers', type=int, default=24, 
                         help='number of workers for DataLoader (default: 3)')
@@ -42,8 +39,8 @@ def parse_args():
                              '[`TabTab`, `GraphTab`, `TabGraph`, `GraphGraph`,' + \
                              ' `tabtab`, `graphtab`, `tabgraph`, `graphgraph`, ' + \
                              ' `TT`, `GT`, `TG`, `GG`, `tt`, `gt`, `tg`, `gg` ]')
-    parser.add_argument('--version', type=str, default='v3', 
-                        help='model version to run') # TODO: this is not used currently
+    parser.add_argument('--version', type=str, default='v1', 
+                        help='model version to run')
     parser.add_argument('--download', type=str, default='n', 
                         help="If raw data should be downloaded press either [`y`, `yes`, `1`]. " \
                            + "If no data should be downloaded press either [`n`, `no`, `0`]")
@@ -56,7 +53,7 @@ def parse_args():
                         help='path of the processed datasets')
     
     # Additional optional parameters for processing.
-    parser.add_argument('--combined_score_thresh', type=int, default=700,
+    parser.add_argument('--combined_score_thresh', type=int, default=990,
                         help='threshold below which to cut of gene-gene interactions')
     parser.add_argument('--gdsc', type=str, default='gdsc2',
                         help='filter for GDSC database, options: [`gdsc1`, `gdsc2`, `both`]')
@@ -91,7 +88,7 @@ def main():
     logging.basicConfig(
         level=logging.DEBUG, filemode="a+",
         filename=PERFORMANCES + \
-            f'logfile_model_{args.model.lower()}_{args.gdsc}_{args.combined_score_thresh}',
+            f'logfile_model_{args.model.lower()}_{args.version}_{args.gdsc}_{args.combined_score_thresh}',
         format="%(asctime)-15s %(levelname)-8s %(message)s"
     )  
 
@@ -113,11 +110,14 @@ def main():
         processor.create_gene_gene_interaction_graph()
         processor.create_drug_datasets()
 
+    # --- Drug response matrix ---
     with open(processor.processed_path + 'gdsc2_drm.pkl', 'rb') as f: 
         drm = pickle.load(f)
         logging.info(f"Finished reading drug response matrix: {drm.shape}")
+        
+    logging.info(f"DRM Number of unique cell-lines: {len(drm.CELL_LINE_NAME.unique())}")        
 
-    
+    # --- TabTab dataset imports ---
     if args.model in ['TabTab', 'tabtab', 'TT', 'tt']:
         # Read cell-line gene matrix.
         with open(processor.gdsc_thresh_path + \
@@ -130,11 +130,8 @@ def main():
                   f'{processor.gdsc.lower()}_smiles_mat.pkl', 'rb') as f:
             smiles_mat = pickle.load(f)
             logging.info(f"Finished reading drug SMILES matrix: {smiles_mat.shape}")                
-        
-    elif args.model in ['GraphTab', 'graphtab', 'GT', 'gt']:
-        # with open(f'{PATH_SUMMARY_DATASETS}{args.model}/{args.version}/drug_response_matrix__gdsc2.pkl', 'rb') as f: 
-        #     drm = pickle.load(f)
-        #     logging.info(f"Finished reading drug response matrix: {drm.shape}")        
+    # --- GraphTab dataset imports ---
+    elif args.model in ['GraphTab', 'graphtab', 'GT', 'gt']:       
         # Read cell line gene-gene interaction graphs.
         with open(processor.gdsc_thresh_path + \
                   f'thresh_{processor.gdsc.lower()}_{processor.combined_score_thresh}_gene_graphs.pkl', 'rb') as f:
@@ -143,35 +140,26 @@ def main():
         # Read drug SMILES fingerprint matrix.
         with open(processor.gdsc_path + \
                   f'{processor.gdsc.lower()}_smiles_dict.pkl', 'rb') as f:
-            # drug_name_smiles = pickle.load(f)
-            # logging.info(f"Finished reading drug SMILES matrix: {drug_name_smiles.shape}")
-
             fingerprints_dict = pickle.load(f)
             logging.info(f"Finished reading drug SMILES dict: {len(fingerprints_dict.keys())}")
-
-            # fingerprints_dict = drug_name_smiles.set_index('DRUG_ID').T.to_dict('list')      
-    # TODO: add else for other models.
-    # TODO: add folder with corresponding datasets for each model type. each folder contains subfolder with dev version
     
-    
+    # --- TabGraph dataset imports ---    
     elif args.model in ['TabGraph', 'tabgraph', 'TG', 'tg']:
         # Read cell-line gene matrix.
         with open(processor.gdsc_thresh_path + \
                   f'thresh_{processor.gdsc.lower()}_{processor.combined_score_thresh}_gene_mat.pkl', 'rb') as f: 
             cl_gene_mat = pickle.load(f)
-            logging.info(f"Finished readin cell-line gene matrix: {cl_gene_mat.shape}")
+            logging.info(f"Finished reading cell-line gene matrix: {cl_gene_mat.shape}")
         # Read drug smiles graphs.
         with open(processor.gdsc_path + \
                   f'{processor.gdsc.lower()}_smiles_graphs.pkl', 'rb') as f: 
             drug_graphs = pickle.load(f)
             logging.info(f"Finished reading drug SMILES graphs: {drug_graphs[1003]}")
 
-    logging.info(f"DRM Number of unique cell-lines: {len(drm.CELL_LINE_NAME.unique())}")
-
-
     # --------------- #
     # Train the model #
     # --------------- #
+    # --- TabTab model training ---
     if args.model in ['TabTab', 'tabgraph', 'TG', 'tg']:
         cl_gene_mat.set_index('CELL_LINE_NAME', inplace=True)
         smiles_mat.set_index('DRUG_ID', inplace=True)
@@ -180,20 +168,24 @@ def main():
         logging.info("Finished building TabTabDataset!")
         dataset.print_dataset_summary() 
 
-        hyper_params = HyperParameters(batch_size=args.batch_size, 
-                                       lr=args.lr, 
-                                       train_ratio=args.train_ratio, 
-                                       val_ratio=args.val_ratio, 
-                                       num_epochs=args.num_epochs, 
-                                       seed=args.seed,
-                                       num_workers=args.num_workers)
+        hyper_params = HyperParameters(
+            batch_size=args.batch_size, 
+            lr=args.lr, 
+            train_ratio=args.train_ratio, 
+            val_ratio=args.val_ratio, 
+            num_epochs=args.num_epochs, 
+            seed=args.seed,
+            num_workers=args.num_workers
+        )
 
         # Create pytorch geometric DataLoader datasets.
         # TODO: make some args as separate input parameters
-        train_loader, test_loader, val_loader = create_tab_tab_datasets(drm, 
-                                                                        cl_gene_mat,
-                                                                        smiles_mat,
-                                                                        hyper_params)
+        train_loader, test_loader, val_loader = create_tab_tab_datasets(
+            drm, 
+            cl_gene_mat,
+            smiles_mat,
+            hyper_params
+        )
         logging.info("Finished creating pytorch training datasets!")
         logging.info("Number of batches per dataset:")
         logging.info(f"  train : {len(train_loader)}")
@@ -222,11 +214,15 @@ def main():
         # Train the model.
         logging.info("TRAINING the model")
         performance_stats = build_model.train(build_model.train_loader)        
-    
-    
+   
+    # --- GraphTab model training ---    
     elif args.model == 'GraphTab':
         # Build pytorch dataset.
-        graph_tab_dataset = GraphTabDataset(cl_graphs=cl_graphs, drugs=fingerprints_dict, drug_response_matrix=drm)
+        graph_tab_dataset = GraphTabDataset(
+            cl_graphs=cl_graphs, 
+            drugs=fingerprints_dict, 
+            drug_response_matrix=drm
+        )
         logging.info("Finished building GraphTabDataset!")
         graph_tab_dataset.print_dataset_summary() 
 
@@ -242,7 +238,12 @@ def main():
 
         # Create pytorch geometric DataLoader datasets.
         # TODO: make some args as separate input parameters
-        train_loader, test_loader, val_loader = create_graph_tab_datasets(drm, cl_graphs, fingerprints_dict, hyper_params)
+        train_loader, test_loader, val_loader = create_graph_tab_datasets(
+            drm, 
+            cl_graphs, 
+            fingerprints_dict, 
+            hyper_params
+        )
         logging.info("Finished creating pytorch training datasets!")
         logging.info("Number of batches per dataset:")
         logging.info(f"  train : {len(train_loader)}")
@@ -251,20 +252,31 @@ def main():
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         logging.info(f"device: {device}")
-
-        model = GraphTab_v1().to(device)
+        
+        match args.version:
+            case 'v1': 
+                model = GraphTab_v1().to(device)
+            case 'v2':
+                model = GraphTab_v2().to(device)
+            case _:
+                raise NotImplementedError(f"Given model version {args.version} is not implemented for GraphTab!")
+            
         loss_func = nn.MSELoss()
-        optimizer = torch.optim.Adam(params=model.parameters(), lr=args.lr) # TODO: include weight_decay of lr
+        optimizer = torch.optim.Adam(params=model.parameters(), lr=args.lr) 
+        # TODO: include weight_decay of lr
+        # check https://github.com/pyg-team/pytorch_geometric/blob/master/examples/gnn_explainer.py#L32
 
         # Build the model.
-        build_model = BuildGraphTabModel(model=model,
-                                criterion=loss_func,
-                                optimizer=optimizer,
-                                num_epochs=args.num_epochs,
-                                train_loader=train_loader,
-                                test_loader=test_loader,
-                                val_loader=val_loader, 
-                                device=device)
+        build_model = BuildGraphTabModel(
+            model=model,
+            criterion=loss_func,
+            optimizer=optimizer,
+            num_epochs=args.num_epochs,
+            train_loader=train_loader,
+            test_loader=test_loader,
+            val_loader=val_loader, 
+            device=device
+        )
 
         # Train the model.
         performance_stats = build_model.train(build_model.train_loader)
@@ -277,6 +289,8 @@ def main():
         # sample_dataset.print_dataset_summary()
         # sample_loader = DataLoader(dataset=sample_dataset, batch_size=2, shuffle=True) 
         # performance_stats = build_model.train(sample_loader)
+
+    # --- TabGraph model training ---    
     elif args.model == 'TabGraph':
         cl_gene_mat.set_index('CELL_LINE_NAME', inplace=True)
         
@@ -296,7 +310,12 @@ def main():
 
         # Create pytorch geometric DataLoader datasets.
         # TODO: make some args as separate input parameters
-        train_loader, test_loader, val_loader = create_tab_graph_datasets(drm, cl_gene_mat, drug_graphs, hyper_params)
+        train_loader, test_loader, val_loader = create_tab_graph_datasets(
+            drm, 
+            cl_gene_mat, 
+            drug_graphs, 
+            hyper_params
+        )
         logging.info("Finished creating pytorch training datasets!")
         logging.info("Number of batches per dataset:")
         logging.info(f"  train : {len(train_loader)}")
@@ -324,12 +343,9 @@ def main():
 
         # Train the model.
         performance_stats = build_model.train(build_model.train_loader)        
-    # elif args.model == 'TabTab':
-    #     dataset = TabTabDataset()
 
-    print(performance_stats['train']['epoch_times'])
     torch.save({
-        'epoch': args.num_epochs, # TODO: add here current epoch. For that the epochs must run in the main.
+        'epoch': args.num_epochs, # TODO: maybe add here current epoch. For that the epochs must run in the main.
         'batch_size': args.batch_size,
         'learning_rate': args.lr,
         'train_ratio': args.train_ratio,
@@ -338,7 +354,7 @@ def main():
         'optimizer_state_dict': build_model.optimizer.state_dict(),
         'train_performances': performance_stats['train'],
         'val_performances': performance_stats['val']
-    }, PERFORMANCES + f'model_performance_{args.model}_{args.gdsc.lower()}_{args.combined_score_thresh}.pth')
+    }, PERFORMANCES + f'model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}.pth')
         
 
 
