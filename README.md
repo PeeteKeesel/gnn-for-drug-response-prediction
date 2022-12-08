@@ -149,4 +149,6 @@ __Networks__:
 
 ## :eyes: Questions <a name="questions"/>
  
-- [ ] Why is cell-line graph approach overfitting a lot and not really improving in epochs? 
+- [ ] How to use the given RMSE in the drug-response matrix?
+- [ ] How can I improve performance of cell-GNN models? More genes (but runtime too low then)?
+- [x] Why is cell-line graph approach overfitting a lot?

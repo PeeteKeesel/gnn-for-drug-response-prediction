@@ -61,7 +61,7 @@ def parse_args():
     return parser.parse_args()
 
 class HyperParameters:
-    def __init__(self, batch_size, lr, train_ratio, val_ratio, num_epochs, seed='12345', num_workers=0):
+    def __init__(self, batch_size, lr, train_ratio, val_ratio, num_epochs, seed='42', num_workers=0):
         self.BATCH_SIZE = batch_size
         self.LR = lr
         self.TRAIN_RATIO = train_ratio
@@ -262,7 +262,8 @@ def main():
                 raise NotImplementedError(f"Given model version {args.version} is not implemented for GraphTab!")
             
         loss_func = nn.MSELoss()
-        optimizer = torch.optim.Adam(params=model.parameters(), lr=args.lr) 
+        optimizer = torch.optim.Adam(params=model.parameters(), 
+                                     lr=args.lr) # TODO: weight_decay=1e-5 or 5e-3 
         # TODO: include weight_decay of lr
         # check https://github.com/pyg-team/pytorch_geometric/blob/master/examples/gnn_explainer.py#L32
 
