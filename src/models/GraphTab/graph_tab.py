@@ -11,7 +11,7 @@ from torch_geometric.nn      import Sequential, GCNConv, GATConv, global_mean_po
 from tqdm                    import tqdm
 from time                    import sleep
 from sklearn.metrics         import r2_score, mean_absolute_error
-from scipy.stats             import pearsonr
+from scipy.stats             import pearsonr, spearmanr
 
 torch.multiprocessing.set_sharing_strategy('file_system')
 
@@ -128,7 +128,7 @@ class BuildGraphTabModel():
             self.model.train()
             batch_losses = []
             y_true, y_pred = [], []
-            for i, data in enumerate(tqdm(loader, desc='Iteration (Train)')):
+            for i, data in enumerate(tqdm(loader, desc='Iteration (train)')):
                 sleep(0.01)
                 cell, drug, ic50s = data
                 drug = torch.stack(drug, 0).transpose(1, 0) # Note that this is only neede when geometric 
@@ -148,7 +148,7 @@ class BuildGraphTabModel():
                 loss.backward()
                 self.optimizer.step()
 
-            all_batch_losses.append(batch_losses) # TODO: this is just for monitoring
+            all_batch_losses.append(batch_losses)
             total_epoch_loss = sum(batch_losses)
             train_epoch_losses.append(total_epoch_loss / n_batches)
 
@@ -194,12 +194,13 @@ class BuildGraphTabModel():
 
         return performance_stats           
 
+    @torch.no_grad()
     def validate(self, loader):
         self.model.eval()
         y_true, y_pred = [], []
         total_loss = 0
         with torch.no_grad():
-            for data in tqdm(loader, desc='Iteration (Val)'):
+            for data in tqdm(loader, desc='Iteration (val)'):
                 sleep(0.01)
                 cl, dr, ic50 = data
                 dr = torch.stack(dr, 0).transpose(1, 0)
@@ -213,15 +214,21 @@ class BuildGraphTabModel():
         
         y_true = torch.cat(y_true, dim=0)
         y_pred = torch.cat(y_pred, dim=0)
+        
+        # Calculate performance metrics.        
         mse = total_loss / len(loader)
         rmse = torch.sqrt(mse)
-        mae = mean_absolute_error(y_true.detach().cpu(), y_pred.detach().cpu())
-        r2 = r2_score(y_true.detach().cpu(), y_pred.detach().cpu())
-        pearson_corr_coef, _ = pearsonr(y_true.detach().numpy().flatten(), 
-                                        y_pred.detach().numpy().flatten())
+        mae = mean_absolute_error(y_true.detach().cpu(), 
+                                  y_pred.detach().cpu())
+        r2 = r2_score(y_true.detach().cpu(), 
+                      y_pred.detach().cpu())
+        pcc, _ = pearsonr(y_true.detach().numpy().flatten(), 
+                          y_pred.detach().numpy().flatten())
+        scc, _ = spearmanr(y_true.detach().numpy().flatten(), 
+                           y_pred.detach().numpy().flatten())        
 
-        return mse, rmse, mae, r2, pearson_corr_coef, y_true, y_pred
-
+        return mse, rmse, mae, r2, pcc, scc, y_true, y_pred    
+    
 """
 GraphTab model using 
     - GCNConv

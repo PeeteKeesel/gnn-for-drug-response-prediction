@@ -12,7 +12,7 @@ from torch_geometric.nn      import Sequential, GINConv, global_mean_pool, globa
 from tqdm                    import tqdm
 from time                    import sleep
 from sklearn.metrics         import r2_score, mean_absolute_error
-from scipy.stats             import pearsonr
+from scipy.stats             import pearsonr, spearmanr
 
 torch.multiprocessing.set_sharing_strategy('file_system')
 
@@ -125,7 +125,7 @@ class BuildTabGraphModel():
             self.model.train()
             batch_losses = []
             y_true, y_pred = [], []
-            for i, data in enumerate(tqdm(loader, desc='Iteration (Train)')):
+            for i, data in enumerate(tqdm(loader, desc='Iteration (train)')):
                 sleep(0.01)
                 cell, drug, ic50s = data
                 cell = torch.stack(cell, 0).transpose(1, 0) # Note that this is only neede when geometric 
@@ -191,12 +191,13 @@ class BuildTabGraphModel():
 
         return performance_stats           
 
+    @torch.no_grad()
     def validate(self, loader):
         self.model.eval()
         y_true, y_pred = [], []
         total_loss = 0
         with torch.no_grad():
-            for data in tqdm(loader, desc='Iteration (Val)'):
+            for data in tqdm(loader, desc='Iteration (val)'):
                 sleep(0.01)
                 cl, dr, ic50 = data
                 cl = torch.stack(cl, 0).transpose(1, 0)
@@ -204,20 +205,26 @@ class BuildTabGraphModel():
                 preds = self.model(cl.float(), dr).unsqueeze(1)
                 ic50 = ic50.to(self.device)
                 total_loss += self.criterion(preds, ic50.view(-1,1).float())
-                # total_loss += F.mse_loss(preds, ic50.view(-1, 1).float(), reduction='sum')
                 y_true.append(ic50.view(-1, 1))
                 y_pred.append(preds)
         
         y_true = torch.cat(y_true, dim=0)
         y_pred = torch.cat(y_pred, dim=0)
+        
+        
+        # Calculate performance metrics.        
         mse = total_loss / len(loader)
         rmse = torch.sqrt(mse)
-        mae = mean_absolute_error(y_true.detach().cpu(), y_pred.detach().cpu())
-        r2 = r2_score(y_true.detach().cpu(), y_pred.detach().cpu())
-        pearson_corr_coef, _ = pearsonr(y_true.detach().numpy().flatten(), 
-                                        y_pred.detach().numpy().flatten())
+        mae = mean_absolute_error(y_true.detach().cpu(), 
+                                  y_pred.detach().cpu())
+        r2 = r2_score(y_true.detach().cpu(), 
+                      y_pred.detach().cpu())
+        pcc, _ = pearsonr(y_true.detach().numpy().flatten(), 
+                          y_pred.detach().numpy().flatten())
+        scc, _ = spearmanr(y_true.detach().numpy().flatten(), 
+                           y_pred.detach().numpy().flatten())        
 
-        return mse, rmse, mae, r2, pearson_corr_coef, y_true, y_pred
+        return mse, rmse, mae, r2, pcc, scc, y_true, y_pred
 
 
 class TabGraph_v1(torch.nn.Module):

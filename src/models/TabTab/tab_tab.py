@@ -12,7 +12,7 @@ from torch_geometric.nn      import Sequential, GCNConv, global_mean_pool, globa
 from tqdm                    import tqdm
 from time                    import sleep
 from sklearn.metrics         import r2_score, mean_absolute_error
-from scipy.stats             import pearsonr
+from scipy.stats             import pearsonr, spearmanr
 
 
 class TabTabDataset(Dataset): 
@@ -129,7 +129,8 @@ class BuildTabTabModel():
         train_epoch_rmse, val_epoch_rmse = [], []
         train_epoch_mae, val_epoch_mae = [], []
         train_epoch_r2, val_epoch_r2 = [], []
-        train_epoch_pcorr, val_epoch_pcorr = [], []
+        train_epoch_pcc, val_epoch_pcc = [], []
+        train_epoch_scc, val_epoch_scc = [], []
         train_epoch_time = []
         all_batch_losses = [] # TODO: this is just for monitoring
         n_batches = len(loader)
@@ -140,7 +141,7 @@ class BuildTabTabModel():
             self.model.train()
             batch_losses = []
             y_true, y_pred = [], []
-            for i, data in enumerate(tqdm(loader, desc='Iteration (Train)')):
+            for i, data in enumerate(tqdm(loader, desc='Iteration (train)')):
                 sleep(0.01)
                 cell, drug, ic50s = data
                 cell, drug, ic50s = cell.to(self.device), drug.to(self.device), ic50s.to(self.device)
@@ -168,15 +169,18 @@ class BuildTabTabModel():
             train_epoch_rmse.append(torch.sqrt(train_mse))
             train_epoch_mae.append(mean_absolute_error(y_true.detach().cpu(), y_pred.detach().cpu()))
             train_epoch_r2.append(r2_score(y_true.detach().cpu(), y_pred.detach().cpu()))
-            train_epoch_pcorr.append(pearsonr(y_true.detach().cpu().numpy().flatten(), 
-                                              y_pred.detach().cpu().numpy().flatten()))
+            train_epoch_pcc.append(pearsonr(y_true.detach().cpu().numpy().flatten(), 
+                                                  y_pred.detach().cpu().numpy().flatten()))
+            train_epoch_scc.append(spearmanr(y_true.detach().cpu().numpy().flatten(),
+                                                    y_pred.detach().cpu().numpy().flatten()))            
                      
-            mse, rmse, mae, r2, pcorr = self.validate(self.val_loader)
+            mse, rmse, mae, r2, pcc, scc, _, _ = self.validate(self.val_loader)
             val_epoch_losses.append(mse)
             val_epoch_rmse.append(rmse)
             val_epoch_mae.append(mae)
             val_epoch_r2.append(r2)
-            val_epoch_pcorr.append(pcorr)
+            val_epoch_pcc.append(pcc)
+            val_epoch_scc.append(scc)
             
             train_epoch_time.append(time.time() - tic)
 
@@ -190,7 +194,8 @@ class BuildTabTabModel():
                 'rmse': train_epoch_rmse,
                 'mae': train_epoch_mae,
                 'r2': train_epoch_r2,
-                'pcorr': train_epoch_pcorr,
+                'pcc': train_epoch_pcc,
+                'scc': train_epoch_scc,                
                 'epoch_times': train_epoch_time
             },
             'val': {
@@ -198,18 +203,20 @@ class BuildTabTabModel():
                 'rmse': val_epoch_rmse,
                 'mae': val_epoch_mae,
                 'r2': val_epoch_r2,
-                'pcorr': val_epoch_pcorr
+                'pcc': val_epoch_pcc,
+                'scc': val_epoch_scc                
             }            
         }
 
         return performance_stats           
 
+    @torch.no_grad()
     def validate(self, loader):
         self.model.eval()
         y_true, y_pred = [], []
         total_loss = 0
         with torch.no_grad():
-            for data in tqdm(loader, desc='Iteration (Val)'):
+            for data in tqdm(loader, desc='Iteration (val)'):
                 sleep(0.01)
                 cl, dr, ic50 = data
 
@@ -221,14 +228,20 @@ class BuildTabTabModel():
         
         y_true = torch.cat(y_true, dim=0)
         y_pred = torch.cat(y_pred, dim=0)
+        
+        # Calculate performance metrics.
         mse = total_loss / len(loader)
         rmse = torch.sqrt(mse)
-        mae = mean_absolute_error(y_true.detach().cpu(), y_pred.detach().cpu())
-        r2 = r2_score(y_true.detach().cpu(), y_pred.detach().cpu())
-        pearson_corr_coef, _ = pearsonr(y_true.detach().numpy().flatten(), 
-                                        y_pred.detach().numpy().flatten())
+        mae = mean_absolute_error(y_true.detach().cpu(), 
+                                  y_pred.detach().cpu())
+        r2 = r2_score(y_true.detach().cpu(), 
+                      y_pred.detach().cpu())
+        pcc, _ = pearsonr(y_true.detach().numpy().flatten(), 
+                          y_pred.detach().numpy().flatten())
+        scc, _ = spearmanr(y_true.detach().numpy().flatten(), 
+                           y_pred.detach().numpy().flatten())        
 
-        return mse, rmse, mae, r2, pearson_corr_coef, y_true, y_pred
+        return mse, rmse, mae, r2, pcc, scc, y_true, y_pred
 
 
 class TabTab_v1(torch.nn.Module):
