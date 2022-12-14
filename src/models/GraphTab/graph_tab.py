@@ -295,7 +295,7 @@ class GraphTab_v1(torch.nn.Module):
 GraphTab model using 
     - GATConv
     - global max pooling
-    - Batch normalization between the GCNConv layers
+    - no batch normalization between the GCNConv layers
 References:
     - https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html#torch_geometric.nn.conv.GATConv
     - https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html#torch_geometric.nn.sequential.Sequential
