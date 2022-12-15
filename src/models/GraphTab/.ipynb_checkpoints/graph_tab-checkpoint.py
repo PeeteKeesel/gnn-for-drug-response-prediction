@@ -138,7 +138,10 @@ class BuildGraphTabModel():
                 self.optimizer.zero_grad()
 
                 # Models predictions of the ic50s for a batch of cell-lines and drugs
-                preds = self.model(cell, drug.float()).unsqueeze(1)
+                preds = self.model(cell.x.float(),
+                                   cell.edge_index,
+                                   cell.batch,
+                                   drug.float()).unsqueeze(1)
                 loss = self.criterion(preds, ic50s.view(-1, 1).float()) # =train_loss
                 batch_losses.append(loss)
 
@@ -205,7 +208,10 @@ class BuildGraphTabModel():
                 cl, dr, ic50 = data
                 dr = torch.stack(dr, 0).transpose(1, 0)
 
-                preds = self.model(cl, dr.float()).unsqueeze(1)
+                preds = self.model(cl.x.float(), 
+                                   cl.edge_index, 
+                                   cl.batch, 
+                                   dr.float()).unsqueeze(1)
                 ic50 = ic50.to(self.device)
                 total_loss += self.criterion(preds, ic50.view(-1,1).float())
                 # total_loss += F.mse_loss(preds, ic50.view(-1, 1).float(), reduction='sum')
@@ -282,9 +288,9 @@ class GraphTab_v1(torch.nn.Module):
             nn.Linear(64, 1)
         )
 
-    def forward(self, cell, drug):
+    def forward(self, cell_x, cell_edge_index, cell_batch, drug):
         drug_emb = self.drug_emb(drug)
-        cell_emb = self.cell_emb(cell.x.float(), cell.edge_index, cell.batch)
+        cell_emb = self.cell_emb(cell_x, cell_edge_index, cell_batch)
         concat = torch.cat([cell_emb, drug_emb], -1)
         y_pred = self.fcn(concat)
         y_pred = y_pred.reshape(y_pred.shape[0])
