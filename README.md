@@ -106,7 +106,7 @@ optional arguments:
                             saved in the processed path
   --raw_path                path to the raw datasets
   --processed_path          path to the processed datasets
-  --combined_score_thresh   threshold below which to cut of the gene-gene interactions
+  --combined_score_thresh   threshold below which to cut off the gene-gene interactions
   --gdsc                    the type of GDSC database to use for training
 ```
 
