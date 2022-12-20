@@ -4,15 +4,18 @@
 This repository contains the process and the final code for my master thesis "_Gene-Interaction Graph Neural Network to Predict Cancer Drug Response_".
 
 ## Table of Contents
-* [Environment Setup](#environment-setup)
-    * [Using conda](#using-conda)
-    * [Using pip](#using-pip)
-* [Download Raw Datasets](#download-raw-datasets)
-* [How to Run](#how-to-run)
-* [Contents](#contents)
-    * [Notebooks](#notebooks)
-* [Todos](#todos)
-* [Questions](#questions)
+- [Graph Neural Networks for Drug Response Prediction in Cancer :dna:](#graph-neural-networks-for-drug-response-prediction-in-cancer-dna)
+  - [:bulb: Introduction](#bulb-introduction)
+  - [Table of Contents](#table-of-contents)
+  - [:computer: Environment Setup ](#computer-environment-setup-)
+    - [Using conda ](#using-conda-)
+    - [Using pip ](#using-pip-)
+  - [:arrow\_double\_down: Download Raw Datasets ](#arrow_double_down-download-raw-datasets-)
+  - [:runner: How To Run ](#runner-how-to-run-)
+  - [:books: Contents ](#books-contents-)
+    - [Notebooks ](#notebooks-)
+  - [:calendar: Todos ](#calendar-todos-)
+  - [:eyes: Questions ](#eyes-questions-)
 
 ## :computer: Environment Setup <a name="environment-setup"/>
 ### Using conda <a name="using-conda"/>
@@ -78,6 +81,35 @@ python3 main.py \
     num_workers=8 \
     dropout=0.1 \ 
 ```
+
+All supported arguments are listed below:
+```
+usage: 
+  main.py [--seed] [--batch_size] [--lr] [--train_ratio] [--val_ratio] [--num_epochs] [--num_workers]
+          [--dropout] [--model] [--version] [--download] [--process] [--raw_path] [--processed_path]
+          [--combined_score_thresh] [--gdsc]
+
+optional arguments:
+  --seed                    the random seed (for reproducible sampling)
+  --batch_size              the size of each batch
+  --lr                      learning rate
+  --train_ratio             train set ratio
+  --val_ratio               validation set ratio. (1-val_ratio) will be the test set ratio
+  --num_epochs              number of epochs
+  --num_workers             number of workers for DataLoader
+  --dropout                 dropout probability
+  --model                   name of the model to use
+  --version                 model version to use
+  --download                if enabled, the raw data will be download and saved in the 
+                            raw path
+  --process                 if enabled, the data in the raw path will be processed and 
+                            saved in the processed path
+  --raw_path                path to the raw datasets
+  --processed_path          path to the processed datasets
+  --combined_score_thresh   threshold below which to cut of the gene-gene interactions
+  --gdsc                    the type of GDSC database to use for training
+```
+
 
 | Argument | Default | Options | Description | Notes |
 | --------: | :------- | ------- | ----------- | ----- | 
