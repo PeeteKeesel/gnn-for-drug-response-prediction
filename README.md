@@ -85,9 +85,9 @@ python3 main.py \
 All supported arguments are listed below:
 ```
 usage: 
-  main.py [--seed] [--batch_size] [--lr] [--train_ratio] [--val_ratio] [--num_epochs] [--num_workers]
-          [--dropout] [--model] [--version] [--download] [--process] [--raw_path] [--processed_path]
-          [--combined_score_thresh] [--gdsc]
+  main.py [--seed] [--batch_size] [--lr] [--train_ratio] [--val_ratio] [--num_epochs] 
+          [--num_workers] [--dropout] [--model] [--version] [--download] [--process] 
+          [--raw_path] [--processed_path] [--combined_score_thresh] [--gdsc]
 
 optional arguments:
   --seed                    the random seed (for reproducible sampling)
