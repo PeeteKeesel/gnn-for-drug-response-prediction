@@ -1,26 +1,25 @@
-# Graph Neural Networks for Drug Response Prediction in Cancer :dna:
+<h1 align="center">:robot: Graph Neural Networks for Drug Response Prediction in Cancer :dna:</h1>
 
 ## :bulb: Introduction
 This repository contains the process and the final code for my master thesis "_Gene-Interaction Graph Neural Network to Predict Cancer Drug Response_".
 
 ## Table of Contents
-- [Graph Neural Networks for Drug Response Prediction in Cancer :dna:](#graph-neural-networks-for-drug-response-prediction-in-cancer-dna)
-  - [:bulb: Introduction](#bulb-introduction)
-  - [Table of Contents](#table-of-contents)
-  - [:computer: Environment Setup ](#computer-environment-setup-)
-    - [Using conda ](#using-conda-)
-    - [Using pip ](#using-pip-)
-  - [:arrow\_double\_down: Download Raw Datasets ](#arrow_double_down-download-raw-datasets-)
-  - [:runner: How To Run ](#runner-how-to-run-)
-  - [:books: Contents ](#books-contents-)
-    - [Notebooks ](#notebooks-)
-  - [:calendar: Todos ](#calendar-todos-)
-  - [:eyes: Questions ](#eyes-questions-)
+- [:bulb: Introduction](#bulb-introduction)
+- [Table of Contents](#table-of-contents)
+- [:computer: Environment Setup ](#computer-environment-setup-)
+  - [Using conda ](#using-conda-)
+  - [Using pip ](#using-pip-)
+- [:arrow\_double\_down: Download Raw Datasets ](#arrow_double_down-download-raw-datasets-)
+- [:runner: How To Run ](#runner-how-to-run-)
+- [:books: Contents ](#books-contents-)
+  - [Notebooks ](#notebooks-)
+- [:calendar: Todos ](#calendar-todos-)
+- [:eyes: Questions ](#eyes-questions-)
 
 ## :computer: Environment Setup <a name="environment-setup"/>
 ### Using conda <a name="using-conda"/>
 To create the virtual environment via `conda` run
-```bash
+```console
 # Option 1: by using the environment.yml file (recommended).
 conda env create -n ENVNAME --file environment.yml
 
@@ -28,7 +27,7 @@ conda env create -n ENVNAME --file environment.yml
 conda create -n ENVNAME --file requirements.txt
 ```
 Now activate the environment.
-```bash
+```console
 conda activate ENVNAME
 ```
 
@@ -37,7 +36,7 @@ conda activate ENVNAME
 - [ ] This may not work yet. I have only tested the conda method yet.
 
 To create and activate the virtual environment via `pip` run
-```bash
+```console
 python3 -m venv env
 source env/bin/activate
 pip install -r requirements.txt
