@@ -1,4 +1,4 @@
-<h1 align="center">:robot: Graph Neural Networks for Drug Response Prediction in Cancer :dna:</h1>
+<h1 align="center">Graph Neural Networks for Drug Response Prediction in Cancer :dna:</h1>
 
 ## :bulb: Introduction
 This repository contains the process and the final code for my master thesis "_Gene-Interaction Graph Neural Network to Predict Cancer Drug Response_".
