@@ -219,6 +219,7 @@ class BuildTabTabModel():
             for data in tqdm(loader, desc='Iteration (val)'):
                 sleep(0.01)
                 cl, dr, ic50 = data
+                cl, dr, ic50 = cl.to(self.device), dr.to(self.device), ic50.to(self.device)
 
                 preds = self.model(cl.float(), dr.float()).unsqueeze(1)
                 ic50 = ic50.to(self.device)
@@ -236,10 +237,10 @@ class BuildTabTabModel():
                                   y_pred.detach().cpu())
         r2 = r2_score(y_true.detach().cpu(), 
                       y_pred.detach().cpu())
-        pcc, _ = pearsonr(y_true.detach().numpy().flatten(), 
-                          y_pred.detach().numpy().flatten())
-        scc, _ = spearmanr(y_true.detach().numpy().flatten(), 
-                           y_pred.detach().numpy().flatten())        
+        pcc, _ = pearsonr(y_true.detach().cpu().numpy().flatten(), 
+                          y_pred.detach().cpu().numpy().flatten())
+        scc, _ = spearmanr(y_true.detach().cpu().numpy().flatten(), 
+                           y_pred.detach().cpu().numpy().flatten())        
 
         return mse, rmse, mae, r2, pcc, scc, y_true, y_pred
 

@@ -22,7 +22,7 @@ def parse_args():
                         help='random seed (default: 42)')
     parser.add_argument('--batch_size', type=int, default=1_000, 
                         help='the batch size (default: 10)')
-    parser.add_argument('--lr', type=int, default=0.0001, 
+    parser.add_argument('--lr', type=float, default=0.0001, 
                         help='learning rate (default: 0.0001)')
     parser.add_argument('--train_ratio', type=float, default=0.8, 
                         help='training set ratio (default: 0.8)')
@@ -57,6 +57,8 @@ def parse_args():
                         help='threshold below which to cut of gene-gene interactions')
     parser.add_argument('--gdsc', type=str, default='gdsc2',
                         help='filter for GDSC database, options: [`gdsc1`, `gdsc2`, `both`]')
+    parser.add_argument('--file_ending', type=str, default='',
+                        help='ending of final models file name')
     
     return parser.parse_args()
 
@@ -70,6 +72,18 @@ class HyperParameters:
         self.NUM_EPOCHS = num_epochs
         self.RANDOM_SEED = seed
         self.NUM_WORKERS = num_workers
+        
+    def __call__(self):
+        logging.info("HyperParameters")
+        logging.info("===============")
+        logging.info(f"batch_size: {self.BATCH_SIZE}")
+        logging.info(f"learning_rate: {self.LR}")
+        logging.info(f"train_ratio: {self.TRAIN_RATIO}")
+        logging.info(f"val_ratio: {self.VAL_RATIO}")
+        logging.info(f"test_ratio: {1-self.VAL_RATIO}")
+        logging.info(f"num_epochs: {self.NUM_EPOCHS}") 
+        logging.info(f"num_workers: {self.NUM_WORKERS}")
+        logging.info(f"random_seed: {self.RANDOM_SEED}")        
 
 
 def main():
@@ -88,7 +102,7 @@ def main():
     logging.basicConfig(
         level=logging.DEBUG, filemode="a+",
         filename=PERFORMANCES + \
-            f'logfile_model_{args.model.lower()}_{args.version}_{args.gdsc}_{args.combined_score_thresh}',
+            f'logfile_model_{args.model.lower()}_{args.version}_{args.gdsc}_{args.combined_score_thresh}_{args.seed}_{args.file_ending}',
         format="%(asctime)-15s %(levelname)-8s %(message)s"
     )  
 
@@ -177,6 +191,7 @@ def main():
             seed=args.seed,
             num_workers=args.num_workers
         )
+        logging.info(hyper_params())        
 
         # Create pytorch geometric DataLoader datasets.
         # TODO: make some args as separate input parameters
@@ -210,13 +225,14 @@ def main():
             val_loader=val_loader, 
             device=device
         )
+        logging.info(build_model.model) 
 
         # Train the model.
         logging.info("TRAINING the model")
         performance_stats = build_model.train(build_model.train_loader)        
    
     # --- GraphTab model training ---    
-    elif args.model == 'GraphTab':
+    elif args.model in ['GraphTab', 'graphtab', 'GT', 'gt']:
         # Build pytorch dataset.
         graph_tab_dataset = GraphTabDataset(
             cl_graphs=cl_graphs, 
@@ -235,6 +251,7 @@ def main():
             seed=args.seed,
             num_workers=args.num_workers
         )
+        logging.info(hyper_params())
 
         # Create pytorch geometric DataLoader datasets.
         # TODO: make some args as separate input parameters
@@ -278,6 +295,7 @@ def main():
             val_loader=val_loader, 
             device=device
         )
+        logging.info(build_model.model)      
 
         # Train the model.
         performance_stats = build_model.train(build_model.train_loader)
@@ -308,6 +326,7 @@ def main():
             seed=args.seed,
             num_workers=args.num_workers
         )
+        logging.info(hyper_params())        
 
         # Create pytorch geometric DataLoader datasets.
         # TODO: make some args as separate input parameters
@@ -355,7 +374,7 @@ def main():
         'optimizer_state_dict': build_model.optimizer.state_dict(),
         'train_performances': performance_stats['train'],
         'val_performances': performance_stats['val']
-    }, PERFORMANCES + f'model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}.pth')
+    }, PERFORMANCES + f'model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}_{args.seed}_{args.file_ending}.pth')
         
 
 

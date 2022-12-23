@@ -161,6 +161,7 @@ optional arguments:
 - [ ] Include args to performe multiple experiments for different seeds per model
 - [x] Run Graph-Tab approach with GAT instead of GCN
     - model is not overfitted anymore; also remved batch normalization between the GAT layers and replaced global_mean_pool with global_max_pool
+- [ ] Print NN architecture in each log-file.
 
 __Networks__:
 

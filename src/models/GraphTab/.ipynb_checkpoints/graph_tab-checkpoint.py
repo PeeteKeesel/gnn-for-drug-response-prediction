@@ -117,7 +117,8 @@ class BuildGraphTabModel():
         train_epoch_rmse, val_epoch_rmse = [], []
         train_epoch_mae, val_epoch_mae = [], []
         train_epoch_r2, val_epoch_r2 = [], []
-        train_epoch_pcorr, val_epoch_pcorr = [], []
+        train_epoch_pcc, val_epoch_pcc = [], []
+        train_epoch_scc, val_epoch_scc = [], []        
         train_epoch_time = []
         all_batch_losses = [] # TODO: this is just for monitoring
         n_batches = len(loader)
@@ -161,19 +162,22 @@ class BuildGraphTabModel():
             train_epoch_rmse.append(torch.sqrt(train_mse))
             train_epoch_mae.append(mean_absolute_error(y_true.detach().cpu(), y_pred.detach().cpu()))
             train_epoch_r2.append(r2_score(y_true.detach().cpu(), y_pred.detach().cpu()))
-            train_epoch_pcorr.append(pearsonr(y_true.detach().cpu().numpy().flatten(), 
-                                              y_pred.detach().cpu().numpy().flatten()))
+            train_epoch_pcc.append(pearsonr(y_true.detach().cpu().numpy().flatten(), 
+                                            y_pred.detach().cpu().numpy().flatten()))
+            train_epoch_scc.append(spearmanr(y_true.detach().cpu().numpy().flatten(),
+                                             y_pred.detach().cpu().numpy().flatten()))             
                      
-            mse, rmse, mae, r2, pcorr = self.validate(self.val_loader)
+            mse, rmse, mae, r2, pcc, scc, _, _  = self.validate(self.val_loader)
             val_epoch_losses.append(mse)
             val_epoch_rmse.append(rmse)
             val_epoch_mae.append(mae)
             val_epoch_r2.append(r2)
-            val_epoch_pcorr.append(pcorr)
+            val_epoch_pcc.append(pcc)
+            val_epoch_scc.append(scc)
             
             train_epoch_time.append(time.time() - tic)            
 
-            logging.info(f"=====Epoch {epoch}")
+            logging.info(f"===Epoch {epoch:03.0f}===")
             logging.info(f"Train      | MSE: {train_mse:2.5f}")
             logging.info(f"Validation | MSE: {mse:2.5f}")
 
@@ -183,7 +187,8 @@ class BuildGraphTabModel():
                 'rmse': train_epoch_rmse,
                 'mae': train_epoch_mae,
                 'r2': train_epoch_r2,
-                'pcorr': train_epoch_pcorr,
+                'pcc': train_epoch_pcc,
+                'scc': train_epoch_scc,
                 'epoch_times': train_epoch_time
             },
             'val': {
@@ -191,7 +196,8 @@ class BuildGraphTabModel():
                 'rmse': val_epoch_rmse,
                 'mae': val_epoch_mae,
                 'r2': val_epoch_r2,
-                'pcorr': val_epoch_pcorr
+                'pcc': val_epoch_pcc,
+                'scc': val_epoch_scc
             }            
         }
 
@@ -207,12 +213,13 @@ class BuildGraphTabModel():
                 sleep(0.01)
                 cl, dr, ic50 = data
                 dr = torch.stack(dr, 0).transpose(1, 0)
+                cl, dr, ic50 = cl.to(self.device), dr.to(self.device), ic50.to(self.device)
 
                 preds = self.model(cl.x.float(), 
                                    cl.edge_index, 
                                    cl.batch, 
                                    dr.float()).unsqueeze(1)
-                ic50 = ic50.to(self.device)
+#                 ic50 = ic50.to(self.device)
                 total_loss += self.criterion(preds, ic50.view(-1,1).float())
                 # total_loss += F.mse_loss(preds, ic50.view(-1, 1).float(), reduction='sum')
                 y_true.append(ic50.view(-1, 1))
@@ -228,10 +235,10 @@ class BuildGraphTabModel():
                                   y_pred.detach().cpu())
         r2 = r2_score(y_true.detach().cpu(), 
                       y_pred.detach().cpu())
-        pcc, _ = pearsonr(y_true.detach().numpy().flatten(), 
-                          y_pred.detach().numpy().flatten())
-        scc, _ = spearmanr(y_true.detach().numpy().flatten(), 
-                           y_pred.detach().numpy().flatten())        
+        pcc, _ = pearsonr(y_true.detach().cpu().numpy().flatten(), 
+                          y_pred.detach().cpu().numpy().flatten())
+        scc, _ = spearmanr(y_true.detach().cpu().numpy().flatten(), 
+                           y_pred.detach().cpu().numpy().flatten())        
 
         return mse, rmse, mae, r2, pcc, scc, y_true, y_pred    
     
@@ -310,6 +317,7 @@ class GraphTab_v2(torch.nn.Module):
     def __init__(self):
         super(GraphTab_v2, self).__init__()
 
+        # Note: in_channels = number of features.
         self.cell_emb = Sequential('x, edge_index, batch', 
             [
                 (GATConv(in_channels=4, out_channels=256), 'x, edge_index -> x1'),
@@ -349,9 +357,25 @@ class GraphTab_v2(torch.nn.Module):
             nn.Linear(64, 1)
         )
 
-    def forward(self, cell, drug):
+#     def forward(self, cell, drug):
+#         drug_emb = self.drug_emb(drug)
+#         cell_emb = self.cell_emb(cell.x.float(), cell.edge_index, cell.batch)
+#         concat = torch.cat([cell_emb, drug_emb], -1)
+#         y_pred = self.fcn(concat)
+#         y_pred = y_pred.reshape(y_pred.shape[0])
+#         return y_pred   
+    
+    def forward(self, cell_x, cell_edge_index, cell_batch, drug):
         drug_emb = self.drug_emb(drug)
-        cell_emb = self.cell_emb(cell.x.float(), cell.edge_index, cell.batch)
+#         print(f"""Input
+#         drug            : {drug.size()}
+#         cell.x          : {cell_x.size()}
+#         cell.edge_index : {cell_edge_index.size()}
+#         cell.batch      : {cell_batch.size()}
+#         """)
+        cell_emb = self.cell_emb(cell_x, cell_edge_index, cell_batch)
+#         print(f"drug_emb.size: {drug_emb.size()}")
+#         print(f"cell_emb.size: {cell_emb.size()}")
         concat = torch.cat([cell_emb, drug_emb], -1)
         y_pred = self.fcn(concat)
         y_pred = y_pred.reshape(y_pred.shape[0])

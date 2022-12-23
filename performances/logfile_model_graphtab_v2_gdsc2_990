@@ -280,3 +280,218 @@
 2022-12-07 11:27:02,532 INFO     =====Epoch 50
 2022-12-07 11:27:02,532 INFO     Train      | MSE: 1.62977
 2022-12-07 11:27:02,532 INFO     Validation | MSE: 1.52631
+2022-12-23 00:46:39,937 INFO     Finished reading drug response matrix: (137835, 9)
+2022-12-23 00:46:39,943 INFO     DRM Number of unique cell-lines: 856
+2022-12-23 00:46:40,147 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2022-12-23 00:46:40,147 INFO     Finished reading drug SMILES dict: 181
+2022-12-23 00:46:40,148 INFO     Finished building GraphTabDataset!
+2022-12-23 00:46:40,148 INFO     GraphTabDataset Summary
+2022-12-23 00:46:40,148 INFO     =======================
+2022-12-23 00:46:40,148 INFO     # observations : 137835
+2022-12-23 00:46:40,230 INFO     # cell-lines   : 856
+2022-12-23 00:46:40,295 INFO     # drugs        : 181
+2022-12-23 00:46:40,296 INFO     # genes        : 293
+2022-12-23 00:46:40,296 INFO     Full     shape: (137835, 9)
+2022-12-23 00:46:40,474 INFO     train    shape: (110268, 9)
+2022-12-23 00:46:40,474 INFO     test_val shape: (27567, 9)
+2022-12-23 00:46:40,475 INFO     test     shape: (13783, 9)
+2022-12-23 00:46:40,475 INFO     val      shape: (13784, 9)
+2022-12-23 00:46:40,475 INFO     train_dataset:
+2022-12-23 00:46:40,475 INFO     GraphTabDataset Summary
+2022-12-23 00:46:40,475 INFO     =======================
+2022-12-23 00:46:40,475 INFO     # observations : 110268
+2022-12-23 00:46:40,539 INFO     # cell-lines   : 856
+2022-12-23 00:46:40,600 INFO     # drugs        : 181
+2022-12-23 00:46:40,600 INFO     # genes        : 293
+2022-12-23 00:46:40,600 INFO     test_dataset:
+2022-12-23 00:46:40,600 INFO     GraphTabDataset Summary
+2022-12-23 00:46:40,600 INFO     =======================
+2022-12-23 00:46:40,600 INFO     # observations : 13783
+2022-12-23 00:46:40,608 INFO     # cell-lines   : 856
+2022-12-23 00:46:40,615 INFO     # drugs        : 181
+2022-12-23 00:46:40,615 INFO     # genes        : 293
+2022-12-23 00:46:40,615 INFO     val_dataset:
+2022-12-23 00:46:40,615 INFO     GraphTabDataset Summary
+2022-12-23 00:46:40,615 INFO     =======================
+2022-12-23 00:46:40,615 INFO     # observations : 13784
+2022-12-23 00:46:40,622 INFO     # cell-lines   : 856
+2022-12-23 00:46:40,629 INFO     # drugs        : 181
+2022-12-23 00:46:40,629 INFO     # genes        : 293
+2022-12-23 00:46:40,630 INFO     Finished creating pytorch training datasets!
+2022-12-23 00:46:40,630 INFO     Number of batches per dataset:
+2022-12-23 00:46:40,630 INFO       train : 111
+2022-12-23 00:46:40,631 INFO       test  : 14
+2022-12-23 00:46:40,631 INFO       val   : 14
+2022-12-23 00:46:40,737 INFO     device: cpu
+2022-12-23 01:24:32,571 INFO     Finished reading drug response matrix: (137835, 9)
+2022-12-23 01:24:32,577 INFO     DRM Number of unique cell-lines: 856
+2022-12-23 01:24:32,805 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2022-12-23 01:24:32,807 INFO     Finished reading drug SMILES dict: 181
+2022-12-23 01:24:32,808 INFO     Finished building GraphTabDataset!
+2022-12-23 01:24:32,808 INFO     GraphTabDataset Summary
+2022-12-23 01:24:32,808 INFO     =======================
+2022-12-23 01:24:32,808 INFO     # observations : 137835
+2022-12-23 01:24:32,883 INFO     # cell-lines   : 856
+2022-12-23 01:24:32,944 INFO     # drugs        : 181
+2022-12-23 01:24:32,944 INFO     # genes        : 293
+2022-12-23 01:24:32,944 INFO     Full     shape: (137835, 9)
+2022-12-23 01:24:33,106 INFO     train    shape: (110268, 9)
+2022-12-23 01:24:33,106 INFO     test_val shape: (27567, 9)
+2022-12-23 01:24:33,106 INFO     test     shape: (13783, 9)
+2022-12-23 01:24:33,106 INFO     val      shape: (13784, 9)
+2022-12-23 01:24:33,107 INFO     train_dataset:
+2022-12-23 01:24:33,107 INFO     GraphTabDataset Summary
+2022-12-23 01:24:33,107 INFO     =======================
+2022-12-23 01:24:33,107 INFO     # observations : 110268
+2022-12-23 01:24:33,165 INFO     # cell-lines   : 856
+2022-12-23 01:24:33,221 INFO     # drugs        : 181
+2022-12-23 01:24:33,221 INFO     # genes        : 293
+2022-12-23 01:24:33,221 INFO     test_dataset:
+2022-12-23 01:24:33,221 INFO     GraphTabDataset Summary
+2022-12-23 01:24:33,221 INFO     =======================
+2022-12-23 01:24:33,221 INFO     # observations : 13783
+2022-12-23 01:24:33,228 INFO     # cell-lines   : 856
+2022-12-23 01:24:33,235 INFO     # drugs        : 181
+2022-12-23 01:24:33,235 INFO     # genes        : 293
+2022-12-23 01:24:33,235 INFO     val_dataset:
+2022-12-23 01:24:33,235 INFO     GraphTabDataset Summary
+2022-12-23 01:24:33,235 INFO     =======================
+2022-12-23 01:24:33,235 INFO     # observations : 13784
+2022-12-23 01:24:33,242 INFO     # cell-lines   : 856
+2022-12-23 01:24:33,248 INFO     # drugs        : 181
+2022-12-23 01:24:33,248 INFO     # genes        : 293
+2022-12-23 01:24:33,249 INFO     Finished creating pytorch training datasets!
+2022-12-23 01:24:33,249 INFO     Number of batches per dataset:
+2022-12-23 01:24:33,249 INFO       train : 111
+2022-12-23 01:24:33,249 INFO       test  : 14
+2022-12-23 01:24:33,249 INFO       val   : 14
+2022-12-23 01:24:33,419 INFO     device: cpu
+2022-12-23 01:50:20,955 INFO     Finished reading drug response matrix: (137835, 9)
+2022-12-23 01:50:20,962 INFO     DRM Number of unique cell-lines: 856
+2022-12-23 01:50:21,249 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2022-12-23 01:50:21,251 INFO     Finished reading drug SMILES dict: 181
+2022-12-23 01:50:21,251 INFO     Finished building GraphTabDataset!
+2022-12-23 01:50:21,251 INFO     GraphTabDataset Summary
+2022-12-23 01:50:21,251 INFO     =======================
+2022-12-23 01:50:21,251 INFO     # observations : 137835
+2022-12-23 01:50:21,345 INFO     # cell-lines   : 856
+2022-12-23 01:50:21,421 INFO     # drugs        : 181
+2022-12-23 01:50:21,421 INFO     # genes        : 293
+2022-12-23 01:50:21,422 INFO     Full     shape: (137835, 9)
+2022-12-23 01:50:21,628 INFO     train    shape: (110268, 9)
+2022-12-23 01:50:21,629 INFO     test_val shape: (27567, 9)
+2022-12-23 01:50:21,629 INFO     test     shape: (13783, 9)
+2022-12-23 01:50:21,629 INFO     val      shape: (13784, 9)
+2022-12-23 01:50:21,629 INFO     train_dataset:
+2022-12-23 01:50:21,629 INFO     GraphTabDataset Summary
+2022-12-23 01:50:21,629 INFO     =======================
+2022-12-23 01:50:21,629 INFO     # observations : 110268
+2022-12-23 01:50:21,703 INFO     # cell-lines   : 856
+2022-12-23 01:50:21,773 INFO     # drugs        : 181
+2022-12-23 01:50:21,773 INFO     # genes        : 293
+2022-12-23 01:50:21,773 INFO     test_dataset:
+2022-12-23 01:50:21,773 INFO     GraphTabDataset Summary
+2022-12-23 01:50:21,773 INFO     =======================
+2022-12-23 01:50:21,773 INFO     # observations : 13783
+2022-12-23 01:50:21,782 INFO     # cell-lines   : 856
+2022-12-23 01:50:21,790 INFO     # drugs        : 181
+2022-12-23 01:50:21,790 INFO     # genes        : 293
+2022-12-23 01:50:21,790 INFO     val_dataset:
+2022-12-23 01:50:21,790 INFO     GraphTabDataset Summary
+2022-12-23 01:50:21,790 INFO     =======================
+2022-12-23 01:50:21,790 INFO     # observations : 13784
+2022-12-23 01:50:21,800 INFO     # cell-lines   : 856
+2022-12-23 01:50:21,808 INFO     # drugs        : 181
+2022-12-23 01:50:21,808 INFO     # genes        : 293
+2022-12-23 01:50:21,810 INFO     Finished creating pytorch training datasets!
+2022-12-23 01:50:21,810 INFO     Number of batches per dataset:
+2022-12-23 01:50:21,810 INFO       train : 111
+2022-12-23 01:50:21,810 INFO       test  : 14
+2022-12-23 01:50:21,810 INFO       val   : 14
+2022-12-23 01:50:21,857 INFO     device: cuda
+2022-12-23 01:51:37,232 INFO     Finished reading drug response matrix: (137835, 9)
+2022-12-23 01:51:37,239 INFO     DRM Number of unique cell-lines: 856
+2022-12-23 01:51:37,518 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2022-12-23 01:51:37,519 INFO     Finished reading drug SMILES dict: 181
+2022-12-23 01:51:37,519 INFO     Finished building GraphTabDataset!
+2022-12-23 01:51:37,519 INFO     GraphTabDataset Summary
+2022-12-23 01:51:37,519 INFO     =======================
+2022-12-23 01:51:37,519 INFO     # observations : 137835
+2022-12-23 01:51:37,613 INFO     # cell-lines   : 856
+2022-12-23 01:51:37,689 INFO     # drugs        : 181
+2022-12-23 01:51:37,689 INFO     # genes        : 293
+2022-12-23 01:51:37,689 INFO     Full     shape: (137835, 9)
+2022-12-23 01:51:37,893 INFO     train    shape: (110268, 9)
+2022-12-23 01:51:37,893 INFO     test_val shape: (27567, 9)
+2022-12-23 01:51:37,893 INFO     test     shape: (13783, 9)
+2022-12-23 01:51:37,893 INFO     val      shape: (13784, 9)
+2022-12-23 01:51:37,894 INFO     train_dataset:
+2022-12-23 01:51:37,894 INFO     GraphTabDataset Summary
+2022-12-23 01:51:37,894 INFO     =======================
+2022-12-23 01:51:37,894 INFO     # observations : 110268
+2022-12-23 01:51:37,966 INFO     # cell-lines   : 856
+2022-12-23 01:51:38,035 INFO     # drugs        : 181
+2022-12-23 01:51:38,035 INFO     # genes        : 293
+2022-12-23 01:51:38,035 INFO     test_dataset:
+2022-12-23 01:51:38,035 INFO     GraphTabDataset Summary
+2022-12-23 01:51:38,036 INFO     =======================
+2022-12-23 01:51:38,036 INFO     # observations : 13783
+2022-12-23 01:51:38,044 INFO     # cell-lines   : 856
+2022-12-23 01:51:38,052 INFO     # drugs        : 181
+2022-12-23 01:51:38,052 INFO     # genes        : 293
+2022-12-23 01:51:38,052 INFO     val_dataset:
+2022-12-23 01:51:38,052 INFO     GraphTabDataset Summary
+2022-12-23 01:51:38,052 INFO     =======================
+2022-12-23 01:51:38,052 INFO     # observations : 13784
+2022-12-23 01:51:38,061 INFO     # cell-lines   : 856
+2022-12-23 01:51:38,070 INFO     # drugs        : 181
+2022-12-23 01:51:38,070 INFO     # genes        : 293
+2022-12-23 01:51:38,072 INFO     Finished creating pytorch training datasets!
+2022-12-23 01:51:38,072 INFO     Number of batches per dataset:
+2022-12-23 01:51:38,072 INFO       train : 111
+2022-12-23 01:51:38,072 INFO       test  : 14
+2022-12-23 01:51:38,072 INFO       val   : 14
+2022-12-23 01:51:38,119 INFO     device: cuda
+2022-12-23 01:55:23,394 INFO     Finished reading drug response matrix: (137835, 9)
+2022-12-23 01:55:23,401 INFO     DRM Number of unique cell-lines: 856
+2022-12-23 01:55:23,663 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2022-12-23 01:55:23,664 INFO     Finished reading drug SMILES dict: 181
+2022-12-23 01:55:23,664 INFO     Finished building GraphTabDataset!
+2022-12-23 01:55:23,664 INFO     GraphTabDataset Summary
+2022-12-23 01:55:23,664 INFO     =======================
+2022-12-23 01:55:23,664 INFO     # observations : 137835
+2022-12-23 01:55:23,761 INFO     # cell-lines   : 856
+2022-12-23 01:55:23,837 INFO     # drugs        : 181
+2022-12-23 01:55:23,837 INFO     # genes        : 293
+2022-12-23 01:55:23,837 INFO     Full     shape: (137835, 9)
+2022-12-23 01:55:24,044 INFO     train    shape: (110268, 9)
+2022-12-23 01:55:24,045 INFO     test_val shape: (27567, 9)
+2022-12-23 01:55:24,045 INFO     test     shape: (13783, 9)
+2022-12-23 01:55:24,045 INFO     val      shape: (13784, 9)
+2022-12-23 01:55:24,045 INFO     train_dataset:
+2022-12-23 01:55:24,045 INFO     GraphTabDataset Summary
+2022-12-23 01:55:24,045 INFO     =======================
+2022-12-23 01:55:24,045 INFO     # observations : 110268
+2022-12-23 01:55:24,118 INFO     # cell-lines   : 856
+2022-12-23 01:55:24,188 INFO     # drugs        : 181
+2022-12-23 01:55:24,188 INFO     # genes        : 293
+2022-12-23 01:55:24,188 INFO     test_dataset:
+2022-12-23 01:55:24,188 INFO     GraphTabDataset Summary
+2022-12-23 01:55:24,188 INFO     =======================
+2022-12-23 01:55:24,188 INFO     # observations : 13783
+2022-12-23 01:55:24,198 INFO     # cell-lines   : 856
+2022-12-23 01:55:24,206 INFO     # drugs        : 181
+2022-12-23 01:55:24,206 INFO     # genes        : 293
+2022-12-23 01:55:24,206 INFO     val_dataset:
+2022-12-23 01:55:24,206 INFO     GraphTabDataset Summary
+2022-12-23 01:55:24,206 INFO     =======================
+2022-12-23 01:55:24,206 INFO     # observations : 13784
+2022-12-23 01:55:24,214 INFO     # cell-lines   : 856
+2022-12-23 01:55:24,222 INFO     # drugs        : 181
+2022-12-23 01:55:24,222 INFO     # genes        : 293
+2022-12-23 01:55:24,223 INFO     Finished creating pytorch training datasets!
+2022-12-23 01:55:24,224 INFO     Number of batches per dataset:
+2022-12-23 01:55:24,224 INFO       train : 111
+2022-12-23 01:55:24,224 INFO       test  : 14
+2022-12-23 01:55:24,224 INFO       val   : 14
+2022-12-23 01:55:24,271 INFO     device: cuda

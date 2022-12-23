@@ -1,0 +1,142 @@
+2022-12-23 02:56:23,503 INFO     Finished reading drug response matrix: (137835, 9)
+2022-12-23 02:56:23,510 INFO     DRM Number of unique cell-lines: 856
+2022-12-23 02:56:25,001 INFO     Finished reading cell-line gene matrix: (856, 1173)
+2022-12-23 02:56:25,075 INFO     Finished reading drug SMILES matrix: (181, 257)
+2022-12-23 02:56:25,077 INFO     Finished building TabTabDataset!
+2022-12-23 02:56:25,077 INFO     TabTabDataset Summary
+2022-12-23 02:56:25,077 INFO     =====================
+2022-12-23 02:56:25,077 INFO     # observations : 137835
+2022-12-23 02:56:25,171 INFO     # cell-lines   : 856
+2022-12-23 02:56:25,247 INFO     # drugs        : 181
+2022-12-23 02:56:25,248 INFO     # genes        : 293
+2022-12-23 02:56:25,248 INFO     HyperParameters
+2022-12-23 02:56:25,248 INFO     ===============
+2022-12-23 02:56:25,248 INFO     batch_size: 100
+2022-12-23 02:56:25,248 INFO     learning_rate: 0.0001
+2022-12-23 02:56:25,248 INFO     train_ratio: 0.8
+2022-12-23 02:56:25,248 INFO     val_ratio: 0.5
+2022-12-23 02:56:25,248 INFO     test_ratio: 0.5
+2022-12-23 02:56:25,248 INFO     num_epochs: 20
+2022-12-23 02:56:25,248 INFO     num_workers: 4
+2022-12-23 02:56:25,248 INFO     random_seed: 42
+2022-12-23 02:56:25,248 INFO     None
+2022-12-23 02:56:25,450 INFO     train_set.shape: (110268, 9)
+2022-12-23 02:56:25,450 INFO     test_set.shape: (13783, 9)
+2022-12-23 02:56:25,450 INFO     val_set.shape: (13784, 9)
+2022-12-23 02:56:25,451 INFO     train_dataset
+2022-12-23 02:56:25,451 INFO     TabTabDataset Summary
+2022-12-23 02:56:25,451 INFO     =====================
+2022-12-23 02:56:25,451 INFO     # observations : 110268
+2022-12-23 02:56:25,524 INFO     # cell-lines   : 856
+2022-12-23 02:56:25,593 INFO     # drugs        : 181
+2022-12-23 02:56:25,593 INFO     # genes        : 293
+2022-12-23 02:56:25,593 INFO     test_dataset
+2022-12-23 02:56:25,593 INFO     TabTabDataset Summary
+2022-12-23 02:56:25,593 INFO     =====================
+2022-12-23 02:56:25,593 INFO     # observations : 13783
+2022-12-23 02:56:25,602 INFO     # cell-lines   : 856
+2022-12-23 02:56:25,610 INFO     # drugs        : 181
+2022-12-23 02:56:25,610 INFO     # genes        : 293
+2022-12-23 02:56:25,610 INFO     val_dataset
+2022-12-23 02:56:25,610 INFO     TabTabDataset Summary
+2022-12-23 02:56:25,610 INFO     =====================
+2022-12-23 02:56:25,610 INFO     # observations : 13784
+2022-12-23 02:56:25,619 INFO     # cell-lines   : 856
+2022-12-23 02:56:25,627 INFO     # drugs        : 181
+2022-12-23 02:56:25,627 INFO     # genes        : 293
+2022-12-23 02:56:25,627 INFO     Finished creating pytorch training datasets!
+2022-12-23 02:56:25,628 INFO     Number of batches per dataset:
+2022-12-23 02:56:25,628 INFO       train : 1103
+2022-12-23 02:56:25,628 INFO       test  : 138
+2022-12-23 02:56:25,628 INFO       val   : 138
+2022-12-23 02:56:25,677 INFO     device: cuda
+2022-12-23 02:56:27,226 INFO     TabTab_v1(
+  (cell_emb): Sequential(
+    (0): Linear(in_features=1172, out_features=516, bias=True)
+    (1): BatchNorm1d(516, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=516, out_features=256, bias=True)
+    (5): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=256, out_features=128, bias=True)
+    (9): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (10): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2022-12-23 02:56:27,227 INFO     TRAINING the model
+2022-12-23 02:56:59,469 INFO     =====Epoch 1
+2022-12-23 02:56:59,469 INFO     Train      | MSE: 5.72702
+2022-12-23 02:56:59,469 INFO     Validation | MSE: 2.31554
+2022-12-23 02:57:33,439 INFO     =====Epoch 2
+2022-12-23 02:57:33,439 INFO     Train      | MSE: 1.97432
+2022-12-23 02:57:33,440 INFO     Validation | MSE: 1.49183
+2022-12-23 02:58:05,441 INFO     =====Epoch 3
+2022-12-23 02:58:05,442 INFO     Train      | MSE: 1.65172
+2022-12-23 02:58:05,442 INFO     Validation | MSE: 1.41168
+2022-12-23 02:58:37,849 INFO     =====Epoch 4
+2022-12-23 02:58:37,850 INFO     Train      | MSE: 1.58554
+2022-12-23 02:58:37,850 INFO     Validation | MSE: 1.43238
+2022-12-23 02:59:10,242 INFO     =====Epoch 5
+2022-12-23 02:59:10,243 INFO     Train      | MSE: 1.52936
+2022-12-23 02:59:10,243 INFO     Validation | MSE: 1.35797
+2022-12-23 02:59:42,465 INFO     =====Epoch 6
+2022-12-23 02:59:42,465 INFO     Train      | MSE: 1.49244
+2022-12-23 02:59:42,466 INFO     Validation | MSE: 1.31070
+2022-12-23 03:00:14,754 INFO     =====Epoch 7
+2022-12-23 03:00:14,754 INFO     Train      | MSE: 1.45642
+2022-12-23 03:00:14,754 INFO     Validation | MSE: 1.27535
+2022-12-23 03:00:48,216 INFO     =====Epoch 8
+2022-12-23 03:00:48,217 INFO     Train      | MSE: 1.42299
+2022-12-23 03:00:48,217 INFO     Validation | MSE: 1.24399
+2022-12-23 03:01:20,748 INFO     =====Epoch 9
+2022-12-23 03:01:20,749 INFO     Train      | MSE: 1.38837
+2022-12-23 03:01:20,749 INFO     Validation | MSE: 1.20758
+2022-12-23 03:01:53,062 INFO     =====Epoch 10
+2022-12-23 03:01:53,062 INFO     Train      | MSE: 1.36487
+2022-12-23 03:01:53,063 INFO     Validation | MSE: 1.20277
+2022-12-23 03:02:25,631 INFO     =====Epoch 11
+2022-12-23 03:02:25,631 INFO     Train      | MSE: 1.34446
+2022-12-23 03:02:25,631 INFO     Validation | MSE: 1.18227
+2022-12-23 03:02:58,077 INFO     =====Epoch 12
+2022-12-23 03:02:58,077 INFO     Train      | MSE: 1.31799
+2022-12-23 03:02:58,077 INFO     Validation | MSE: 1.21699
+2022-12-23 03:03:32,307 INFO     =====Epoch 13
+2022-12-23 03:03:32,307 INFO     Train      | MSE: 1.30263
+2022-12-23 03:03:32,307 INFO     Validation | MSE: 1.16504
+2022-12-23 03:04:04,863 INFO     =====Epoch 14
+2022-12-23 03:04:04,864 INFO     Train      | MSE: 1.27757
+2022-12-23 03:04:04,864 INFO     Validation | MSE: 1.15900
+2022-12-23 03:04:37,251 INFO     =====Epoch 15
+2022-12-23 03:04:37,252 INFO     Train      | MSE: 1.26472
+2022-12-23 03:04:37,252 INFO     Validation | MSE: 1.11545
+2022-12-23 03:05:09,846 INFO     =====Epoch 16
+2022-12-23 03:05:09,847 INFO     Train      | MSE: 1.24983
+2022-12-23 03:05:09,847 INFO     Validation | MSE: 1.15000
+2022-12-23 03:05:42,314 INFO     =====Epoch 17
+2022-12-23 03:05:42,314 INFO     Train      | MSE: 1.23109
+2022-12-23 03:05:42,314 INFO     Validation | MSE: 1.10269
+2022-12-23 03:06:14,985 INFO     =====Epoch 18
+2022-12-23 03:06:14,986 INFO     Train      | MSE: 1.22141
+2022-12-23 03:06:14,986 INFO     Validation | MSE: 1.09993
