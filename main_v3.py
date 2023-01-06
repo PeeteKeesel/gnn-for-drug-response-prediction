@@ -6,12 +6,19 @@ import torch.nn as nn
 import numpy    as np
 import pandas   as pd
 
+from sklearn.model_selection       import train_test_split
 from argparse                      import ArgumentParser
 from pathlib                       import Path
 from src.models.TabTab.tab_tab     import TabTabDataset, create_tab_tab_datasets, BuildTabTabModel, TabTab_v1
-from src.models.GraphTab.graph_tab import GraphTabDataset, create_graph_tab_datasets, BuildGraphTabModel, GraphTab_v1, GraphTab_v2
+# from src.models.GraphTab.graph_tab import GraphTabDataset, create_graph_tab_datasets, create_gt_loaders, BuildGraphTabModel, GraphTab_v1, GraphTab_v2, create_gt_final_datasets, create_gt_loaders
+from src.models.GraphTab.graph_tab_v2 import GraphTabDataset, create_graph_tab_datasets, create_gt_loaders, BuildGraphTabModel, GraphTab_v1, GraphTab_v2, create_gt_final_datasets, create_gt_loaders
 from src.models.TabGraph.tab_graph import TabGraphDataset, create_tab_graph_datasets, BuildTabGraphModel, TabGraph_v1
 from src.preprocess.processor      import Processor
+from skopt                         import gbrt_minimize
+from skopt.space                   import Real, Integer, Categorical, Dimension
+from sklearn.model_selection       import KFold
+from functools                     import partial
+
 
 PERFORMANCES = 'performances/'
 
@@ -26,14 +33,18 @@ def parse_args():
                         help='learning rate (default: 0.0001)')
     parser.add_argument('--train_ratio', type=float, default=0.8, 
                         help='training set ratio (default: 0.8)')
-    parser.add_argument('--val_ratio', type=float, default=0.5, 
+    parser.add_argument('--val_ratio', type=float, default=0.1, 
                         help='validation set ratio inside the test set (default: 0.5)')
+    parser.add_argument('--test_ratio', type=float, default=0.1, 
+                        help='test set ratio (default: 0.1)')    
     parser.add_argument('--num_epochs', type=int, default=5, 
                         help='number of epochs (default: )')
     parser.add_argument('--num_workers', type=int, default=24, 
                         help='number of workers for DataLoader (default: 3)')
     parser.add_argument('--dropout', type=float, default=0.1, 
                         help='dropout probability (default: 0.1)')
+    parser.add_argument('--kfolds', type=float, default=5, 
+                        help='number of folds for cross validation (default: 5)')    
     parser.add_argument('--model', type=str, default='GraphTab', 
                         help='name of the model to run, options: ' + \
                              '[`TabTab`, `GraphTab`, `TabGraph`, `GraphGraph`,' + \
@@ -83,9 +94,88 @@ class HyperParameters:
         logging.info(f"test_ratio: {1-self.VAL_RATIO}")
         logging.info(f"num_epochs: {self.NUM_EPOCHS}") 
         logging.info(f"num_workers: {self.NUM_WORKERS}")
-        logging.info(f"random_seed: {self.RANDOM_SEED}")        
+        logging.info(f"random_seed: {self.RANDOM_SEED}")  
+        
+def print_args_summary(args):
+    logging.info("Args Summary")
+    logging.info("============")
+    logging.info(f"batch_size: {args.batch_size}")
+    logging.info(f"learning_rate: {args.lr}")
+    logging.info(f"train_ratio: {args.train_ratio}")
+    logging.info(f"val_ratio: {args.train_ratio/args.kfolds}")
+    logging.info(f"test_ratio: {1-args.train_ratio}")
+    logging.info(f"num_epochs: {args.num_epochs}") 
+    logging.info(f"num_workers: {args.num_workers}")
+    logging.info(f"random_seed: {args.seed}")      
+        
+def objective_gt(params, args, device, datasets):
+    """
+    Defines the objective function for GraphTab.
+    """
+    learning_rate = params[0]
+    train_val_set, test_set, cl_graphs, fingerprints_dict = datasets
+    logging.info(f"{4*' '}learning rate: {learning_rate}")
 
+    # Initialize model and model class.
+    match args.version:
+        case 'v1': 
+            model = GraphTab_v1().to(device)
+        case 'v2':
+            model = GraphTab_v2().to(device)
+        case _:
+            raise NotImplementedError(f"Given model version {args.version} is not implemented for GraphTab!")    
+    loss_func = nn.MSELoss()
+    print(learning_rate)
+    optimizer = torch.optim.Adam(params=model.parameters(), 
+                                 lr=learning_rate)
 
+    # Compute cross-validation score.
+    kfold = KFold(n_splits=3, shuffle=True, random_state=args.seed)
+    cv_performances = {}
+    cv_mse_scores = []
+    for i, (train_i, val_i) in enumerate(kfold.split(train_val_set), 1):
+        train_set = train_val_set.iloc[train_i]
+        val_set = train_val_set.iloc[val_i]
+
+        # Create loaders.
+        train_loader, val_loader, test_loader = create_gt_loaders(
+            [train_set, val_set, test_set],
+            cl_graphs, 
+            fingerprints_dict,
+            args
+        )
+        
+        gt_cls = BuildGraphTabModel(
+            model=model,
+            criterion=loss_func,
+            optimizer=optimizer,
+            num_epochs=args.num_epochs,
+            train_loader=train_loader,
+            test_loader=test_loader,
+            val_loader=val_loader, 
+            device=device
+        )
+        logging.info(gt_cls.model)        
+
+        # Set the loader attributes such that they can be used inside the class.
+        gt_cls.train_loader = train_loader
+        gt_cls.val_ratio = val_loader
+        gt_cls.test_loader = test_loader
+
+        # Train the model on the training fold.
+        performances = gt_cls.train(gt_cls.train_loader)
+
+        cv_performances[f'k{i}_val'] = performances.get('val')
+        cv_mse_scores.append(performances.get('val').get('mse'))
+
+    logging.info(f"KFold CV MSE score: {cv_mse_scores}")
+    logging.info(f"KFold CV MSE score mean: {np.mean(cv_mse_scores.cpu().numpy())}")
+    logging.info(f"KFold CV MSE score std: {np.std(cv_mse_scores.cpu().numpy())}")    
+
+    return np.mean(cv_mse_scores.cpu().numpy())
+        
+
+# -----------------------------------------------------------------------------
 def main():
     args = parse_args()
 
@@ -123,7 +213,8 @@ def main():
         processor.create_processed_datasets()
         processor.create_gene_gene_interaction_graph()
         processor.create_drug_datasets()
-
+        
+    # -------------------------------------------------------------------------
     # --- Drug response matrix ---
     with open(processor.processed_path + 'gdsc2_drm.pkl', 'rb') as f: 
         drm = pickle.load(f)
@@ -170,6 +261,8 @@ def main():
             drug_graphs = pickle.load(f)
             logging.info(f"Finished reading drug SMILES graphs: {drug_graphs[1003]}")
 
+    # -------------------------------------------------------------------------
+    
     # --------------- #
     # Train the model #
     # --------------- #
@@ -240,32 +333,72 @@ def main():
             drug_response_matrix=drm
         )
         logging.info("Finished building GraphTabDataset!")
-        graph_tab_dataset.print_dataset_summary() 
+        graph_tab_dataset.print_dataset_summary()
+        logging.info(print_args_summary(args))
+        
+        # Define hyperparameters to optimize for.
+        param_space = [
+            Real(low=0.0004, high=0.1, prior='log-uniform', name='learning_rate')
+            # Real(0.0, 0.5, prior='uniform', name='dropout'),
+            # Real(0.0, 0.001, prior='log-uniform', name='weight_decay')
+            # Dimension(low=16, high=1024, prior='uniform', name='batch_size')
+            # Categorical(categories=['GCNConv', 'GATConv'], name='conv_type')
+        ]
 
-        hyper_params = HyperParameters(
-            batch_size=args.batch_size, 
-            lr=args.lr, 
-            train_ratio=args.train_ratio, 
-            val_ratio=args.val_ratio, 
-            num_epochs=args.num_epochs, 
-            seed=args.seed,
-            num_workers=args.num_workers
-        )
-        logging.info(hyper_params())
-
-        # Create pytorch geometric DataLoader datasets.
-        # TODO: make some args as separate input parameters
-        train_loader, test_loader, val_loader = create_graph_tab_datasets(
+        train_val_set, test_set = train_test_split(
             drm, 
+            test_size=1 - (args.train_ratio + args.val_ratio),
+            random_state=args.seed,
+            stratify=drm['CELL_LINE_NAME']
+        )
+        
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        logging.info(f"device: {device}")
+        
+        # Define fixed parameters for the objective function.
+        fixed_params = {
+            'args': args,
+            'device': device,
+            'datasets': [train_val_set, test_set, cl_graphs, fingerprints_dict]
+        }
+        
+        import skopt
+        print(skopt.__version__)
+        print(param_space)
+
+        objective_gt_fixed = partial(objective_gt, **fixed_params)
+
+        # Run the bayesian hyperparameter optimization.
+        bayes_res = gbrt_minimize(
+            objective_gt_fixed, 
+            param_space, 
+            n_calls=10, # TODO: make this higher
+            random_state=args.seed,
+            n_jobs=args.num_workers
+        )
+        optimal_params = bayes_res.x
+
+        logging.info("Results of Bayesian Hyperparameter optimization")
+        logging.info("===============================================")
+        logging.info(f"4*{''}Optimal hyperparameter values:")
+        for param, value in zip(bayes_res.space, optimal_params):
+            logging.info(f"8*{''}Param: {param.name:15s} optimal value: {value}")        
+        
+        # ---------------------------------------------------------------------
+        # --- Train final model using the optimal hyperparameters ---
+        optimal_learning_rate = optimal_params[0]
+        
+        train_val_loader, test_loader = create_gt_final_datasets(
+            [train_val_set, test_set],
             cl_graphs, 
             fingerprints_dict, 
-            hyper_params
+            args
         )
+        
         logging.info("Finished creating pytorch training datasets!")
         logging.info("Number of batches per dataset:")
         logging.info(f"  train : {len(train_loader)}")
         logging.info(f"  test  : {len(test_loader)}")
-        logging.info(f"  val   : {len(val_loader)}")
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         logging.info(f"device: {device}")
@@ -280,9 +413,7 @@ def main():
             
         loss_func = nn.MSELoss()
         optimizer = torch.optim.Adam(params=model.parameters(), 
-                                     lr=args.lr) # TODO: weight_decay=1e-5 or 5e-3 
-        # TODO: include weight_decay of lr
-        # check https://github.com/pyg-team/pytorch_geometric/blob/master/examples/gnn_explainer.py#L32
+                                     lr=optimal_learning_rate)
 
         # Build the model.
         build_model = BuildGraphTabModel(
@@ -291,24 +422,15 @@ def main():
             optimizer=optimizer,
             num_epochs=args.num_epochs,
             train_loader=train_loader,
-            test_loader=test_loader,
-            val_loader=val_loader, 
+            val_loader=train_loader,        
+            test_loader=test_loader, 
             device=device
         )
         logging.info(build_model.model)      
 
         # Train the model.
         performance_stats = build_model.train(build_model.train_loader)
-
-        # ONLY USE A SAMPLE
-        # sample = drm.sample(1_000)
-        # train_set, test_val_set = train_test_split(sample, test_size=0.8, random_state=args.seed)
-        # sample_dataset = GraphTabDataset(cl_graphs=cl_graphs, drugs=fingerprints_dict, drug_response_matrix=train_set)
-        # logging.info("\ntrain_dataset:")
-        # sample_dataset.print_dataset_summary()
-        # sample_loader = DataLoader(dataset=sample_dataset, batch_size=2, shuffle=True) 
-        # performance_stats = build_model.train(sample_loader)
-
+        
     # --- TabGraph model training ---    
     elif args.model == 'TabGraph':
         cl_gene_mat.set_index('CELL_LINE_NAME', inplace=True)
@@ -373,10 +495,11 @@ def main():
         'model_state_dict': build_model.model.state_dict(),
         'optimizer_state_dict': build_model.optimizer.state_dict(),
         'train_performances': performance_stats['train'],
-        'val_performances': performance_stats['val']
-    }, PERFORMANCES + f'model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}_{args.seed}_{args.file_ending}.pth')
+        'val_performances': performance_stats['val'],
+        'test_performance': performance_stats['test']
+    }, PERFORMANCES + f'Bayes_model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}_{args.seed}_{args.file_ending}.pth')
         
 
 
 if __name__ == "__main__":
-    main()
+    main()        

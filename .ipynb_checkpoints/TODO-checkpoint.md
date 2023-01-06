@@ -22,7 +22,7 @@
 - [x] Check other performance metric [spearmanr](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.spearmanr.html)
 - [ ] Implement BayesianOptimization to tune hyperparameters:
     - __hyperparams__:
-        - `combined_score_thresh`
+        - `combined_score_thresh` (this will be visualised after the hypertuning)
         - `learning rate`
         - `dropout`
         - `number of cell GNN layers`

@@ -6,12 +6,19 @@ import torch.nn as nn
 import numpy    as np
 import pandas   as pd
 
+from sklearn.model_selection       import train_test_split
 from argparse                      import ArgumentParser
 from pathlib                       import Path
 from src.models.TabTab.tab_tab     import TabTabDataset, create_tab_tab_datasets, BuildTabTabModel, TabTab_v1
-from src.models.GraphTab.graph_tab import GraphTabDataset, create_graph_tab_datasets, BuildGraphTabModel, GraphTab_v1, GraphTab_v2
+from src.models.GraphTab.graph_tab import GraphTabDataset, create_graph_tab_datasets, create_gt_loaders, BuildGraphTabModel, GraphTab_v1, GraphTab_v2
 from src.models.TabGraph.tab_graph import TabGraphDataset, create_tab_graph_datasets, BuildTabGraphModel, TabGraph_v1
 from src.preprocess.processor      import Processor
+from skopt                         import gp_minimize
+from skopt.space                   import Real, Integer
+from sklearn.model_selection       import KFold
+from skopt                         import gbrt_minimize
+from functools                     import partial
+
 
 PERFORMANCES = 'performances/'
 
@@ -34,6 +41,8 @@ def parse_args():
                         help='number of workers for DataLoader (default: 3)')
     parser.add_argument('--dropout', type=float, default=0.1, 
                         help='dropout probability (default: 0.1)')
+    parser.add_argument('--kfolds', type=float, default=5, 
+                        help='number of folds for cross validation (default: 5)')    
     parser.add_argument('--model', type=str, default='GraphTab', 
                         help='name of the model to run, options: ' + \
                              '[`TabTab`, `GraphTab`, `TabGraph`, `GraphGraph`,' + \
@@ -83,8 +92,8 @@ class HyperParameters:
         logging.info(f"test_ratio: {1-self.VAL_RATIO}")
         logging.info(f"num_epochs: {self.NUM_EPOCHS}") 
         logging.info(f"num_workers: {self.NUM_WORKERS}")
-        logging.info(f"random_seed: {self.RANDOM_SEED}")        
-
+        logging.info(f"random_seed: {self.RANDOM_SEED}")     
+        
 
 def main():
     args = parse_args()
@@ -123,7 +132,8 @@ def main():
         processor.create_processed_datasets()
         processor.create_gene_gene_interaction_graph()
         processor.create_drug_datasets()
-
+        
+    # -------------------------------------------------------------------------
     # --- Drug response matrix ---
     with open(processor.processed_path + 'gdsc2_drm.pkl', 'rb') as f: 
         drm = pickle.load(f)
@@ -170,6 +180,8 @@ def main():
             drug_graphs = pickle.load(f)
             logging.info(f"Finished reading drug SMILES graphs: {drug_graphs[1003]}")
 
+    # -------------------------------------------------------------------------
+    
     # --------------- #
     # Train the model #
     # --------------- #
@@ -252,20 +264,121 @@ def main():
             num_workers=args.num_workers
         )
         logging.info(hyper_params())
+        
+        train_val_set, test_set = train_test_split(
+            drm, 
+            test_size=0.1,
+            random_state=args.seed,
+            stratify=drm['CELL_LINE_NAME']
+        )
+        
+        # Define the search spaces.
+        learning_rate_space = Real(.001, .1, name='learning_rate')
+        batch_size_space = Integer(10, 1_000, name='batch_size')
+        weight_decay_space = Real(0, .001, name='weight_decay')
+        
+        def optimize_gt(params):
+            batch_size = params[0]    
+            weight_decay = params[1]
+            learning_rate = params[2]
+            
+            # Use 5-fold cross-validation to evaluate the model's performance
+            kf, performances = KFold(n_splits=args.kfolds), []
+            for i, (i_train, i_val) in enumerate(kf.split(train_val_set)):
+                logging.info(f"KFold iteration {i}")  
+                train_set = train_val_set.iloc[i_train]
+                val_set = train_val_set.iloc[i_val]                
+                
+                train_loader, val_loader, test_loader = create_gt_loaders(
+                    train_set, 
+                    val_set,
+                    test_set,
+                    cl_graphs, 
+                    fingerprints_dict, 
+                    args,
+                    batch_size
+                )
+                logging.info("Finished creating pytorch training datasets!")
+                logging.info("Number of batches per dataset:")
+                logging.info(f"  train : {len(train_loader)}")
+                logging.info(f"  val   : {len(val_loader)}")        
+                logging.info(f"  test  : {len(test_loader)}")
+
+                device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+                logging.info(f"device: {device}")   
+                
+                match args.version:
+                    case 'v1': 
+                        model = GraphTab_v1().to(device)
+                    case 'v2':
+                        model = GraphTab_v2().to(device)
+                    case _:
+                        raise NotImplementedError(f"Given model version {args.version} is not implemented for GraphTab!")
+                                  
+                loss_func = nn.MSELoss()
+                optimizer = torch.optim.Adam(params=model.parameters(), 
+                                             lr=learning_rate,
+                                             weight_decay=weight_decay)
+
+                # Build the model.
+                build_model = BuildGraphTabModel(
+                    model=model,
+                    criterion=loss_func,
+                    optimizer=optimizer,
+                    num_epochs=args.num_epochs,
+                    train_loader=train_loader,
+                    val_loader=val_loader,            
+                    test_loader=test_loader, 
+                    device=device
+                )
+                logging.info(build_model.model)      
+
+                # Train the model on the training fold.
+                performance_stats = build_model.train(build_model.train_loader)
+
+                # Evaluate the model on the validation fold.
+                mse_va, rmse_va, mae_va, r2_va, pcc_va, scc_va, _, _ = build_model.validate(build_model.val_loader)        
+
+                performances.append(rmse_va)
+
+            # Return the negative of the average performance (since skopt minimizes the objective function)
+            return -np.mean(performances)           
+        
+        # Use the gp_minimize function to optimize the objective function.
+        opt_params = gp_minimize(
+            optimize_gt, 
+            (
+                batch_size_space,
+                weight_decay_space,
+                learning_rate_space
+#                 'kfold_splits': args.kfolds,
+#                 'train_val_set': train_val_set,
+#                 'test_set': test_set,
+#                 'args': args
+            ),
+            n_calls=50
+        )
+        
+        # Extract the optimal values of the hyperparameters.
+        optimal_batch_size = opt_params.x[0]
+        optimal_weight_decay = opt_params.x[1]
+        optimal_learning_rate = opt_params.x[2]
 
         # Create pytorch geometric DataLoader datasets.
         # TODO: make some args as separate input parameters
-        train_loader, test_loader, val_loader = create_graph_tab_datasets(
-            drm, 
+        train_loader, val_loader, test_loader = create_gt_loaders(
+            train_val_set, 
             cl_graphs, 
             fingerprints_dict, 
-            hyper_params
+            params['args'],
+            optimal_batch_size,
+            params['test_set']
         )
         logging.info("Finished creating pytorch training datasets!")
         logging.info("Number of batches per dataset:")
         logging.info(f"  train : {len(train_loader)}")
+        logging.info(f"  val   : {len(val_loader)}")        
         logging.info(f"  test  : {len(test_loader)}")
-        logging.info(f"  val   : {len(val_loader)}")
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         logging.info(f"device: {device}")
@@ -280,7 +393,8 @@ def main():
             
         loss_func = nn.MSELoss()
         optimizer = torch.optim.Adam(params=model.parameters(), 
-                                     lr=args.lr) # TODO: weight_decay=1e-5 or 5e-3 
+                                     lr=optimal_learning_rate,
+                                     weight_decay=optimal_weight_decay)
         # TODO: include weight_decay of lr
         # check https://github.com/pyg-team/pytorch_geometric/blob/master/examples/gnn_explainer.py#L32
 
@@ -291,15 +405,16 @@ def main():
             optimizer=optimizer,
             num_epochs=args.num_epochs,
             train_loader=train_loader,
+            val_loader=val_loader,             
             test_loader=test_loader,
-            val_loader=val_loader, 
             device=device
         )
         logging.info(build_model.model)      
 
         # Train the model.
         performance_stats = build_model.train(build_model.train_loader)
-
+        
+        
         # ONLY USE A SAMPLE
         # sample = drm.sample(1_000)
         # train_set, test_val_set = train_test_split(sample, test_size=0.8, random_state=args.seed)
@@ -373,10 +488,11 @@ def main():
         'model_state_dict': build_model.model.state_dict(),
         'optimizer_state_dict': build_model.optimizer.state_dict(),
         'train_performances': performance_stats['train'],
-        'val_performances': performance_stats['val']
-    }, PERFORMANCES + f'model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}_{args.seed}_{args.file_ending}.pth')
+        'val_performances': performance_stats['val'],
+        'test_performance': performance_stats['test']
+    }, PERFORMANCES + f'Bayes_model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}_{args.seed}_{args.file_ending}.pth')
         
 
 
 if __name__ == "__main__":
-    main()
+    main()        

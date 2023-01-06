@@ -1,0 +1,1143 @@
+2023-01-05 23:18:00,573 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:18:00,579 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:18:00,914 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:18:00,915 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:18:00,915 INFO     Finished building GraphTabDataset!
+2023-01-05 23:18:00,915 INFO     GraphTabDataset Summary
+2023-01-05 23:18:00,915 INFO     =======================
+2023-01-05 23:18:00,915 INFO     # observations : 137835
+2023-01-05 23:18:01,009 INFO     # cell-lines   : 856
+2023-01-05 23:18:01,085 INFO     # drugs        : 181
+2023-01-05 23:18:01,085 INFO     # genes        : 293
+2023-01-05 23:18:01,085 INFO     Args Summary
+2023-01-05 23:18:01,085 INFO     ============
+2023-01-05 23:18:01,085 INFO     batch_size: 100
+2023-01-05 23:18:01,085 INFO     learning_rate: 0.0001
+2023-01-05 23:18:01,085 INFO     train_ratio: 0.9
+2023-01-05 23:18:01,085 INFO     val_ratio: 0.18
+2023-01-05 23:18:36,707 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:18:36,714 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:18:37,119 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:18:37,121 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:18:37,121 INFO     Finished building GraphTabDataset!
+2023-01-05 23:18:37,121 INFO     GraphTabDataset Summary
+2023-01-05 23:18:37,121 INFO     =======================
+2023-01-05 23:18:37,122 INFO     # observations : 137835
+2023-01-05 23:18:37,215 INFO     # cell-lines   : 856
+2023-01-05 23:18:37,292 INFO     # drugs        : 181
+2023-01-05 23:18:37,292 INFO     # genes        : 293
+2023-01-05 23:18:37,292 INFO     Args Summary
+2023-01-05 23:18:37,292 INFO     ============
+2023-01-05 23:18:37,292 INFO     batch_size: 100
+2023-01-05 23:18:37,292 INFO     learning_rate: 0.0001
+2023-01-05 23:18:37,292 INFO     train_ratio: 0.9
+2023-01-05 23:18:37,292 INFO     val_ratio: 0.18
+2023-01-05 23:18:37,292 INFO     test_ratio: 0.09999999999999998
+2023-01-05 23:18:37,292 INFO     num_epochs: 2
+2023-01-05 23:18:37,292 INFO     num_workers: 4
+2023-01-05 23:18:37,292 INFO     random_seed: 42
+2023-01-05 23:18:37,292 INFO     None
+2023-01-05 23:19:19,079 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:19:19,086 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:19:19,432 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:19:19,433 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:19:19,433 INFO     Finished building GraphTabDataset!
+2023-01-05 23:19:19,434 INFO     GraphTabDataset Summary
+2023-01-05 23:19:19,434 INFO     =======================
+2023-01-05 23:19:19,434 INFO     # observations : 137835
+2023-01-05 23:19:19,528 INFO     # cell-lines   : 856
+2023-01-05 23:19:19,604 INFO     # drugs        : 181
+2023-01-05 23:19:19,605 INFO     # genes        : 293
+2023-01-05 23:19:19,605 INFO     Args Summary
+2023-01-05 23:19:19,605 INFO     ============
+2023-01-05 23:19:19,605 INFO     batch_size: 100
+2023-01-05 23:19:19,605 INFO     learning_rate: 0.0001
+2023-01-05 23:19:19,605 INFO     train_ratio: 0.9
+2023-01-05 23:19:19,605 INFO     val_ratio: 0.18
+2023-01-05 23:19:19,605 INFO     test_ratio: 0.09999999999999998
+2023-01-05 23:19:19,605 INFO     num_epochs: 2
+2023-01-05 23:19:19,605 INFO     num_workers: 4
+2023-01-05 23:19:19,605 INFO     random_seed: 42
+2023-01-05 23:19:19,605 INFO     None
+2023-01-05 23:21:32,705 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:21:32,712 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:21:33,028 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:21:33,029 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:21:33,029 INFO     Finished building GraphTabDataset!
+2023-01-05 23:21:33,029 INFO     GraphTabDataset Summary
+2023-01-05 23:21:33,029 INFO     =======================
+2023-01-05 23:21:33,029 INFO     # observations : 137835
+2023-01-05 23:21:33,123 INFO     # cell-lines   : 856
+2023-01-05 23:21:33,200 INFO     # drugs        : 181
+2023-01-05 23:21:33,200 INFO     # genes        : 293
+2023-01-05 23:21:33,200 INFO     Args Summary
+2023-01-05 23:21:33,200 INFO     ============
+2023-01-05 23:21:33,200 INFO     batch_size: 100
+2023-01-05 23:21:33,200 INFO     learning_rate: 0.0001
+2023-01-05 23:21:33,201 INFO     train_ratio: 0.8
+2023-01-05 23:21:33,201 INFO     val_ratio: 0.16
+2023-01-05 23:21:33,201 INFO     test_ratio: 0.19999999999999996
+2023-01-05 23:21:33,201 INFO     num_epochs: 2
+2023-01-05 23:21:33,201 INFO     num_workers: 4
+2023-01-05 23:21:33,201 INFO     random_seed: 42
+2023-01-05 23:21:33,201 INFO     None
+2023-01-05 23:21:33,426 INFO     device: cuda
+2023-01-05 23:22:10,570 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:22:10,578 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:22:10,893 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:22:10,894 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:22:10,895 INFO     Finished building GraphTabDataset!
+2023-01-05 23:22:10,895 INFO     GraphTabDataset Summary
+2023-01-05 23:22:10,895 INFO     =======================
+2023-01-05 23:22:10,895 INFO     # observations : 137835
+2023-01-05 23:22:10,989 INFO     # cell-lines   : 856
+2023-01-05 23:22:11,069 INFO     # drugs        : 181
+2023-01-05 23:22:11,069 INFO     # genes        : 293
+2023-01-05 23:22:11,069 INFO     Args Summary
+2023-01-05 23:22:11,069 INFO     ============
+2023-01-05 23:22:11,069 INFO     batch_size: 100
+2023-01-05 23:22:11,069 INFO     learning_rate: 0.0001
+2023-01-05 23:22:11,069 INFO     train_ratio: 0.8
+2023-01-05 23:22:11,069 INFO     val_ratio: 0.16
+2023-01-05 23:22:11,069 INFO     test_ratio: 0.19999999999999996
+2023-01-05 23:22:11,069 INFO     num_epochs: 2
+2023-01-05 23:22:11,069 INFO     num_workers: 4
+2023-01-05 23:22:11,069 INFO     random_seed: 42
+2023-01-05 23:22:11,069 INFO     None
+2023-01-05 23:22:11,299 INFO     device: cuda
+2023-01-05 23:23:00,442 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:23:00,450 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:23:00,752 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:23:00,752 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:23:00,753 INFO     Finished building GraphTabDataset!
+2023-01-05 23:23:00,753 INFO     GraphTabDataset Summary
+2023-01-05 23:23:00,753 INFO     =======================
+2023-01-05 23:23:00,753 INFO     # observations : 137835
+2023-01-05 23:23:00,847 INFO     # cell-lines   : 856
+2023-01-05 23:23:00,923 INFO     # drugs        : 181
+2023-01-05 23:23:00,923 INFO     # genes        : 293
+2023-01-05 23:23:00,923 INFO     Args Summary
+2023-01-05 23:23:00,923 INFO     ============
+2023-01-05 23:23:00,923 INFO     batch_size: 100
+2023-01-05 23:23:00,923 INFO     learning_rate: 0.0001
+2023-01-05 23:23:00,923 INFO     train_ratio: 0.8
+2023-01-05 23:23:00,923 INFO     val_ratio: 0.16
+2023-01-05 23:23:00,923 INFO     test_ratio: 0.19999999999999996
+2023-01-05 23:23:00,923 INFO     num_epochs: 2
+2023-01-05 23:23:00,923 INFO     num_workers: 4
+2023-01-05 23:23:00,924 INFO     random_seed: 42
+2023-01-05 23:23:00,924 INFO     None
+2023-01-05 23:23:01,151 INFO     device: cuda
+2023-01-05 23:26:32,793 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:26:32,801 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:26:33,122 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:26:33,123 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:26:33,124 INFO     Finished building GraphTabDataset!
+2023-01-05 23:26:33,124 INFO     GraphTabDataset Summary
+2023-01-05 23:26:33,124 INFO     =======================
+2023-01-05 23:26:33,124 INFO     # observations : 137835
+2023-01-05 23:26:33,218 INFO     # cell-lines   : 856
+2023-01-05 23:26:33,293 INFO     # drugs        : 181
+2023-01-05 23:26:33,294 INFO     # genes        : 293
+2023-01-05 23:26:33,294 INFO     Args Summary
+2023-01-05 23:26:33,294 INFO     ============
+2023-01-05 23:26:33,294 INFO     batch_size: 100
+2023-01-05 23:26:33,294 INFO     learning_rate: 0.0001
+2023-01-05 23:26:33,294 INFO     train_ratio: 0.8
+2023-01-05 23:26:33,294 INFO     val_ratio: 0.16
+2023-01-05 23:26:33,294 INFO     test_ratio: 0.19999999999999996
+2023-01-05 23:26:33,294 INFO     num_epochs: 2
+2023-01-05 23:26:33,294 INFO     num_workers: 4
+2023-01-05 23:26:33,294 INFO     random_seed: 42
+2023-01-05 23:26:33,294 INFO     None
+2023-01-05 23:26:33,524 INFO     device: cuda
+2023-01-05 23:29:06,246 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:29:06,253 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:29:06,596 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:29:06,597 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:29:06,597 INFO     Finished building GraphTabDataset!
+2023-01-05 23:29:06,597 INFO     GraphTabDataset Summary
+2023-01-05 23:29:06,597 INFO     =======================
+2023-01-05 23:29:06,597 INFO     # observations : 137835
+2023-01-05 23:29:06,691 INFO     # cell-lines   : 856
+2023-01-05 23:29:06,767 INFO     # drugs        : 181
+2023-01-05 23:29:06,768 INFO     # genes        : 293
+2023-01-05 23:29:06,768 INFO     Args Summary
+2023-01-05 23:29:06,768 INFO     ============
+2023-01-05 23:29:06,768 INFO     batch_size: 100
+2023-01-05 23:29:06,768 INFO     learning_rate: 0.0001
+2023-01-05 23:29:06,768 INFO     train_ratio: 0.8
+2023-01-05 23:29:06,768 INFO     val_ratio: 0.16
+2023-01-05 23:29:06,768 INFO     test_ratio: 0.19999999999999996
+2023-01-05 23:29:06,768 INFO     num_epochs: 2
+2023-01-05 23:29:06,768 INFO     num_workers: 4
+2023-01-05 23:29:06,768 INFO     random_seed: 42
+2023-01-05 23:29:06,768 INFO     None
+2023-01-05 23:29:06,991 INFO     device: cuda
+2023-01-05 23:29:43,715 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:29:43,722 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:29:44,036 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:29:44,037 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:29:44,038 INFO     Finished building GraphTabDataset!
+2023-01-05 23:29:44,038 INFO     GraphTabDataset Summary
+2023-01-05 23:29:44,038 INFO     =======================
+2023-01-05 23:29:44,038 INFO     # observations : 137835
+2023-01-05 23:29:44,131 INFO     # cell-lines   : 856
+2023-01-05 23:29:44,207 INFO     # drugs        : 181
+2023-01-05 23:29:44,207 INFO     # genes        : 293
+2023-01-05 23:29:44,207 INFO     Args Summary
+2023-01-05 23:29:44,207 INFO     ============
+2023-01-05 23:29:44,208 INFO     batch_size: 100
+2023-01-05 23:29:44,208 INFO     learning_rate: 0.0001
+2023-01-05 23:29:44,208 INFO     train_ratio: 0.8
+2023-01-05 23:29:44,208 INFO     val_ratio: 0.16
+2023-01-05 23:29:44,208 INFO     test_ratio: 0.19999999999999996
+2023-01-05 23:29:44,208 INFO     num_epochs: 2
+2023-01-05 23:29:44,208 INFO     num_workers: 4
+2023-01-05 23:29:44,208 INFO     random_seed: 42
+2023-01-05 23:29:44,208 INFO     None
+2023-01-05 23:29:44,435 INFO     device: cuda
+2023-01-05 23:30:13,277 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:30:13,284 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:30:13,603 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:30:13,604 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:30:13,604 INFO     Finished building GraphTabDataset!
+2023-01-05 23:30:13,604 INFO     GraphTabDataset Summary
+2023-01-05 23:30:13,604 INFO     =======================
+2023-01-05 23:30:13,604 INFO     # observations : 137835
+2023-01-05 23:30:13,698 INFO     # cell-lines   : 856
+2023-01-05 23:30:13,774 INFO     # drugs        : 181
+2023-01-05 23:30:13,775 INFO     # genes        : 293
+2023-01-05 23:30:13,776 INFO     Args Summary
+2023-01-05 23:30:13,776 INFO     ============
+2023-01-05 23:30:13,776 INFO     batch_size: 100
+2023-01-05 23:30:13,776 INFO     learning_rate: 0.0001
+2023-01-05 23:30:13,776 INFO     train_ratio: 0.8
+2023-01-05 23:30:13,776 INFO     val_ratio: 0.16
+2023-01-05 23:30:13,776 INFO     test_ratio: 0.19999999999999996
+2023-01-05 23:30:13,776 INFO     num_epochs: 2
+2023-01-05 23:30:13,776 INFO     num_workers: 4
+2023-01-05 23:30:13,776 INFO     random_seed: 42
+2023-01-05 23:30:13,776 INFO     None
+2023-01-05 23:30:14,004 INFO     device: cuda
+2023-01-05 23:30:47,986 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:30:47,993 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:30:48,315 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:30:48,316 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:30:48,317 INFO     Finished building GraphTabDataset!
+2023-01-05 23:30:48,317 INFO     GraphTabDataset Summary
+2023-01-05 23:30:48,317 INFO     =======================
+2023-01-05 23:30:48,317 INFO     # observations : 137835
+2023-01-05 23:30:48,411 INFO     # cell-lines   : 856
+2023-01-05 23:30:48,487 INFO     # drugs        : 181
+2023-01-05 23:30:48,487 INFO     # genes        : 293
+2023-01-05 23:30:48,487 INFO     Args Summary
+2023-01-05 23:30:48,487 INFO     ============
+2023-01-05 23:30:48,487 INFO     batch_size: 100
+2023-01-05 23:30:48,487 INFO     learning_rate: 0.0001
+2023-01-05 23:30:48,487 INFO     train_ratio: 0.8
+2023-01-05 23:30:48,487 INFO     val_ratio: 0.16
+2023-01-05 23:30:48,487 INFO     test_ratio: 0.19999999999999996
+2023-01-05 23:30:48,487 INFO     num_epochs: 2
+2023-01-05 23:30:48,487 INFO     num_workers: 4
+2023-01-05 23:30:48,487 INFO     random_seed: 42
+2023-01-05 23:30:48,487 INFO     None
+2023-01-05 23:30:48,716 INFO     device: cuda
+2023-01-05 23:31:56,222 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:31:56,229 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:31:56,531 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:31:56,532 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:31:56,533 INFO     Finished building GraphTabDataset!
+2023-01-05 23:31:56,533 INFO     GraphTabDataset Summary
+2023-01-05 23:31:56,533 INFO     =======================
+2023-01-05 23:31:56,533 INFO     # observations : 137835
+2023-01-05 23:31:56,626 INFO     # cell-lines   : 856
+2023-01-05 23:31:56,702 INFO     # drugs        : 181
+2023-01-05 23:31:56,702 INFO     # genes        : 293
+2023-01-05 23:31:56,702 INFO     Args Summary
+2023-01-05 23:31:56,702 INFO     ============
+2023-01-05 23:31:56,702 INFO     batch_size: 100
+2023-01-05 23:31:56,702 INFO     learning_rate: 0.0001
+2023-01-05 23:31:56,702 INFO     train_ratio: 0.8
+2023-01-05 23:31:56,702 INFO     val_ratio: 0.16
+2023-01-05 23:31:56,702 INFO     test_ratio: 0.19999999999999996
+2023-01-05 23:31:56,702 INFO     num_epochs: 2
+2023-01-05 23:31:56,702 INFO     num_workers: 4
+2023-01-05 23:31:56,703 INFO     random_seed: 42
+2023-01-05 23:31:56,703 INFO     None
+2023-01-05 23:31:56,932 INFO     device: cuda
+2023-01-05 23:33:14,410 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:33:14,417 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:33:14,736 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:33:14,737 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:33:14,737 INFO     Finished building GraphTabDataset!
+2023-01-05 23:33:14,737 INFO     GraphTabDataset Summary
+2023-01-05 23:33:14,737 INFO     =======================
+2023-01-05 23:33:14,737 INFO     # observations : 137835
+2023-01-05 23:33:14,831 INFO     # cell-lines   : 856
+2023-01-05 23:33:14,907 INFO     # drugs        : 181
+2023-01-05 23:33:14,907 INFO     # genes        : 293
+2023-01-05 23:33:14,907 INFO     Args Summary
+2023-01-05 23:33:14,907 INFO     ============
+2023-01-05 23:33:14,908 INFO     batch_size: 100
+2023-01-05 23:33:14,908 INFO     learning_rate: 0.0001
+2023-01-05 23:33:14,908 INFO     train_ratio: 0.8
+2023-01-05 23:33:14,908 INFO     val_ratio: 0.16
+2023-01-05 23:33:14,908 INFO     test_ratio: 0.19999999999999996
+2023-01-05 23:33:14,908 INFO     num_epochs: 2
+2023-01-05 23:33:14,908 INFO     num_workers: 4
+2023-01-05 23:33:14,908 INFO     random_seed: 42
+2023-01-05 23:33:14,908 INFO     None
+2023-01-05 23:33:15,131 INFO     device: cuda
+2023-01-05 23:34:07,172 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:34:07,180 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:34:07,524 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:34:07,525 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:34:07,526 INFO     Finished building GraphTabDataset!
+2023-01-05 23:34:07,526 INFO     GraphTabDataset Summary
+2023-01-05 23:34:07,526 INFO     =======================
+2023-01-05 23:34:07,526 INFO     # observations : 137835
+2023-01-05 23:34:07,621 INFO     # cell-lines   : 856
+2023-01-05 23:34:07,698 INFO     # drugs        : 181
+2023-01-05 23:34:07,698 INFO     # genes        : 293
+2023-01-05 23:34:07,698 INFO     Args Summary
+2023-01-05 23:34:07,698 INFO     ============
+2023-01-05 23:34:07,698 INFO     batch_size: 100
+2023-01-05 23:34:07,698 INFO     learning_rate: 0.0001
+2023-01-05 23:34:07,698 INFO     train_ratio: 0.8
+2023-01-05 23:34:07,699 INFO     val_ratio: 0.16
+2023-01-05 23:34:07,699 INFO     test_ratio: 0.19999999999999996
+2023-01-05 23:34:07,699 INFO     num_epochs: 2
+2023-01-05 23:34:07,699 INFO     num_workers: 4
+2023-01-05 23:34:07,699 INFO     random_seed: 42
+2023-01-05 23:34:07,699 INFO     None
+2023-01-05 23:34:07,927 INFO     device: cuda
+2023-01-05 23:35:00,959 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:35:00,967 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:35:01,316 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:35:01,317 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:35:01,318 INFO     Finished building GraphTabDataset!
+2023-01-05 23:35:01,318 INFO     GraphTabDataset Summary
+2023-01-05 23:35:01,318 INFO     =======================
+2023-01-05 23:35:01,318 INFO     # observations : 137835
+2023-01-05 23:35:01,412 INFO     # cell-lines   : 856
+2023-01-05 23:35:01,489 INFO     # drugs        : 181
+2023-01-05 23:35:01,489 INFO     # genes        : 293
+2023-01-05 23:35:01,489 INFO     Args Summary
+2023-01-05 23:35:01,489 INFO     ============
+2023-01-05 23:35:01,489 INFO     batch_size: 100
+2023-01-05 23:35:01,489 INFO     learning_rate: 0.0001
+2023-01-05 23:35:01,489 INFO     train_ratio: 0.8
+2023-01-05 23:35:01,489 INFO     val_ratio: 0.16
+2023-01-05 23:35:01,490 INFO     test_ratio: 0.19999999999999996
+2023-01-05 23:35:01,490 INFO     num_epochs: 2
+2023-01-05 23:35:01,490 INFO     num_workers: 4
+2023-01-05 23:35:01,490 INFO     random_seed: 42
+2023-01-05 23:35:01,490 INFO     None
+2023-01-05 23:35:01,724 INFO     device: cuda
+2023-01-05 23:35:24,921 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:35:24,928 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:35:25,246 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:35:25,247 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:35:25,248 INFO     Finished building GraphTabDataset!
+2023-01-05 23:35:25,248 INFO     GraphTabDataset Summary
+2023-01-05 23:35:25,248 INFO     =======================
+2023-01-05 23:35:25,248 INFO     # observations : 137835
+2023-01-05 23:35:25,342 INFO     # cell-lines   : 856
+2023-01-05 23:35:25,419 INFO     # drugs        : 181
+2023-01-05 23:35:25,419 INFO     # genes        : 293
+2023-01-05 23:35:25,419 INFO     Args Summary
+2023-01-05 23:35:25,419 INFO     ============
+2023-01-05 23:35:25,419 INFO     batch_size: 100
+2023-01-05 23:35:25,419 INFO     learning_rate: 0.0001
+2023-01-05 23:35:25,419 INFO     train_ratio: 0.8
+2023-01-05 23:35:25,419 INFO     val_ratio: 0.16
+2023-01-05 23:35:25,419 INFO     test_ratio: 0.19999999999999996
+2023-01-05 23:35:25,419 INFO     num_epochs: 2
+2023-01-05 23:35:25,419 INFO     num_workers: 4
+2023-01-05 23:35:25,419 INFO     random_seed: 42
+2023-01-05 23:35:25,419 INFO     None
+2023-01-05 23:35:25,643 INFO     device: cuda
+2023-01-05 23:36:32,326 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:36:32,334 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:36:32,645 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:36:32,646 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:36:32,646 INFO     Finished building GraphTabDataset!
+2023-01-05 23:36:32,647 INFO     GraphTabDataset Summary
+2023-01-05 23:36:32,647 INFO     =======================
+2023-01-05 23:36:32,647 INFO     # observations : 137835
+2023-01-05 23:36:32,740 INFO     # cell-lines   : 856
+2023-01-05 23:36:32,816 INFO     # drugs        : 181
+2023-01-05 23:36:32,816 INFO     # genes        : 293
+2023-01-05 23:36:32,816 INFO     Args Summary
+2023-01-05 23:36:32,816 INFO     ============
+2023-01-05 23:36:32,816 INFO     batch_size: 100
+2023-01-05 23:36:32,817 INFO     learning_rate: 0.0001
+2023-01-05 23:36:32,817 INFO     train_ratio: 0.8
+2023-01-05 23:36:32,817 INFO     val_ratio: 0.16
+2023-01-05 23:36:32,817 INFO     test_ratio: 0.19999999999999996
+2023-01-05 23:36:32,817 INFO     num_epochs: 2
+2023-01-05 23:36:32,817 INFO     num_workers: 4
+2023-01-05 23:36:32,817 INFO     random_seed: 42
+2023-01-05 23:36:32,817 INFO     None
+2023-01-05 23:36:33,038 INFO     device: cuda
+2023-01-05 23:36:34,730 INFO     train    shape: (99240, 9)
+2023-01-05 23:36:56,853 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:36:56,861 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:36:57,178 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:36:57,179 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:36:57,179 INFO     Finished building GraphTabDataset!
+2023-01-05 23:36:57,179 INFO     GraphTabDataset Summary
+2023-01-05 23:36:57,179 INFO     =======================
+2023-01-05 23:36:57,180 INFO     # observations : 137835
+2023-01-05 23:36:57,274 INFO     # cell-lines   : 856
+2023-01-05 23:36:57,351 INFO     # drugs        : 181
+2023-01-05 23:36:57,351 INFO     # genes        : 293
+2023-01-05 23:36:57,351 INFO     Args Summary
+2023-01-05 23:36:57,351 INFO     ============
+2023-01-05 23:36:57,351 INFO     batch_size: 100
+2023-01-05 23:36:57,351 INFO     learning_rate: 0.0001
+2023-01-05 23:36:57,351 INFO     train_ratio: 0.8
+2023-01-05 23:36:57,351 INFO     val_ratio: 0.16
+2023-01-05 23:36:57,351 INFO     test_ratio: 0.19999999999999996
+2023-01-05 23:36:57,351 INFO     num_epochs: 2
+2023-01-05 23:36:57,351 INFO     num_workers: 4
+2023-01-05 23:36:57,351 INFO     random_seed: 42
+2023-01-05 23:36:57,351 INFO     None
+2023-01-05 23:36:57,581 INFO     device: cuda
+2023-01-05 23:36:59,284 INFO     train    shape: (99240, 9)
+2023-01-05 23:36:59,284 INFO     test     shape: (13784, 9)
+2023-01-05 23:36:59,284 INFO     val      shape: (24811, 9)
+2023-01-05 23:36:59,285 INFO     train_dataset:
+2023-01-05 23:36:59,285 INFO     GraphTabDataset Summary
+2023-01-05 23:36:59,285 INFO     =======================
+2023-01-05 23:36:59,285 INFO     # observations : 99240
+2023-01-05 23:36:59,352 INFO     # cell-lines   : 856
+2023-01-05 23:36:59,413 INFO     # drugs        : 181
+2023-01-05 23:36:59,413 INFO     # genes        : 293
+2023-01-05 23:36:59,413 INFO     test_dataset:
+2023-01-05 23:36:59,413 INFO     GraphTabDataset Summary
+2023-01-05 23:36:59,413 INFO     =======================
+2023-01-05 23:36:59,414 INFO     # observations : 13784
+2023-01-05 23:36:59,422 INFO     # cell-lines   : 856
+2023-01-05 23:36:59,430 INFO     # drugs        : 181
+2023-01-05 23:36:59,430 INFO     # genes        : 293
+2023-01-05 23:36:59,430 INFO     val_dataset:
+2023-01-05 23:36:59,430 INFO     GraphTabDataset Summary
+2023-01-05 23:36:59,430 INFO     =======================
+2023-01-05 23:36:59,430 INFO     # observations : 24811
+2023-01-05 23:36:59,445 INFO     # cell-lines   : 856
+2023-01-05 23:36:59,459 INFO     # drugs        : 181
+2023-01-05 23:36:59,459 INFO     # genes        : 293
+2023-01-05 23:36:59,460 INFO     GraphTab_v2(
+  (cell_emb): Sequential(
+    (0): GATConv(4, 256, heads=1)
+    (1): ReLU(inplace=True)
+    (2): Dropout(p=0.1, inplace=False)
+    (3): GATConv(256, 128, heads=1)
+    (4): ReLU(inplace=True)
+    (5): <function global_max_pool at 0x7f1bee08acb0>
+    (6): Linear(in_features=128, out_features=128, bias=True)
+    (7): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Dropout(p=0.1, inplace=False)
+    (10): Linear(in_features=128, out_features=128, bias=True)
+    (11): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-01-05 23:38:44,219 INFO     ===Epoch 001===
+2023-01-05 23:38:44,220 INFO     Train      | MSE: 2.68946
+2023-01-05 23:38:44,221 INFO     Validation | MSE: 2.35038
+2023-01-05 23:39:37,882 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:39:37,889 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:39:38,187 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:39:38,188 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:39:38,189 INFO     Finished building GraphTabDataset!
+2023-01-05 23:39:38,189 INFO     GraphTabDataset Summary
+2023-01-05 23:39:38,189 INFO     =======================
+2023-01-05 23:39:38,189 INFO     # observations : 137835
+2023-01-05 23:39:38,283 INFO     # cell-lines   : 856
+2023-01-05 23:39:38,359 INFO     # drugs        : 181
+2023-01-05 23:39:38,359 INFO     # genes        : 293
+2023-01-05 23:39:38,359 INFO     Args Summary
+2023-01-05 23:39:38,359 INFO     ============
+2023-01-05 23:39:38,359 INFO     batch_size: 100
+2023-01-05 23:39:38,359 INFO     learning_rate: 0.0001
+2023-01-05 23:39:38,359 INFO     train_ratio: 0.8
+2023-01-05 23:39:38,359 INFO     val_ratio: 0.16
+2023-01-05 23:39:38,359 INFO     test_ratio: 0.19999999999999996
+2023-01-05 23:39:38,359 INFO     num_epochs: 2
+2023-01-05 23:39:38,359 INFO     num_workers: 4
+2023-01-05 23:39:38,359 INFO     random_seed: 42
+2023-01-05 23:39:38,359 INFO     None
+2023-01-05 23:39:38,584 INFO     device: cuda
+2023-01-05 23:39:51,263 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 23:39:51,270 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 23:39:51,574 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 23:39:51,575 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 23:39:51,576 INFO     Finished building GraphTabDataset!
+2023-01-05 23:39:51,576 INFO     GraphTabDataset Summary
+2023-01-05 23:39:51,576 INFO     =======================
+2023-01-05 23:39:51,576 INFO     # observations : 137835
+2023-01-05 23:39:51,670 INFO     # cell-lines   : 856
+2023-01-05 23:39:51,747 INFO     # drugs        : 181
+2023-01-05 23:39:51,747 INFO     # genes        : 293
+2023-01-05 23:39:51,747 INFO     Args Summary
+2023-01-05 23:39:51,747 INFO     ============
+2023-01-05 23:39:51,747 INFO     batch_size: 100
+2023-01-05 23:39:51,747 INFO     learning_rate: 0.0001
+2023-01-05 23:39:51,747 INFO     train_ratio: 0.8
+2023-01-05 23:39:51,748 INFO     val_ratio: 0.16
+2023-01-05 23:39:51,748 INFO     test_ratio: 0.19999999999999996
+2023-01-05 23:39:51,748 INFO     num_epochs: 2
+2023-01-05 23:39:51,748 INFO     num_workers: 4
+2023-01-05 23:39:51,748 INFO     random_seed: 42
+2023-01-05 23:39:51,748 INFO     None
+2023-01-05 23:39:51,971 INFO     device: cuda
+2023-01-05 23:39:53,662 INFO     train    shape: (99240, 9)
+2023-01-05 23:39:53,662 INFO     test     shape: (13784, 9)
+2023-01-05 23:39:53,662 INFO     val      shape: (24811, 9)
+2023-01-05 23:39:53,663 INFO     train_dataset:
+2023-01-05 23:39:53,663 INFO     GraphTabDataset Summary
+2023-01-05 23:39:53,663 INFO     =======================
+2023-01-05 23:39:53,663 INFO     # observations : 99240
+2023-01-05 23:39:53,730 INFO     # cell-lines   : 856
+2023-01-05 23:39:53,793 INFO     # drugs        : 181
+2023-01-05 23:39:53,793 INFO     # genes        : 293
+2023-01-05 23:39:53,793 INFO     test_dataset:
+2023-01-05 23:39:53,793 INFO     GraphTabDataset Summary
+2023-01-05 23:39:53,793 INFO     =======================
+2023-01-05 23:39:53,793 INFO     # observations : 13784
+2023-01-05 23:39:53,802 INFO     # cell-lines   : 856
+2023-01-05 23:39:53,809 INFO     # drugs        : 181
+2023-01-05 23:39:53,810 INFO     # genes        : 293
+2023-01-05 23:39:53,810 INFO     val_dataset:
+2023-01-05 23:39:53,810 INFO     GraphTabDataset Summary
+2023-01-05 23:39:53,810 INFO     =======================
+2023-01-05 23:39:53,810 INFO     # observations : 24811
+2023-01-05 23:39:53,825 INFO     # cell-lines   : 856
+2023-01-05 23:39:53,840 INFO     # drugs        : 181
+2023-01-05 23:39:53,840 INFO     # genes        : 293
+2023-01-05 23:39:53,840 INFO     GraphTab_v2(
+  (cell_emb): Sequential(
+    (0): GATConv(4, 256, heads=1)
+    (1): ReLU(inplace=True)
+    (2): Dropout(p=0.1, inplace=False)
+    (3): GATConv(256, 128, heads=1)
+    (4): ReLU(inplace=True)
+    (5): <function global_max_pool at 0x7f2a624facb0>
+    (6): Linear(in_features=128, out_features=128, bias=True)
+    (7): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Dropout(p=0.1, inplace=False)
+    (10): Linear(in_features=128, out_features=128, bias=True)
+    (11): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-01-05 23:41:38,881 INFO     ===Epoch 001===
+2023-01-05 23:41:38,882 INFO     Train      | MSE: 2.67197
+2023-01-05 23:41:38,882 INFO     Validation | MSE: 2.30166
+2023-01-05 23:43:30,620 INFO     ===Epoch 002===
+2023-01-05 23:43:30,621 INFO     Train      | MSE: 2.23399
+2023-01-05 23:43:30,621 INFO     Validation | MSE: 2.14304
+2023-01-05 23:43:52,236 INFO     train    shape: (99241, 9)
+2023-01-05 23:43:52,237 INFO     test     shape: (13784, 9)
+2023-01-05 23:43:52,237 INFO     val      shape: (24810, 9)
+2023-01-05 23:43:52,238 INFO     train_dataset:
+2023-01-05 23:43:52,238 INFO     GraphTabDataset Summary
+2023-01-05 23:43:52,239 INFO     =======================
+2023-01-05 23:43:52,239 INFO     # observations : 99241
+2023-01-05 23:43:52,311 INFO     # cell-lines   : 856
+2023-01-05 23:43:52,381 INFO     # drugs        : 181
+2023-01-05 23:43:52,381 INFO     # genes        : 293
+2023-01-05 23:43:52,382 INFO     test_dataset:
+2023-01-05 23:43:52,382 INFO     GraphTabDataset Summary
+2023-01-05 23:43:52,382 INFO     =======================
+2023-01-05 23:43:52,382 INFO     # observations : 13784
+2023-01-05 23:43:52,390 INFO     # cell-lines   : 856
+2023-01-05 23:43:52,398 INFO     # drugs        : 181
+2023-01-05 23:43:52,398 INFO     # genes        : 293
+2023-01-05 23:43:52,398 INFO     val_dataset:
+2023-01-05 23:43:52,398 INFO     GraphTabDataset Summary
+2023-01-05 23:43:52,398 INFO     =======================
+2023-01-05 23:43:52,398 INFO     # observations : 24810
+2023-01-05 23:43:52,414 INFO     # cell-lines   : 856
+2023-01-05 23:43:52,428 INFO     # drugs        : 181
+2023-01-05 23:43:52,428 INFO     # genes        : 293
+2023-01-05 23:43:52,429 INFO     GraphTab_v2(
+  (cell_emb): Sequential(
+    (0): GATConv(4, 256, heads=1)
+    (1): ReLU(inplace=True)
+    (2): Dropout(p=0.1, inplace=False)
+    (3): GATConv(256, 128, heads=1)
+    (4): ReLU(inplace=True)
+    (5): <function global_max_pool at 0x7f2a624facb0>
+    (6): Linear(in_features=128, out_features=128, bias=True)
+    (7): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Dropout(p=0.1, inplace=False)
+    (10): Linear(in_features=128, out_features=128, bias=True)
+    (11): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-01-05 23:45:45,641 INFO     ===Epoch 001===
+2023-01-05 23:45:45,641 INFO     Train      | MSE: 2.02092
+2023-01-05 23:45:45,641 INFO     Validation | MSE: 2.06159
+2023-01-05 23:47:30,746 INFO     ===Epoch 002===
+2023-01-05 23:47:30,747 INFO     Train      | MSE: 1.86702
+2023-01-05 23:47:30,747 INFO     Validation | MSE: 1.92431
+2023-01-05 23:47:52,766 INFO     train    shape: (99241, 9)
+2023-01-05 23:47:52,766 INFO     test     shape: (13784, 9)
+2023-01-05 23:47:52,766 INFO     val      shape: (24810, 9)
+2023-01-05 23:47:52,767 INFO     train_dataset:
+2023-01-05 23:47:52,767 INFO     GraphTabDataset Summary
+2023-01-05 23:47:52,767 INFO     =======================
+2023-01-05 23:47:52,767 INFO     # observations : 99241
+2023-01-05 23:47:52,833 INFO     # cell-lines   : 856
+2023-01-05 23:47:52,897 INFO     # drugs        : 181
+2023-01-05 23:47:52,897 INFO     # genes        : 293
+2023-01-05 23:47:52,897 INFO     test_dataset:
+2023-01-05 23:47:52,897 INFO     GraphTabDataset Summary
+2023-01-05 23:47:52,897 INFO     =======================
+2023-01-05 23:47:52,897 INFO     # observations : 13784
+2023-01-05 23:47:52,906 INFO     # cell-lines   : 856
+2023-01-05 23:47:52,914 INFO     # drugs        : 181
+2023-01-05 23:47:52,914 INFO     # genes        : 293
+2023-01-05 23:47:52,914 INFO     val_dataset:
+2023-01-05 23:47:52,915 INFO     GraphTabDataset Summary
+2023-01-05 23:47:52,915 INFO     =======================
+2023-01-05 23:47:52,915 INFO     # observations : 24810
+2023-01-05 23:47:52,930 INFO     # cell-lines   : 856
+2023-01-05 23:47:52,945 INFO     # drugs        : 181
+2023-01-05 23:47:52,946 INFO     # genes        : 293
+2023-01-05 23:47:52,947 INFO     GraphTab_v2(
+  (cell_emb): Sequential(
+    (0): GATConv(4, 256, heads=1)
+    (1): ReLU(inplace=True)
+    (2): Dropout(p=0.1, inplace=False)
+    (3): GATConv(256, 128, heads=1)
+    (4): ReLU(inplace=True)
+    (5): <function global_max_pool at 0x7f2a624facb0>
+    (6): Linear(in_features=128, out_features=128, bias=True)
+    (7): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Dropout(p=0.1, inplace=False)
+    (10): Linear(in_features=128, out_features=128, bias=True)
+    (11): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-01-05 23:49:45,443 INFO     ===Epoch 001===
+2023-01-05 23:49:45,443 INFO     Train      | MSE: 1.77153
+2023-01-05 23:49:45,444 INFO     Validation | MSE: 1.84025
+2023-01-05 23:51:37,298 INFO     ===Epoch 002===
+2023-01-05 23:51:37,299 INFO     Train      | MSE: 1.71827
+2023-01-05 23:51:37,300 INFO     Validation | MSE: 1.73534
+2023-01-05 23:51:59,338 INFO     train    shape: (99241, 9)
+2023-01-05 23:51:59,338 INFO     test     shape: (13784, 9)
+2023-01-05 23:51:59,338 INFO     val      shape: (24810, 9)
+2023-01-05 23:51:59,339 INFO     train_dataset:
+2023-01-05 23:51:59,339 INFO     GraphTabDataset Summary
+2023-01-05 23:51:59,339 INFO     =======================
+2023-01-05 23:51:59,339 INFO     # observations : 99241
+2023-01-05 23:51:59,407 INFO     # cell-lines   : 856
+2023-01-05 23:51:59,471 INFO     # drugs        : 181
+2023-01-05 23:51:59,471 INFO     # genes        : 293
+2023-01-05 23:51:59,471 INFO     test_dataset:
+2023-01-05 23:51:59,471 INFO     GraphTabDataset Summary
+2023-01-05 23:51:59,471 INFO     =======================
+2023-01-05 23:51:59,471 INFO     # observations : 13784
+2023-01-05 23:51:59,480 INFO     # cell-lines   : 856
+2023-01-05 23:51:59,488 INFO     # drugs        : 181
+2023-01-05 23:51:59,488 INFO     # genes        : 293
+2023-01-05 23:51:59,488 INFO     val_dataset:
+2023-01-05 23:51:59,488 INFO     GraphTabDataset Summary
+2023-01-05 23:51:59,488 INFO     =======================
+2023-01-05 23:51:59,488 INFO     # observations : 24810
+2023-01-05 23:51:59,504 INFO     # cell-lines   : 856
+2023-01-05 23:51:59,519 INFO     # drugs        : 181
+2023-01-05 23:51:59,519 INFO     # genes        : 293
+2023-01-05 23:51:59,520 INFO     GraphTab_v2(
+  (cell_emb): Sequential(
+    (0): GATConv(4, 256, heads=1)
+    (1): ReLU(inplace=True)
+    (2): Dropout(p=0.1, inplace=False)
+    (3): GATConv(256, 128, heads=1)
+    (4): ReLU(inplace=True)
+    (5): <function global_max_pool at 0x7f2a624facb0>
+    (6): Linear(in_features=128, out_features=128, bias=True)
+    (7): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Dropout(p=0.1, inplace=False)
+    (10): Linear(in_features=128, out_features=128, bias=True)
+    (11): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-01-05 23:53:45,034 INFO     ===Epoch 001===
+2023-01-05 23:53:45,035 INFO     Train      | MSE: 1.67506
+2023-01-05 23:53:45,035 INFO     Validation | MSE: 1.71464
+2023-01-05 23:55:38,611 INFO     ===Epoch 002===
+2023-01-05 23:55:38,612 INFO     Train      | MSE: 1.63291
+2023-01-05 23:55:38,613 INFO     Validation | MSE: 1.62283
+2023-01-05 23:56:01,279 INFO     train    shape: (99241, 9)
+2023-01-05 23:56:01,279 INFO     test     shape: (13784, 9)
+2023-01-05 23:56:01,279 INFO     val      shape: (24810, 9)
+2023-01-05 23:56:01,280 INFO     train_dataset:
+2023-01-05 23:56:01,280 INFO     GraphTabDataset Summary
+2023-01-05 23:56:01,280 INFO     =======================
+2023-01-05 23:56:01,280 INFO     # observations : 99241
+2023-01-05 23:56:01,347 INFO     # cell-lines   : 856
+2023-01-05 23:56:01,414 INFO     # drugs        : 181
+2023-01-05 23:56:01,414 INFO     # genes        : 293
+2023-01-05 23:56:01,414 INFO     test_dataset:
+2023-01-05 23:56:01,414 INFO     GraphTabDataset Summary
+2023-01-05 23:56:01,414 INFO     =======================
+2023-01-05 23:56:01,414 INFO     # observations : 13784
+2023-01-05 23:56:01,423 INFO     # cell-lines   : 856
+2023-01-05 23:56:01,431 INFO     # drugs        : 181
+2023-01-05 23:56:01,431 INFO     # genes        : 293
+2023-01-05 23:56:01,431 INFO     val_dataset:
+2023-01-05 23:56:01,431 INFO     GraphTabDataset Summary
+2023-01-05 23:56:01,431 INFO     =======================
+2023-01-05 23:56:01,431 INFO     # observations : 24810
+2023-01-05 23:56:01,447 INFO     # cell-lines   : 856
+2023-01-05 23:56:01,462 INFO     # drugs        : 181
+2023-01-05 23:56:01,462 INFO     # genes        : 293
+2023-01-05 23:56:01,463 INFO     GraphTab_v2(
+  (cell_emb): Sequential(
+    (0): GATConv(4, 256, heads=1)
+    (1): ReLU(inplace=True)
+    (2): Dropout(p=0.1, inplace=False)
+    (3): GATConv(256, 128, heads=1)
+    (4): ReLU(inplace=True)
+    (5): <function global_max_pool at 0x7f2a624facb0>
+    (6): Linear(in_features=128, out_features=128, bias=True)
+    (7): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Dropout(p=0.1, inplace=False)
+    (10): Linear(in_features=128, out_features=128, bias=True)
+    (11): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-01-05 23:57:55,162 INFO     ===Epoch 001===
+2023-01-05 23:57:55,165 INFO     Train      | MSE: 1.63105
+2023-01-05 23:57:55,165 INFO     Validation | MSE: 1.54575
+2023-01-05 23:59:39,879 INFO     ===Epoch 002===
+2023-01-05 23:59:39,880 INFO     Train      | MSE: 1.59806
+2023-01-05 23:59:39,881 INFO     Validation | MSE: 1.66286
+2023-01-06 00:00:01,684 INFO     KFold CV MSE score: [[tensor(2.3017, device='cuda:0'), tensor(2.1430, device='cuda:0')], [tensor(2.0616, device='cuda:0'), tensor(1.9243, device='cuda:0')], [tensor(1.8403, device='cuda:0'), tensor(1.7353, device='cuda:0')], [tensor(1.7146, device='cuda:0'), tensor(1.6228, device='cuda:0')], [tensor(1.5457, device='cuda:0'), tensor(1.6629, device='cuda:0')]]
+2023-01-06 00:07:25,600 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-06 00:07:25,607 INFO     DRM Number of unique cell-lines: 856
+2023-01-06 00:07:25,942 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-06 00:07:25,943 INFO     Finished reading drug SMILES dict: 181
+2023-01-06 00:07:25,944 INFO     Finished building GraphTabDataset!
+2023-01-06 00:07:25,944 INFO     GraphTabDataset Summary
+2023-01-06 00:07:25,944 INFO     =======================
+2023-01-06 00:07:25,944 INFO     # observations : 137835
+2023-01-06 00:07:26,038 INFO     # cell-lines   : 856
+2023-01-06 00:07:26,114 INFO     # drugs        : 181
+2023-01-06 00:07:26,114 INFO     # genes        : 293
+2023-01-06 00:07:26,115 INFO     Args Summary
+2023-01-06 00:07:26,115 INFO     ============
+2023-01-06 00:07:26,115 INFO     batch_size: 100
+2023-01-06 00:07:26,115 INFO     learning_rate: 0.0001
+2023-01-06 00:07:26,115 INFO     train_ratio: 0.8
+2023-01-06 00:07:26,115 INFO     val_ratio: 0.16
+2023-01-06 00:07:26,115 INFO     test_ratio: 0.19999999999999996
+2023-01-06 00:07:26,115 INFO     num_epochs: 1
+2023-01-06 00:07:26,115 INFO     num_workers: 4
+2023-01-06 00:07:26,115 INFO     random_seed: 42
+2023-01-06 00:07:26,115 INFO     None
+2023-01-06 00:07:26,339 INFO     device: cuda
+2023-01-06 00:07:28,034 INFO     train    shape: (82700, 9)
+2023-01-06 00:07:28,034 INFO     test     shape: (13784, 9)
+2023-01-06 00:07:28,034 INFO     val      shape: (41351, 9)
+2023-01-06 00:07:28,035 INFO     train_dataset:
+2023-01-06 00:07:28,035 INFO     GraphTabDataset Summary
+2023-01-06 00:07:28,035 INFO     =======================
+2023-01-06 00:07:28,035 INFO     # observations : 82700
+2023-01-06 00:07:28,090 INFO     # cell-lines   : 856
+2023-01-06 00:07:28,140 INFO     # drugs        : 181
+2023-01-06 00:07:28,140 INFO     # genes        : 293
+2023-01-06 00:07:28,140 INFO     test_dataset:
+2023-01-06 00:07:28,140 INFO     GraphTabDataset Summary
+2023-01-06 00:07:28,140 INFO     =======================
+2023-01-06 00:07:28,140 INFO     # observations : 13784
+2023-01-06 00:07:28,149 INFO     # cell-lines   : 856
+2023-01-06 00:07:28,156 INFO     # drugs        : 181
+2023-01-06 00:07:28,156 INFO     # genes        : 293
+2023-01-06 00:07:28,156 INFO     val_dataset:
+2023-01-06 00:07:28,156 INFO     GraphTabDataset Summary
+2023-01-06 00:07:28,156 INFO     =======================
+2023-01-06 00:07:28,156 INFO     # observations : 41351
+2023-01-06 00:07:28,183 INFO     # cell-lines   : 856
+2023-01-06 00:07:28,207 INFO     # drugs        : 181
+2023-01-06 00:07:28,207 INFO     # genes        : 293
+2023-01-06 00:07:28,208 INFO     GraphTab_v2(
+  (cell_emb): Sequential(
+    (0): GATConv(4, 256, heads=1)
+    (1): ReLU(inplace=True)
+    (2): Dropout(p=0.1, inplace=False)
+    (3): GATConv(256, 128, heads=1)
+    (4): ReLU(inplace=True)
+    (5): <function global_max_pool at 0x7f07762f6dd0>
+    (6): Linear(in_features=128, out_features=128, bias=True)
+    (7): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Dropout(p=0.1, inplace=False)
+    (10): Linear(in_features=128, out_features=128, bias=True)
+    (11): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-01-06 00:08:58,488 INFO     ===Epoch 001===
+2023-01-06 00:08:58,489 INFO     Train      | MSE: 2.72487
+2023-01-06 00:08:58,489 INFO     Validation | MSE: 2.35465
+2023-01-06 00:09:42,921 INFO     train    shape: (82701, 9)
+2023-01-06 00:09:42,921 INFO     test     shape: (13784, 9)
+2023-01-06 00:09:42,922 INFO     val      shape: (41350, 9)
+2023-01-06 00:09:42,923 INFO     train_dataset:
+2023-01-06 00:09:42,924 INFO     GraphTabDataset Summary
+2023-01-06 00:09:42,924 INFO     =======================
+2023-01-06 00:09:42,924 INFO     # observations : 82701
+2023-01-06 00:09:43,005 INFO     # cell-lines   : 856
+2023-01-06 00:09:43,055 INFO     # drugs        : 181
+2023-01-06 00:09:43,056 INFO     # genes        : 293
+2023-01-06 00:09:43,056 INFO     test_dataset:
+2023-01-06 00:09:43,056 INFO     GraphTabDataset Summary
+2023-01-06 00:09:43,056 INFO     =======================
+2023-01-06 00:09:43,056 INFO     # observations : 13784
+2023-01-06 00:09:43,064 INFO     # cell-lines   : 856
+2023-01-06 00:09:43,072 INFO     # drugs        : 181
+2023-01-06 00:09:43,072 INFO     # genes        : 293
+2023-01-06 00:09:43,072 INFO     val_dataset:
+2023-01-06 00:09:43,072 INFO     GraphTabDataset Summary
+2023-01-06 00:09:43,072 INFO     =======================
+2023-01-06 00:09:43,072 INFO     # observations : 41350
+2023-01-06 00:09:43,099 INFO     # cell-lines   : 856
+2023-01-06 00:09:43,123 INFO     # drugs        : 181
+2023-01-06 00:09:43,123 INFO     # genes        : 293
+2023-01-06 00:09:43,124 INFO     GraphTab_v2(
+  (cell_emb): Sequential(
+    (0): GATConv(4, 256, heads=1)
+    (1): ReLU(inplace=True)
+    (2): Dropout(p=0.1, inplace=False)
+    (3): GATConv(256, 128, heads=1)
+    (4): ReLU(inplace=True)
+    (5): <function global_max_pool at 0x7f07762f6dd0>
+    (6): Linear(in_features=128, out_features=128, bias=True)
+    (7): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Dropout(p=0.1, inplace=False)
+    (10): Linear(in_features=128, out_features=128, bias=True)
+    (11): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-01-06 00:15:14,410 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-06 00:15:14,417 INFO     DRM Number of unique cell-lines: 856
+2023-01-06 00:15:14,706 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-06 00:15:14,707 INFO     Finished reading drug SMILES dict: 181
+2023-01-06 00:15:14,708 INFO     Finished building GraphTabDataset!
+2023-01-06 00:15:14,708 INFO     GraphTabDataset Summary
+2023-01-06 00:15:14,708 INFO     =======================
+2023-01-06 00:15:14,708 INFO     # observations : 137835
+2023-01-06 00:15:14,804 INFO     # cell-lines   : 856
+2023-01-06 00:15:14,881 INFO     # drugs        : 181
+2023-01-06 00:15:14,881 INFO     # genes        : 293
+2023-01-06 00:15:14,881 INFO     Args Summary
+2023-01-06 00:15:14,881 INFO     ============
+2023-01-06 00:15:14,881 INFO     batch_size: 100
+2023-01-06 00:15:14,881 INFO     learning_rate: 0.0001
+2023-01-06 00:15:14,881 INFO     train_ratio: 0.8
+2023-01-06 00:15:14,881 INFO     val_ratio: 0.16
+2023-01-06 00:15:14,881 INFO     test_ratio: 0.19999999999999996
+2023-01-06 00:15:14,881 INFO     num_epochs: 2
+2023-01-06 00:15:14,881 INFO     num_workers: 4
+2023-01-06 00:15:14,881 INFO     random_seed: 42
+2023-01-06 00:15:14,881 INFO     None
+2023-01-06 00:15:15,106 INFO     device: cuda
+2023-01-06 00:15:15,109 INFO         learning rate: 0.0031636230211261477
+2023-01-06 00:15:16,804 INFO     train    shape: (82700, 9)
+2023-01-06 00:15:16,804 INFO     test     shape: (13784, 9)
+2023-01-06 00:15:16,804 INFO     val      shape: (41351, 9)
+2023-01-06 00:15:16,805 INFO     train_dataset:
+2023-01-06 00:15:16,805 INFO     GraphTabDataset Summary
+2023-01-06 00:15:16,805 INFO     =======================
+2023-01-06 00:15:16,805 INFO     # observations : 82700
+2023-01-06 00:15:16,860 INFO     # cell-lines   : 856
+2023-01-06 00:15:16,910 INFO     # drugs        : 181
+2023-01-06 00:15:16,910 INFO     # genes        : 293
+2023-01-06 00:15:16,910 INFO     test_dataset:
+2023-01-06 00:15:16,910 INFO     GraphTabDataset Summary
+2023-01-06 00:15:16,910 INFO     =======================
+2023-01-06 00:15:16,910 INFO     # observations : 13784
+2023-01-06 00:15:16,919 INFO     # cell-lines   : 856
+2023-01-06 00:15:16,926 INFO     # drugs        : 181
+2023-01-06 00:15:16,926 INFO     # genes        : 293
+2023-01-06 00:15:16,927 INFO     val_dataset:
+2023-01-06 00:15:16,927 INFO     GraphTabDataset Summary
+2023-01-06 00:15:16,927 INFO     =======================
+2023-01-06 00:15:16,927 INFO     # observations : 41351
+2023-01-06 00:15:16,953 INFO     # cell-lines   : 856
+2023-01-06 00:15:16,977 INFO     # drugs        : 181
+2023-01-06 00:15:16,978 INFO     # genes        : 293
+2023-01-06 00:15:16,978 INFO     GraphTab_v2(
+  (cell_emb): Sequential(
+    (0): GATConv(4, 256, heads=1)
+    (1): ReLU(inplace=True)
+    (2): Dropout(p=0.1, inplace=False)
+    (3): GATConv(256, 128, heads=1)
+    (4): ReLU(inplace=True)
+    (5): <function global_max_pool at 0x7f697cdd2e60>
+    (6): Linear(in_features=128, out_features=128, bias=True)
+    (7): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Dropout(p=0.1, inplace=False)
+    (10): Linear(in_features=128, out_features=128, bias=True)
+    (11): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-01-06 00:16:52,282 INFO     ===Epoch 001===
+2023-01-06 00:16:52,282 INFO     Train      | MSE: 2.73429
+2023-01-06 00:16:52,282 INFO     Validation | MSE: 2.42654
+2023-01-06 00:18:21,166 INFO     ===Epoch 002===
+2023-01-06 00:18:21,167 INFO     Train      | MSE: 2.27072
+2023-01-06 00:18:21,168 INFO     Validation | MSE: 2.19448
+2023-01-06 00:19:05,338 INFO     train    shape: (82701, 9)
+2023-01-06 00:19:05,339 INFO     test     shape: (13784, 9)
+2023-01-06 00:19:05,339 INFO     val      shape: (41350, 9)
+2023-01-06 00:19:05,340 INFO     train_dataset:
+2023-01-06 00:19:05,340 INFO     GraphTabDataset Summary
+2023-01-06 00:19:05,340 INFO     =======================
+2023-01-06 00:19:05,341 INFO     # observations : 82701
+2023-01-06 00:19:05,422 INFO     # cell-lines   : 856
+2023-01-06 00:19:05,473 INFO     # drugs        : 181
+2023-01-06 00:19:05,473 INFO     # genes        : 293
+2023-01-06 00:19:05,473 INFO     test_dataset:
+2023-01-06 00:19:05,473 INFO     GraphTabDataset Summary
+2023-01-06 00:19:05,473 INFO     =======================
+2023-01-06 00:19:05,473 INFO     # observations : 13784
+2023-01-06 00:19:05,482 INFO     # cell-lines   : 856
+2023-01-06 00:19:05,490 INFO     # drugs        : 181
+2023-01-06 00:19:05,490 INFO     # genes        : 293
+2023-01-06 00:19:05,490 INFO     val_dataset:
+2023-01-06 00:19:05,490 INFO     GraphTabDataset Summary
+2023-01-06 00:19:05,490 INFO     =======================
+2023-01-06 00:19:05,490 INFO     # observations : 41350
+2023-01-06 00:19:05,517 INFO     # cell-lines   : 856
+2023-01-06 00:19:05,541 INFO     # drugs        : 181
+2023-01-06 00:19:05,541 INFO     # genes        : 293
+2023-01-06 00:19:05,542 INFO     GraphTab_v2(
+  (cell_emb): Sequential(
+    (0): GATConv(4, 256, heads=1)
+    (1): ReLU(inplace=True)
+    (2): Dropout(p=0.1, inplace=False)
+    (3): GATConv(256, 128, heads=1)
+    (4): ReLU(inplace=True)
+    (5): <function global_max_pool at 0x7f697cdd2e60>
+    (6): Linear(in_features=128, out_features=128, bias=True)
+    (7): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Dropout(p=0.1, inplace=False)
+    (10): Linear(in_features=128, out_features=128, bias=True)
+    (11): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)

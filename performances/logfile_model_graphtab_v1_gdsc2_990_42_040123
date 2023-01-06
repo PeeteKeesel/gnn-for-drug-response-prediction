@@ -1,0 +1,217 @@
+2023-01-04 23:44:57,101 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-04 23:44:57,116 INFO     DRM Number of unique cell-lines: 856
+2023-01-04 23:45:01,836 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-04 23:45:01,980 INFO     Finished reading drug SMILES dict: 181
+2023-01-04 23:45:01,981 INFO     Finished building GraphTabDataset!
+2023-01-04 23:45:01,981 INFO     GraphTabDataset Summary
+2023-01-04 23:45:01,981 INFO     =======================
+2023-01-04 23:45:01,981 INFO     # observations : 137835
+2023-01-04 23:45:02,133 INFO     # cell-lines   : 856
+2023-01-04 23:45:02,249 INFO     # drugs        : 181
+2023-01-04 23:45:02,249 INFO     # genes        : 293
+2023-01-04 23:45:02,249 INFO     HyperParameters
+2023-01-04 23:45:02,249 INFO     ===============
+2023-01-04 23:45:02,250 INFO     batch_size: 100
+2023-01-04 23:45:02,250 INFO     learning_rate: 0.0001
+2023-01-04 23:45:02,250 INFO     train_ratio: 0.8
+2023-01-04 23:45:02,250 INFO     val_ratio: 0.5
+2023-01-04 23:45:02,250 INFO     test_ratio: 0.5
+2023-01-04 23:45:02,250 INFO     num_epochs: 2
+2023-01-04 23:45:02,250 INFO     num_workers: 4
+2023-01-04 23:45:02,250 INFO     random_seed: 42
+2023-01-04 23:45:02,250 INFO     None
+2023-01-04 23:45:29,248 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-04 23:45:29,255 INFO     DRM Number of unique cell-lines: 856
+2023-01-04 23:45:29,487 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-04 23:45:29,488 INFO     Finished reading drug SMILES dict: 181
+2023-01-04 23:45:29,489 INFO     Finished building GraphTabDataset!
+2023-01-04 23:45:29,489 INFO     GraphTabDataset Summary
+2023-01-04 23:45:29,489 INFO     =======================
+2023-01-04 23:45:29,489 INFO     # observations : 137835
+2023-01-04 23:45:29,572 INFO     # cell-lines   : 856
+2023-01-04 23:45:29,639 INFO     # drugs        : 181
+2023-01-04 23:45:29,639 INFO     # genes        : 293
+2023-01-04 23:45:29,639 INFO     HyperParameters
+2023-01-04 23:45:29,639 INFO     ===============
+2023-01-04 23:45:29,639 INFO     batch_size: 100
+2023-01-04 23:45:29,639 INFO     learning_rate: 0.0001
+2023-01-04 23:45:29,639 INFO     train_ratio: 0.8
+2023-01-04 23:45:29,639 INFO     val_ratio: 0.5
+2023-01-04 23:45:29,639 INFO     test_ratio: 0.5
+2023-01-04 23:45:29,639 INFO     num_epochs: 2
+2023-01-04 23:45:29,639 INFO     num_workers: 4
+2023-01-04 23:45:29,639 INFO     random_seed: 42
+2023-01-04 23:45:29,639 INFO     None
+2023-01-04 23:48:10,087 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-04 23:48:10,094 INFO     DRM Number of unique cell-lines: 856
+2023-01-04 23:48:10,323 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-04 23:48:10,324 INFO     Finished reading drug SMILES dict: 181
+2023-01-04 23:48:10,324 INFO     Finished building GraphTabDataset!
+2023-01-04 23:48:10,324 INFO     GraphTabDataset Summary
+2023-01-04 23:48:10,324 INFO     =======================
+2023-01-04 23:48:10,325 INFO     # observations : 137835
+2023-01-04 23:48:10,408 INFO     # cell-lines   : 856
+2023-01-04 23:48:10,474 INFO     # drugs        : 181
+2023-01-04 23:48:10,475 INFO     # genes        : 293
+2023-01-04 23:48:10,475 INFO     HyperParameters
+2023-01-04 23:48:10,475 INFO     ===============
+2023-01-04 23:48:10,475 INFO     batch_size: 100
+2023-01-04 23:48:10,475 INFO     learning_rate: 0.0001
+2023-01-04 23:48:10,475 INFO     train_ratio: 0.8
+2023-01-04 23:48:10,475 INFO     val_ratio: 0.5
+2023-01-04 23:48:10,475 INFO     test_ratio: 0.5
+2023-01-04 23:48:10,475 INFO     num_epochs: 2
+2023-01-04 23:48:10,475 INFO     num_workers: 4
+2023-01-04 23:48:10,475 INFO     random_seed: 42
+2023-01-04 23:48:10,475 INFO     None
+2023-01-04 23:49:49,320 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-04 23:49:49,326 INFO     DRM Number of unique cell-lines: 856
+2023-01-04 23:49:49,557 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-04 23:49:49,558 INFO     Finished reading drug SMILES dict: 181
+2023-01-04 23:49:49,559 INFO     Finished building GraphTabDataset!
+2023-01-04 23:49:49,559 INFO     GraphTabDataset Summary
+2023-01-04 23:49:49,559 INFO     =======================
+2023-01-04 23:49:49,559 INFO     # observations : 137835
+2023-01-04 23:49:49,644 INFO     # cell-lines   : 856
+2023-01-04 23:49:49,712 INFO     # drugs        : 181
+2023-01-04 23:49:49,713 INFO     # genes        : 293
+2023-01-04 23:49:49,713 INFO     HyperParameters
+2023-01-04 23:49:49,713 INFO     ===============
+2023-01-04 23:49:49,713 INFO     batch_size: 100
+2023-01-04 23:49:49,713 INFO     learning_rate: 0.0001
+2023-01-04 23:49:49,713 INFO     train_ratio: 0.8
+2023-01-04 23:49:49,713 INFO     val_ratio: 0.5
+2023-01-04 23:49:49,713 INFO     test_ratio: 0.5
+2023-01-04 23:49:49,713 INFO     num_epochs: 2
+2023-01-04 23:49:49,713 INFO     num_workers: 4
+2023-01-04 23:49:49,713 INFO     random_seed: 42
+2023-01-04 23:49:49,713 INFO     None
+2023-01-05 00:05:43,690 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 00:05:43,696 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 00:05:43,926 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 00:05:43,927 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 00:05:43,927 INFO     Finished building GraphTabDataset!
+2023-01-05 00:05:43,927 INFO     GraphTabDataset Summary
+2023-01-05 00:05:43,927 INFO     =======================
+2023-01-05 00:05:43,927 INFO     # observations : 137835
+2023-01-05 00:05:44,011 INFO     # cell-lines   : 856
+2023-01-05 00:05:44,077 INFO     # drugs        : 181
+2023-01-05 00:05:44,077 INFO     # genes        : 293
+2023-01-05 00:05:44,077 INFO     HyperParameters
+2023-01-05 00:05:44,077 INFO     ===============
+2023-01-05 00:05:44,077 INFO     batch_size: 100
+2023-01-05 00:05:44,077 INFO     learning_rate: 0.0001
+2023-01-05 00:05:44,077 INFO     train_ratio: 0.8
+2023-01-05 00:05:44,078 INFO     val_ratio: 0.5
+2023-01-05 00:05:44,078 INFO     test_ratio: 0.5
+2023-01-05 00:05:44,078 INFO     num_epochs: 2
+2023-01-05 00:05:44,078 INFO     num_workers: 4
+2023-01-05 00:05:44,078 INFO     random_seed: 42
+2023-01-05 00:05:44,078 INFO     None
+2023-01-05 00:06:08,194 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 00:06:08,201 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 00:06:08,436 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 00:06:08,437 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 00:06:08,437 INFO     Finished building GraphTabDataset!
+2023-01-05 00:06:08,437 INFO     GraphTabDataset Summary
+2023-01-05 00:06:08,437 INFO     =======================
+2023-01-05 00:06:08,437 INFO     # observations : 137835
+2023-01-05 00:06:08,521 INFO     # cell-lines   : 856
+2023-01-05 00:06:08,587 INFO     # drugs        : 181
+2023-01-05 00:06:08,587 INFO     # genes        : 293
+2023-01-05 00:06:08,587 INFO     HyperParameters
+2023-01-05 00:06:08,587 INFO     ===============
+2023-01-05 00:06:08,587 INFO     batch_size: 100
+2023-01-05 00:06:08,588 INFO     learning_rate: 0.0001
+2023-01-05 00:06:08,588 INFO     train_ratio: 0.8
+2023-01-05 00:06:08,588 INFO     val_ratio: 0.5
+2023-01-05 00:06:08,588 INFO     test_ratio: 0.5
+2023-01-05 00:06:08,588 INFO     num_epochs: 2
+2023-01-05 00:06:08,588 INFO     num_workers: 4
+2023-01-05 00:06:08,588 INFO     random_seed: 42
+2023-01-05 00:06:08,588 INFO     None
+2023-01-05 00:06:08,756 INFO     KFold iteration 0
+2023-01-05 00:09:37,770 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 00:09:37,779 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 00:09:38,104 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 00:09:38,105 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 00:09:38,106 INFO     Finished building GraphTabDataset!
+2023-01-05 00:09:38,106 INFO     GraphTabDataset Summary
+2023-01-05 00:09:38,106 INFO     =======================
+2023-01-05 00:09:38,106 INFO     # observations : 137835
+2023-01-05 00:09:38,207 INFO     # cell-lines   : 856
+2023-01-05 00:09:38,288 INFO     # drugs        : 181
+2023-01-05 00:09:38,288 INFO     # genes        : 293
+2023-01-05 00:09:38,288 INFO     HyperParameters
+2023-01-05 00:09:38,288 INFO     ===============
+2023-01-05 00:09:38,288 INFO     batch_size: 100
+2023-01-05 00:09:38,288 INFO     learning_rate: 0.0001
+2023-01-05 00:09:38,288 INFO     train_ratio: 0.8
+2023-01-05 00:09:38,288 INFO     val_ratio: 0.5
+2023-01-05 00:09:38,288 INFO     test_ratio: 0.5
+2023-01-05 00:09:38,288 INFO     num_epochs: 2
+2023-01-05 00:09:38,288 INFO     num_workers: 4
+2023-01-05 00:09:38,288 INFO     random_seed: 42
+2023-01-05 00:09:38,288 INFO     None
+2023-01-05 00:09:38,506 INFO     KFold iteration 0
+2023-01-05 00:10:51,038 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 00:10:51,045 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 00:10:51,274 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 00:10:51,275 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 00:10:51,275 INFO     Finished building GraphTabDataset!
+2023-01-05 00:10:51,276 INFO     GraphTabDataset Summary
+2023-01-05 00:10:51,276 INFO     =======================
+2023-01-05 00:10:51,276 INFO     # observations : 137835
+2023-01-05 00:10:51,359 INFO     # cell-lines   : 856
+2023-01-05 00:10:51,425 INFO     # drugs        : 181
+2023-01-05 00:10:51,426 INFO     # genes        : 293
+2023-01-05 00:10:51,426 INFO     HyperParameters
+2023-01-05 00:10:51,426 INFO     ===============
+2023-01-05 00:10:51,426 INFO     batch_size: 100
+2023-01-05 00:10:51,426 INFO     learning_rate: 0.0001
+2023-01-05 00:10:51,426 INFO     train_ratio: 0.8
+2023-01-05 00:10:51,426 INFO     val_ratio: 0.5
+2023-01-05 00:10:51,426 INFO     test_ratio: 0.5
+2023-01-05 00:10:51,426 INFO     num_epochs: 2
+2023-01-05 00:10:51,426 INFO     num_workers: 4
+2023-01-05 00:10:51,426 INFO     random_seed: 42
+2023-01-05 00:10:51,426 INFO     None
+2023-01-05 00:10:51,594 INFO     KFold iteration 0
+2023-01-05 00:11:38,256 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-05 00:11:38,263 INFO     DRM Number of unique cell-lines: 856
+2023-01-05 00:11:38,500 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-05 00:11:38,501 INFO     Finished reading drug SMILES dict: 181
+2023-01-05 00:11:38,501 INFO     Finished building GraphTabDataset!
+2023-01-05 00:11:38,501 INFO     GraphTabDataset Summary
+2023-01-05 00:11:38,501 INFO     =======================
+2023-01-05 00:11:38,501 INFO     # observations : 137835
+2023-01-05 00:11:38,585 INFO     # cell-lines   : 856
+2023-01-05 00:11:38,652 INFO     # drugs        : 181
+2023-01-05 00:11:38,653 INFO     # genes        : 293
+2023-01-05 00:11:38,653 INFO     HyperParameters
+2023-01-05 00:11:38,653 INFO     ===============
+2023-01-05 00:11:38,653 INFO     batch_size: 100
+2023-01-05 00:11:38,653 INFO     learning_rate: 0.0001
+2023-01-05 00:11:38,653 INFO     train_ratio: 0.8
+2023-01-05 00:11:38,653 INFO     val_ratio: 0.5
+2023-01-05 00:11:38,653 INFO     test_ratio: 0.5
+2023-01-05 00:11:38,653 INFO     num_epochs: 2
+2023-01-05 00:11:38,653 INFO     num_workers: 4
+2023-01-05 00:11:38,653 INFO     random_seed: 42
+2023-01-05 00:11:38,653 INFO     None
+2023-01-05 00:11:38,824 INFO     KFold iteration 0
+2023-01-05 00:11:38,836 INFO     train_dataset:
+2023-01-05 00:11:38,836 INFO     GraphTabDataset Summary
+2023-01-05 00:11:38,836 INFO     =======================
+2023-01-05 00:11:38,836 INFO     # observations : 99240
+2023-01-05 00:11:38,895 INFO     # cell-lines   : 856
+2023-01-05 00:11:38,949 INFO     # drugs        : 181
+2023-01-05 00:11:38,949 INFO     # genes        : 293
+2023-01-05 00:11:38,949 INFO     val_dataset:
+2023-01-05 00:11:38,949 INFO     test_dataset:
+2023-01-05 00:11:38,950 INFO     GraphTabDataset Summary
+2023-01-05 00:11:38,950 INFO     =======================
+2023-01-05 00:11:38,950 INFO     # observations : 13784
+2023-01-05 00:11:38,957 INFO     # cell-lines   : 856
+2023-01-05 00:11:38,964 INFO     # drugs        : 181
+2023-01-05 00:11:38,964 INFO     # genes        : 293
