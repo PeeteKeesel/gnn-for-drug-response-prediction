@@ -92,9 +92,9 @@ def create_graph_tab_datasets(drm, cl_graphs, drug_mat, args):
     logging.info("val_dataset:")
     val_dataset.print_dataset_summary()
 
-    train_loader = PyG_DataLoader(dataset=train_dataset, batch_size=args.BATCH_SIZE, shuffle=True, num_workers=args.NUM_WORKERS)
-    test_loader = PyG_DataLoader(dataset=test_dataset, batch_size=args.BATCH_SIZE, shuffle=True, num_workers=args.NUM_WORKERS)
-    val_loader = PyG_DataLoader(dataset=val_dataset, batch_size=args.BATCH_SIZE, shuffle=True, num_workers=args.NUM_WORKERS)
+    train_loader = PyG_DataLoader(dataset=train_dataset, batch_size=int(args.batch_size), shuffle=True, num_workers=args.num_workers)
+    test_loader = PyG_DataLoader(dataset=test_dataset, batch_size=int(args.batch_size), shuffle=True, num_workers=args.num_workers)
+    val_loader = PyG_DataLoader(dataset=val_dataset, batch_size=int(args.batch_size), shuffle=True, num_workers=args.num_workers)
 
     return train_loader, test_loader, val_loader    
 
@@ -115,8 +115,8 @@ def create_gt_final_datasets(datasets, cl_graphs, drug_mat, args):
     logging.info("train_dataset:"); train_dataset.print_dataset_summary()
     logging.info("test_dataset:"); test_dataset.print_dataset_summary()
     
-    train_loader = PyG_DataLoader(dataset=train_dataset, batch_size=args.BATCH_SIZE, shuffle=True, num_workers=args.NUM_WORKERS)
-    test_loader = PyG_DataLoader(dataset=test_dataset, batch_size=args.BATCH_SIZE, shuffle=True, num_workers=args.NUM_WORKERS)
+    train_loader = PyG_DataLoader(dataset=train_dataset, batch_size=int(args.batch_size), shuffle=True, num_workers=args.num_workers)
+    test_loader = PyG_DataLoader(dataset=test_dataset, batch_size=int(args.batch_size), shuffle=True, num_workers=args.num_workers)
 
     return train_loader, test_loader
     
@@ -125,20 +125,20 @@ def create_gt_loaders(datasets, cl_graphs, drug_mat, args):
     train_set, val_set, test_set = datasets
 
     logging.info(f"train    shape: {train_set.shape}")
+    logging.info(f"val      shape: {val_set.shape}")    
     logging.info(f"test     shape: {test_set.shape}")
-    logging.info(f"val      shape: {val_set.shape}")
 
     train_dataset = GraphTabDataset(cl_graphs=cl_graphs, drugs=drug_mat, drug_response_matrix=train_set)
     test_dataset = GraphTabDataset(cl_graphs=cl_graphs, drugs=drug_mat, drug_response_matrix=test_set)
     val_dataset = GraphTabDataset(cl_graphs=cl_graphs, drugs=drug_mat, drug_response_matrix=val_set)
 
     logging.info("train_dataset:"); train_dataset.print_dataset_summary()
-    logging.info("test_dataset:"); test_dataset.print_dataset_summary()
-    logging.info("val_dataset:"); val_dataset.print_dataset_summary()
+    logging.info("val_dataset  :"); val_dataset.print_dataset_summary()    
+    logging.info("test_dataset :"); test_dataset.print_dataset_summary()
 
-    train_loader = PyG_DataLoader(dataset=train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
-    test_loader = PyG_DataLoader(dataset=test_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
-    val_loader = PyG_DataLoader(dataset=val_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
+    train_loader = PyG_DataLoader(dataset=train_dataset, batch_size=int(args.batch_size), shuffle=True, num_workers=args.num_workers)
+    test_loader = PyG_DataLoader(dataset=test_dataset, batch_size=int(args.batch_size), shuffle=True, num_workers=args.num_workers)
+    val_loader = PyG_DataLoader(dataset=val_dataset, batch_size=int(args.batch_size), shuffle=True, num_workers=args.num_workers)
 
     return train_loader, test_loader, val_loader
 
@@ -186,8 +186,9 @@ class BuildGraphTabModel():
 
                 self.optimizer.zero_grad()
 
-                print(cell)
-                print(cell.x)
+#                 print(cell)
+#                 print(cell.x)
+#                 print(cell.x.float().shape)
                 # Models predictions of the ic50s for a batch of cell-lines and drugs
                 preds = self.model(cell.x.float(),
                                    cell.edge_index,
@@ -233,6 +234,7 @@ class BuildGraphTabModel():
             
         # Final model performance.
         mse_te, rmse_te, mae_te, r2_te, pcc_te, scc_te, _, _ = self.validate(self.test_loader)
+        logging.info(f"Test       | MSE: {mse_te:2.5f}")
 
         performance_stats = {
             'train': {
@@ -454,13 +456,14 @@ class GraphTab_v2(torch.nn.Module):
 #         return y_pred   
     
     def forward(self, cell_x, cell_edge_index, cell_batch, drug):
+#         if drug.size() != torch.Size([128, 256]):
+#             print(f"""Input
+#             drug            : {drug.size()}
+#             cell.x          : {cell_x.size()}
+#             cell.edge_index : {cell_edge_index.size()}
+#             cell.batch      : {cell_batch.size()}
+#             """)        
         drug_emb = self.drug_emb(drug)
-#         print(f"""Input
-#         drug            : {drug.size()}
-#         cell.x          : {cell_x.size()}
-#         cell.edge_index : {cell_edge_index.size()}
-#         cell.batch      : {cell_batch.size()}
-#         """)
         cell_emb = self.cell_emb(cell_x, cell_edge_index, cell_batch)
 #         print(f"drug_emb.size: {drug_emb.size()}")
 #         print(f"cell_emb.size: {cell_emb.size()}")

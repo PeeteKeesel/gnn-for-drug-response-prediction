@@ -15,7 +15,7 @@ from src.models.GraphTab.graph_tab_v2 import GraphTabDataset, create_graph_tab_d
 from src.models.TabGraph.tab_graph import TabGraphDataset, create_tab_graph_datasets, BuildTabGraphModel, TabGraph_v1
 from src.preprocess.processor      import Processor
 from skopt                         import gbrt_minimize
-from skopt.space                   import Real, Integer, Categorical, Dimension
+from skopt.space                   import Real, Integer, Categorical
 from sklearn.model_selection       import KFold
 from functools                     import partial
 
@@ -99,22 +99,28 @@ class HyperParameters:
 def print_args_summary(args):
     logging.info("Args Summary")
     logging.info("============")
-    logging.info(f"batch_size: {args.batch_size}")
-    logging.info(f"learning_rate: {args.lr}")
-    logging.info(f"train_ratio: {args.train_ratio}")
-    logging.info(f"val_ratio: {args.train_ratio/args.kfolds}")
-    logging.info(f"test_ratio: {1-args.train_ratio}")
-    logging.info(f"num_epochs: {args.num_epochs}") 
-    logging.info(f"num_workers: {args.num_workers}")
-    logging.info(f"random_seed: {args.seed}")      
+    logging.info(f"{'batch_size':>20}: {args.batch_size}")
+    logging.info(f"{'learning_rate':>20}: {args.lr}")
+    logging.info(f"{'train_ratio':>20}: {args.train_ratio}")
+    logging.info(f"{'val_ratio':>20}: {args.val_ratio}")
+    logging.info(f"{'test_ratio':>20}: {args.test_ratio}")
+    logging.info(f"{'num_epochs':>20}: {args.num_epochs}") 
+    logging.info(f"{'num_workers':>20}: {args.num_workers}")
+    logging.info(f"{'random_seed':>20}: {args.seed}")      
+        
         
 def objective_gt(params, args, device, datasets):
     """
     Defines the objective function for GraphTab.
     """
-    learning_rate = params[0]
+    learning_rate, weight_decay, batch_size = params
     train_val_set, test_set, cl_graphs, fingerprints_dict = datasets
-    logging.info(f"{4*' '}learning rate: {learning_rate}")
+    logging.info(f"{4*' '}learning_rate : {learning_rate}")
+    logging.info(f"{4*' '}weight_decay  : {weight_decay}")
+    logging.info(f"{4*' '}batch_size    : {batch_size}")
+    print(type(batch_size))
+    
+    args.batch_size = batch_size
 
     # Initialize model and model class.
     match args.version:
@@ -125,15 +131,29 @@ def objective_gt(params, args, device, datasets):
         case _:
             raise NotImplementedError(f"Given model version {args.version} is not implemented for GraphTab!")    
     loss_func = nn.MSELoss()
-    print(learning_rate)
     optimizer = torch.optim.Adam(params=model.parameters(), 
-                                 lr=learning_rate)
+                                 lr=learning_rate,
+                                 weight_decay=weight_decay)
 
     # Compute cross-validation score.
-    kfold = KFold(n_splits=3, shuffle=True, random_state=args.seed)
-    cv_performances = {}
+    kfold = KFold(n_splits=args.kfolds, shuffle=True, random_state=args.seed)
+#     cv_performances = {}
     cv_mse_scores = []
+    cv_rmse_scores = []
+    cv_mae_scores = []
+    cv_r2_scores = []
+    cv_pcc_scores = []
+    cv_scc_scores = []
+    logging.info(f"Running {args.kfolds}-Fold CV")
+    logging.info("===================")
+    logging.info(f"{4*' '}Parameter Set")
+    logging.info(f"{4*' '}-------------")
+    logging.info(f"{8*' '}learning_rate: {learning_rate}")
+    logging.info(f"{8*' '}weight_decay : {weight_decay}")
+    logging.info(f"{8*' '}batch_size   : {batch_size}")    
     for i, (train_i, val_i) in enumerate(kfold.split(train_val_set), 1):
+        logging.info(f"{12*' '}Fold iteration k={i:2.0f}...")
+        
         train_set = train_val_set.iloc[train_i]
         val_set = train_val_set.iloc[val_i]
 
@@ -165,14 +185,33 @@ def objective_gt(params, args, device, datasets):
         # Train the model on the training fold.
         performances = gt_cls.train(gt_cls.train_loader)
 
-        cv_performances[f'k{i}_val'] = performances.get('val')
+#         cv_performances[f'k{i}_val'] = performances.get('val')
         cv_mse_scores.append(performances.get('val').get('mse'))
+        cv_rmse_scores.append(performances.get('val').get('rmse'))
+        cv_mae_scores.append(performances.get('val').get('mae'))
+        cv_r2_scores.append(performances.get('val').get('r2'))
+        cv_pcc_scores.append(performances.get('val').get('pcc'))
+        cv_scc_scores.append(performances.get('val').get('scc'))       
+        
+    scores_as_tensor = torch.tensor(cv_mse_scores).detach().cpu().numpy()
+    logging.info(f"{args.kfolds}-Fold CV Results")
+    logging.info("=================")
+    logging.info(f"{4*' '}MSE scores: {np.mean(scores_as_tensor):0.3f} +- {np.std(scores_as_tensor):0.3f}")
+    
+    with open('performances/scores.txt', 'a') as f:
+        f.write("Hyperparameter Setting")
+        f.write("----------------------")
+        f.write(f"{4*' '}learning_rate: {learning_rate}")
+        f.write(f"{4*' '}weight_decay : {weight_decay}")
+        f.write(f"{4*' '}batch_size   : {batch_size}")
+        f.write(f"{8*' '}MSE  : {np.mean(scores_as_tensor)} +- {np.std(scores_as_tensor)}")
+        f.write(f"{8*' '}RMSE : {np.mean(torch.tensor(cv_rmse_scores).detach().cpu().numpy()):<10f} +- {np.std(torch.tensor(cv_rmse_scores).detach().cpu().numpy()):<10f}")
+        f.write(f"{8*' '}MAE  : {np.mean(torch.tensor(cv_mae_scores).detach().cpu().numpy()):<10f} +- {np.std(torch.tensor(cv_mae_scores).detach().cpu().numpy()):<10f}")
+        f.write(f"{8*' '}R2   : {np.mean(torch.tensor(cv_r2_scores).detach().cpu().numpy()):<10f} +- {np.std(torch.tensor(cv_r2_scores).detach().cpu().numpy()):<10f}")        
+        f.write(f"{8*' '}PCC  : {np.mean(torch.tensor(cv_pcc_scores).detach().cpu().numpy()):<10f} +- {np.std(torch.tensor(cv_pcc_scores).detach().cpu().numpy()):<10f}")
+        f.write(f"{8*' '}SCC  : {np.mean(torch.tensor(cv_scc_scores).detach().cpu().numpy()):<10f} +- {np.std(torch.tensor(cv_scc_scores).detach().cpu().numpy()):<10f}")        
 
-    logging.info(f"KFold CV MSE score: {cv_mse_scores}")
-    logging.info(f"KFold CV MSE score mean: {np.mean(cv_mse_scores.cpu().numpy())}")
-    logging.info(f"KFold CV MSE score std: {np.std(cv_mse_scores.cpu().numpy())}")    
-
-    return np.mean(cv_mse_scores.cpu().numpy())
+    return np.mean(scores_as_tensor)
         
 
 # -----------------------------------------------------------------------------
@@ -336,9 +375,13 @@ def main():
         graph_tab_dataset.print_dataset_summary()
         logging.info(print_args_summary(args))
         
+        # ---------------------------------------------------------------------        
         # Define hyperparameters to optimize for.
         param_space = [
-            Real(low=0.0004, high=0.1, prior='log-uniform', name='learning_rate')
+            Real(name='learning_rate', low=0.0001, high=0.1, prior='log-uniform'),
+#             Real(name='dropout', low=0.0, high=0.5, prior='uniform'),
+            Real(name='weight_decay', low=0.000000001, high=0.001, prior='log-uniform'),
+            Integer(name='batch_size', low=16, high=1024)#, prior='uniform')            
             # Real(0.0, 0.5, prior='uniform', name='dropout'),
             # Real(0.0, 0.001, prior='log-uniform', name='weight_decay')
             # Dimension(low=16, high=1024, prior='uniform', name='batch_size')
@@ -347,7 +390,7 @@ def main():
 
         train_val_set, test_set = train_test_split(
             drm, 
-            test_size=1 - (args.train_ratio + args.val_ratio),
+            test_size=args.test_ratio, #1 - (args.train_ratio + args.val_ratio),
             random_state=args.seed,
             stratify=drm['CELL_LINE_NAME']
         )
@@ -368,11 +411,12 @@ def main():
 
         objective_gt_fixed = partial(objective_gt, **fixed_params)
 
-        # Run the bayesian hyperparameter optimization.
+        # ---------------------------------------------------------------------        
+        # Run the Bayesian hyperparameter optimization.
         bayes_res = gbrt_minimize(
             objective_gt_fixed, 
             param_space, 
-            n_calls=10, # TODO: make this higher
+            n_calls=50, # TODO: make this higher
             random_state=args.seed,
             n_jobs=args.num_workers
         )
@@ -380,9 +424,9 @@ def main():
 
         logging.info("Results of Bayesian Hyperparameter optimization")
         logging.info("===============================================")
-        logging.info(f"4*{''}Optimal hyperparameter values:")
+        logging.info(f"{4*' '}Optimal hyperparameter values:")
         for param, value in zip(bayes_res.space, optimal_params):
-            logging.info(f"8*{''}Param: {param.name:15s} optimal value: {value}")        
+            logging.info(f"{8*' '} {param.name:15s} optimal value: {value}")        
         
         # ---------------------------------------------------------------------
         # --- Train final model using the optimal hyperparameters ---
@@ -497,7 +541,7 @@ def main():
         'train_performances': performance_stats['train'],
         'val_performances': performance_stats['val'],
         'test_performance': performance_stats['test']
-    }, PERFORMANCES + f'Bayes_model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}_{args.seed}_{args.file_ending}.pth')
+    }, PERFORMANCES + f'bayes_model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}_{args.seed}_{args.file_ending}.pth')
         
 
 

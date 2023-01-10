@@ -24,6 +24,8 @@ def parse_args():
                         help='the batch size (default: 10)')
     parser.add_argument('--lr', type=float, default=0.0001, 
                         help='learning rate (default: 0.0001)')
+    parser.add_argument('--weight_decay', type=float, default=0.0001, 
+                        help='weight decay (default: 0.0001)')    
     parser.add_argument('--train_ratio', type=float, default=0.8, 
                         help='training set ratio (default: 0.8)')
     parser.add_argument('--val_ratio', type=float, default=0.5, 
@@ -63,9 +65,10 @@ def parse_args():
     return parser.parse_args()
 
 class HyperParameters:
-    def __init__(self, batch_size, lr, train_ratio, val_ratio, num_epochs, seed='42', num_workers=0):
+    def __init__(self, batch_size, lr, weight_decay, train_ratio, val_ratio, num_epochs, seed='42', num_workers=0):
         self.BATCH_SIZE = batch_size
         self.LR = lr
+        self.WEIGHT_DECAY = weight_decay
         self.TRAIN_RATIO = train_ratio
         self.TEST_VAL_RATIO = 1-self.TRAIN_RATIO
         self.VAL_RATIO = val_ratio
@@ -78,6 +81,7 @@ class HyperParameters:
         logging.info("===============")
         logging.info(f"batch_size: {self.BATCH_SIZE}")
         logging.info(f"learning_rate: {self.LR}")
+        logging.info(f"weight_decay: {self.WEIGHT_DECAY}")
         logging.info(f"train_ratio: {self.TRAIN_RATIO}")
         logging.info(f"val_ratio: {self.VAL_RATIO}")
         logging.info(f"test_ratio: {1-self.VAL_RATIO}")
@@ -185,6 +189,7 @@ def main():
         hyper_params = HyperParameters(
             batch_size=args.batch_size, 
             lr=args.lr, 
+            weight_decay=args.weight_decay,            
             train_ratio=args.train_ratio, 
             val_ratio=args.val_ratio, 
             num_epochs=args.num_epochs, 
@@ -244,7 +249,8 @@ def main():
 
         hyper_params = HyperParameters(
             batch_size=args.batch_size, 
-            lr=args.lr, 
+            lr=args.lr,
+            weight_decay=args.weight_decay,            
             train_ratio=args.train_ratio, 
             val_ratio=args.val_ratio, 
             num_epochs=args.num_epochs, 
@@ -320,6 +326,7 @@ def main():
         hyper_params = HyperParameters(
             batch_size=args.batch_size, 
             lr=args.lr, 
+            weight_decay=args.weight_decay,
             train_ratio=args.train_ratio, 
             val_ratio=args.val_ratio, 
             num_epochs=args.num_epochs, 
@@ -347,7 +354,9 @@ def main():
 
         model = TabGraph_v1(cl_gene_mat.shape[1]).to(device)
         loss_func = nn.MSELoss()
-        optimizer = torch.optim.Adam(params=model.parameters(), lr=args.lr) # TODO: include weight_decay of lr
+        optimizer = torch.optim.Adam(params=model.parameters(), 
+                                     lr=args.lr,
+                                     weight_decay=args.weight_decay)
 
         # Build the model.
         build_model = BuildTabGraphModel(
@@ -373,7 +382,8 @@ def main():
         'model_state_dict': build_model.model.state_dict(),
         'optimizer_state_dict': build_model.optimizer.state_dict(),
         'train_performances': performance_stats['train'],
-        'val_performances': performance_stats['val']
+        'val_performances': performance_stats['val'],
+        'test_performance': performance_stats['test']
     }, PERFORMANCES + f'model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}_{args.seed}_{args.file_ending}.pth')
         
 

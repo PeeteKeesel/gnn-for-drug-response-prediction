@@ -180,6 +180,10 @@ class BuildGraphTabModel():
             logging.info(f"===Epoch {epoch:03.0f}===")
             logging.info(f"Train      | MSE: {train_mse:2.5f}")
             logging.info(f"Validation | MSE: {mse:2.5f}")
+            
+        # Final model performance.
+        mse_te, rmse_te, mae_te, r2_te, pcc_te, scc_te, _, _ = self.validate(self.test_loader)
+        logging.info(f"Test       | MSE: {mse_te:2.5f}")            
 
         performance_stats = {
             'train': {
@@ -198,7 +202,15 @@ class BuildGraphTabModel():
                 'r2': val_epoch_r2,
                 'pcc': val_epoch_pcc,
                 'scc': val_epoch_scc
-            }            
+            },
+            'test': {
+                'mse': mse_te,
+                'rmse': rmse_te,
+                'mae': mae_te,
+                'r2': r2_te,
+                'pcc': pcc_te,
+                'scc': scc_te              
+            }             
         }
 
         return performance_stats           

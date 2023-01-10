@@ -1,0 +1,1690 @@
+2023-01-08 19:42:37,972 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-08 19:42:37,979 INFO     DRM Number of unique cell-lines: 856
+2023-01-08 19:42:38,307 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-01-08 19:42:38,308 INFO     Finished reading drug SMILES dict: 181
+2023-01-08 19:42:38,309 INFO     Finished building GraphTabDataset!
+2023-01-08 19:42:38,309 INFO     GraphTabDataset Summary
+2023-01-08 19:42:38,309 INFO     =======================
+2023-01-08 19:42:38,309 INFO     # observations : 137835
+2023-01-08 19:42:38,403 INFO     # cell-lines   : 856
+2023-01-08 19:42:38,479 INFO     # drugs        : 181
+2023-01-08 19:42:38,479 INFO     # genes        : 293
+2023-01-08 19:42:38,479 INFO     Args Summary
+2023-01-08 19:42:38,479 INFO     ============
+2023-01-08 19:42:38,480 INFO               batch_size: 1000
+2023-01-08 19:42:38,480 INFO            learning_rate: 0.0001
+2023-01-08 19:42:38,480 INFO              train_ratio: 0.8
+2023-01-08 19:42:38,480 INFO                val_ratio: 0.1
+2023-01-08 19:42:38,480 INFO               test_ratio: 0.1
+2023-01-08 19:42:38,480 INFO               num_epochs: 100
+2023-01-08 19:42:38,480 INFO              num_workers: 4
+2023-01-08 19:42:38,480 INFO              random_seed: 42
+2023-01-08 19:42:38,480 INFO     None
+2023-01-08 19:42:38,690 INFO     device: cuda
+2023-01-08 19:42:38,693 INFO         learning_rate : 0.0013292918943162168
+2023-01-08 19:42:38,693 INFO         weight_decay  : 0.0005061576888752313
+2023-01-08 19:42:38,693 INFO         batch_size    : 122
+2023-01-08 19:42:40,448 INFO     Running 5-Fold CV
+2023-01-08 19:42:40,448 INFO     ===================
+2023-01-08 19:42:40,448 INFO         Parameter Set
+2023-01-08 19:42:40,448 INFO         -------------
+2023-01-08 19:42:40,448 INFO             learning_rate: 0.0013292918943162168
+2023-01-08 19:42:40,453 INFO                 Fold iteration k= 1...
+2023-01-08 19:42:40,464 INFO     train    shape: (99240, 9)
+2023-01-08 19:42:40,464 INFO     val      shape: (24811, 9)
+2023-01-08 19:42:40,464 INFO     test     shape: (13784, 9)
+2023-01-08 19:42:40,465 INFO     train_dataset:
+2023-01-08 19:42:40,465 INFO     GraphTabDataset Summary
+2023-01-08 19:42:40,465 INFO     =======================
+2023-01-08 19:42:40,465 INFO     # observations : 99240
+2023-01-08 19:42:40,535 INFO     # cell-lines   : 856
+2023-01-08 19:42:40,597 INFO     # drugs        : 181
+2023-01-08 19:42:40,597 INFO     # genes        : 293
+2023-01-08 19:42:40,597 INFO     val_dataset  :
+2023-01-08 19:42:40,597 INFO     GraphTabDataset Summary
+2023-01-08 19:42:40,597 INFO     =======================
+2023-01-08 19:42:40,597 INFO     # observations : 24811
+2023-01-08 19:42:40,613 INFO     # cell-lines   : 856
+2023-01-08 19:42:40,627 INFO     # drugs        : 181
+2023-01-08 19:42:40,628 INFO     # genes        : 293
+2023-01-08 19:42:40,628 INFO     test_dataset :
+2023-01-08 19:42:40,628 INFO     GraphTabDataset Summary
+2023-01-08 19:42:40,628 INFO     =======================
+2023-01-08 19:42:40,628 INFO     # observations : 13784
+2023-01-08 19:42:40,637 INFO     # cell-lines   : 856
+2023-01-08 19:42:40,644 INFO     # drugs        : 181
+2023-01-08 19:42:40,644 INFO     # genes        : 293
+2023-01-08 19:42:40,645 INFO     GraphTab_v2(
+  (cell_emb): Sequential(
+    (0): GATConv(4, 256, heads=1)
+    (1): ReLU(inplace=True)
+    (2): Dropout(p=0.1, inplace=False)
+    (3): GATConv(256, 128, heads=1)
+    (4): ReLU(inplace=True)
+    (5): <function global_max_pool at 0x7ff1fc88af80>
+    (6): Linear(in_features=128, out_features=128, bias=True)
+    (7): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Dropout(p=0.1, inplace=False)
+    (10): Linear(in_features=128, out_features=128, bias=True)
+    (11): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-01-08 19:44:22,811 INFO     ===Epoch 001===
+2023-01-08 19:44:22,812 INFO     Train      | MSE: 2.89965
+2023-01-08 19:44:22,813 INFO     Validation | MSE: 2.43130
+2023-01-08 19:46:07,169 INFO     ===Epoch 002===
+2023-01-08 19:46:07,170 INFO     Train      | MSE: 2.25354
+2023-01-08 19:46:07,170 INFO     Validation | MSE: 2.15229
+2023-01-08 19:47:42,645 INFO     ===Epoch 003===
+2023-01-08 19:47:42,646 INFO     Train      | MSE: 2.07551
+2023-01-08 19:47:42,647 INFO     Validation | MSE: 2.56146
+2023-01-08 19:49:26,170 INFO     ===Epoch 004===
+2023-01-08 19:49:26,171 INFO     Train      | MSE: 1.91425
+2023-01-08 19:49:26,172 INFO     Validation | MSE: 1.95137
+2023-01-08 19:51:02,295 INFO     ===Epoch 005===
+2023-01-08 19:51:02,296 INFO     Train      | MSE: 1.79976
+2023-01-08 19:51:02,296 INFO     Validation | MSE: 1.88177
+2023-01-08 19:52:46,556 INFO     ===Epoch 006===
+2023-01-08 19:52:46,558 INFO     Train      | MSE: 1.72588
+2023-01-08 19:52:46,558 INFO     Validation | MSE: 1.76465
+2023-01-08 19:54:21,950 INFO     ===Epoch 007===
+2023-01-08 19:54:21,951 INFO     Train      | MSE: 1.68595
+2023-01-08 19:54:21,951 INFO     Validation | MSE: 1.74852
+2023-01-08 19:56:03,350 INFO     ===Epoch 008===
+2023-01-08 19:56:03,351 INFO     Train      | MSE: 1.66298
+2023-01-08 19:56:03,351 INFO     Validation | MSE: 1.63855
+2023-01-08 19:57:36,102 INFO     ===Epoch 009===
+2023-01-08 19:57:36,103 INFO     Train      | MSE: 1.63899
+2023-01-08 19:57:36,103 INFO     Validation | MSE: 1.75566
+2023-01-08 19:59:17,393 INFO     ===Epoch 010===
+2023-01-08 19:59:17,394 INFO     Train      | MSE: 1.62496
+2023-01-08 19:59:17,394 INFO     Validation | MSE: 1.56079
+2023-01-08 20:00:58,831 INFO     ===Epoch 011===
+2023-01-08 20:00:58,832 INFO     Train      | MSE: 1.60641
+2023-01-08 20:00:58,832 INFO     Validation | MSE: 1.57831
+2023-01-08 20:02:35,342 INFO     ===Epoch 012===
+2023-01-08 20:02:35,343 INFO     Train      | MSE: 1.60402
+2023-01-08 20:02:35,343 INFO     Validation | MSE: 1.58197
+2023-01-08 20:04:19,608 INFO     ===Epoch 013===
+2023-01-08 20:04:19,608 INFO     Train      | MSE: 1.59314
+2023-01-08 20:04:19,609 INFO     Validation | MSE: 1.56091
+2023-01-08 20:05:54,766 INFO     ===Epoch 014===
+2023-01-08 20:05:54,767 INFO     Train      | MSE: 1.59090
+2023-01-08 20:05:54,767 INFO     Validation | MSE: 1.59385
+2023-01-08 20:07:37,566 INFO     ===Epoch 015===
+2023-01-08 20:07:37,566 INFO     Train      | MSE: 1.57594
+2023-01-08 20:07:37,567 INFO     Validation | MSE: 1.50359
+2023-01-08 20:09:12,882 INFO     ===Epoch 016===
+2023-01-08 20:09:12,883 INFO     Train      | MSE: 1.56829
+2023-01-08 20:09:12,883 INFO     Validation | MSE: 1.58870
+2023-01-08 20:10:56,797 INFO     ===Epoch 017===
+2023-01-08 20:10:56,797 INFO     Train      | MSE: 1.55904
+2023-01-08 20:10:56,798 INFO     Validation | MSE: 1.54788
+2023-01-08 20:12:34,277 INFO     ===Epoch 018===
+2023-01-08 20:12:34,278 INFO     Train      | MSE: 1.55738
+2023-01-08 20:12:34,278 INFO     Validation | MSE: 1.55439
+2023-01-08 20:14:16,508 INFO     ===Epoch 019===
+2023-01-08 20:14:16,516 INFO     Train      | MSE: 1.55315
+2023-01-08 20:14:16,516 INFO     Validation | MSE: 1.57916
+2023-01-08 20:16:00,113 INFO     ===Epoch 020===
+2023-01-08 20:16:00,114 INFO     Train      | MSE: 1.55045
+2023-01-08 20:16:00,114 INFO     Validation | MSE: 1.57255
+2023-01-08 20:17:34,446 INFO     ===Epoch 021===
+2023-01-08 20:17:34,447 INFO     Train      | MSE: 1.54275
+2023-01-08 20:17:34,447 INFO     Validation | MSE: 1.53050
+2023-01-08 20:19:17,128 INFO     ===Epoch 022===
+2023-01-08 20:19:17,129 INFO     Train      | MSE: 1.54319
+2023-01-08 20:19:17,129 INFO     Validation | MSE: 1.48743
+2023-01-08 20:20:51,709 INFO     ===Epoch 023===
+2023-01-08 20:20:51,710 INFO     Train      | MSE: 1.52813
+2023-01-08 20:20:51,710 INFO     Validation | MSE: 1.54541
+2023-01-08 20:22:35,463 INFO     ===Epoch 024===
+2023-01-08 20:22:35,464 INFO     Train      | MSE: 1.53672
+2023-01-08 20:22:35,464 INFO     Validation | MSE: 1.56260
+2023-01-08 20:24:12,574 INFO     ===Epoch 025===
+2023-01-08 20:24:12,575 INFO     Train      | MSE: 1.52799
+2023-01-08 20:24:12,575 INFO     Validation | MSE: 1.48888
+2023-01-08 20:25:56,114 INFO     ===Epoch 026===
+2023-01-08 20:25:56,115 INFO     Train      | MSE: 1.51762
+2023-01-08 20:25:56,115 INFO     Validation | MSE: 1.49332
+2023-01-08 20:27:29,593 INFO     ===Epoch 027===
+2023-01-08 20:27:29,594 INFO     Train      | MSE: 1.51664
+2023-01-08 20:27:29,594 INFO     Validation | MSE: 1.44682
+2023-01-08 20:29:11,285 INFO     ===Epoch 028===
+2023-01-08 20:29:11,286 INFO     Train      | MSE: 1.51896
+2023-01-08 20:29:11,286 INFO     Validation | MSE: 1.46219
+2023-01-08 20:30:55,058 INFO     ===Epoch 029===
+2023-01-08 20:30:55,059 INFO     Train      | MSE: 1.50563
+2023-01-08 20:30:55,059 INFO     Validation | MSE: 1.49360
+2023-01-08 20:32:32,163 INFO     ===Epoch 030===
+2023-01-08 20:32:32,164 INFO     Train      | MSE: 1.50451
+2023-01-08 20:32:32,164 INFO     Validation | MSE: 1.42101
+2023-01-08 20:34:17,142 INFO     ===Epoch 031===
+2023-01-08 20:34:17,142 INFO     Train      | MSE: 1.50095
+2023-01-08 20:34:17,143 INFO     Validation | MSE: 1.44849
+2023-01-08 20:35:53,301 INFO     ===Epoch 032===
+2023-01-08 20:35:53,302 INFO     Train      | MSE: 1.50275
+2023-01-08 20:35:53,302 INFO     Validation | MSE: 1.47947
+2023-01-08 20:37:38,509 INFO     ===Epoch 033===
+2023-01-08 20:37:38,511 INFO     Train      | MSE: 1.50286
+2023-01-08 20:37:38,511 INFO     Validation | MSE: 1.42618
+2023-01-08 20:39:13,745 INFO     ===Epoch 034===
+2023-01-08 20:39:13,746 INFO     Train      | MSE: 1.50551
+2023-01-08 20:39:13,746 INFO     Validation | MSE: 1.43029
+2023-01-08 20:40:58,285 INFO     ===Epoch 035===
+2023-01-08 20:40:58,286 INFO     Train      | MSE: 1.50585
+2023-01-08 20:40:58,286 INFO     Validation | MSE: 1.44950
+2023-01-08 20:42:34,473 INFO     ===Epoch 036===
+2023-01-08 20:42:34,474 INFO     Train      | MSE: 1.47822
+2023-01-08 20:42:34,474 INFO     Validation | MSE: 1.42711
+2023-01-08 20:44:16,152 INFO     ===Epoch 037===
+2023-01-08 20:44:16,153 INFO     Train      | MSE: 1.49115
+2023-01-08 20:44:16,153 INFO     Validation | MSE: 1.49581
+2023-01-08 20:46:01,452 INFO     ===Epoch 038===
+2023-01-08 20:46:01,453 INFO     Train      | MSE: 1.49122
+2023-01-08 20:46:01,453 INFO     Validation | MSE: 1.42948
+2023-01-08 20:47:37,767 INFO     ===Epoch 039===
+2023-01-08 20:47:37,768 INFO     Train      | MSE: 1.48419
+2023-01-08 20:47:37,768 INFO     Validation | MSE: 1.41398
+2023-01-08 20:49:22,354 INFO     ===Epoch 040===
+2023-01-08 20:49:22,355 INFO     Train      | MSE: 1.47933
+2023-01-08 20:49:22,355 INFO     Validation | MSE: 1.42493
+2023-01-08 20:50:58,019 INFO     ===Epoch 041===
+2023-01-08 20:50:58,020 INFO     Train      | MSE: 1.48012
+2023-01-08 20:50:58,020 INFO     Validation | MSE: 1.46594
+2023-01-08 20:52:42,807 INFO     ===Epoch 042===
+2023-01-08 20:52:42,809 INFO     Train      | MSE: 1.48074
+2023-01-08 20:52:42,810 INFO     Validation | MSE: 1.41530
+2023-01-08 20:54:19,892 INFO     ===Epoch 043===
+2023-01-08 20:54:19,894 INFO     Train      | MSE: 1.47518
+2023-01-08 20:54:19,894 INFO     Validation | MSE: 1.41956
+2023-01-08 20:56:03,187 INFO     ===Epoch 044===
+2023-01-08 20:56:03,188 INFO     Train      | MSE: 1.46827
+2023-01-08 20:56:03,188 INFO     Validation | MSE: 1.40444
+2023-01-08 20:57:39,232 INFO     ===Epoch 045===
+2023-01-08 20:57:39,233 INFO     Train      | MSE: 1.46753
+2023-01-08 20:57:39,234 INFO     Validation | MSE: 1.41380
+2023-01-08 20:59:21,127 INFO     ===Epoch 046===
+2023-01-08 20:59:21,128 INFO     Train      | MSE: 1.47115
+2023-01-08 20:59:21,128 INFO     Validation | MSE: 1.40635
+2023-01-08 21:01:06,145 INFO     ===Epoch 047===
+2023-01-08 21:01:06,147 INFO     Train      | MSE: 1.46231
+2023-01-08 21:01:06,147 INFO     Validation | MSE: 1.40201
+2023-01-08 21:02:42,951 INFO     ===Epoch 048===
+2023-01-08 21:02:42,952 INFO     Train      | MSE: 1.46391
+2023-01-08 21:02:42,953 INFO     Validation | MSE: 1.42872
+2023-01-08 21:04:27,551 INFO     ===Epoch 049===
+2023-01-08 21:04:27,552 INFO     Train      | MSE: 1.46331
+2023-01-08 21:04:27,552 INFO     Validation | MSE: 1.43592
+2023-01-08 21:06:02,142 INFO     ===Epoch 050===
+2023-01-08 21:06:02,143 INFO     Train      | MSE: 1.46512
+2023-01-08 21:06:02,143 INFO     Validation | MSE: 1.38810
+2023-01-08 21:07:47,787 INFO     ===Epoch 051===
+2023-01-08 21:07:47,788 INFO     Train      | MSE: 1.44967
+2023-01-08 21:07:47,788 INFO     Validation | MSE: 1.38597
+2023-01-08 21:09:23,734 INFO     ===Epoch 052===
+2023-01-08 21:09:23,735 INFO     Train      | MSE: 1.45762
+2023-01-08 21:09:23,736 INFO     Validation | MSE: 1.43312
+2023-01-08 21:11:08,374 INFO     ===Epoch 053===
+2023-01-08 21:11:08,375 INFO     Train      | MSE: 1.44706
+2023-01-08 21:11:08,375 INFO     Validation | MSE: 1.38941
+2023-01-08 21:12:53,200 INFO     ===Epoch 054===
+2023-01-08 21:12:53,201 INFO     Train      | MSE: 1.44913
+2023-01-08 21:12:53,201 INFO     Validation | MSE: 1.36795
+2023-01-08 21:14:28,278 INFO     ===Epoch 055===
+2023-01-08 21:14:28,279 INFO     Train      | MSE: 1.44627
+2023-01-08 21:14:28,279 INFO     Validation | MSE: 1.42078
+2023-01-08 21:16:15,558 INFO     ===Epoch 056===
+2023-01-08 21:16:15,559 INFO     Train      | MSE: 1.44508
+2023-01-08 21:16:15,560 INFO     Validation | MSE: 1.43269
+2023-01-08 21:17:52,928 INFO     ===Epoch 057===
+2023-01-08 21:17:52,929 INFO     Train      | MSE: 1.43434
+2023-01-08 21:17:52,929 INFO     Validation | MSE: 1.37437
+2023-01-08 21:19:37,099 INFO     ===Epoch 058===
+2023-01-08 21:19:37,100 INFO     Train      | MSE: 1.43809
+2023-01-08 21:19:37,100 INFO     Validation | MSE: 1.42910
+2023-01-08 21:21:13,870 INFO     ===Epoch 059===
+2023-01-08 21:21:13,871 INFO     Train      | MSE: 1.44200
+2023-01-08 21:21:13,871 INFO     Validation | MSE: 1.39712
+2023-01-08 21:22:56,937 INFO     ===Epoch 060===
+2023-01-08 21:22:56,938 INFO     Train      | MSE: 1.44141
+2023-01-08 21:22:56,938 INFO     Validation | MSE: 1.38274
+2023-01-08 21:24:33,542 INFO     ===Epoch 061===
+2023-01-08 21:24:33,543 INFO     Train      | MSE: 1.44130
+2023-01-08 21:24:33,543 INFO     Validation | MSE: 1.38457
+2023-01-08 21:26:14,991 INFO     ===Epoch 062===
+2023-01-08 21:26:14,992 INFO     Train      | MSE: 1.43461
+2023-01-08 21:26:14,992 INFO     Validation | MSE: 1.40692
+2023-01-08 21:27:57,672 INFO     ===Epoch 063===
+2023-01-08 21:27:57,674 INFO     Train      | MSE: 1.42894
+2023-01-08 21:27:57,674 INFO     Validation | MSE: 1.38095
+2023-01-08 21:29:34,839 INFO     ===Epoch 064===
+2023-01-08 21:29:34,849 INFO     Train      | MSE: 1.44257
+2023-01-08 21:29:34,849 INFO     Validation | MSE: 1.39280
+2023-01-08 21:31:20,292 INFO     ===Epoch 065===
+2023-01-08 21:31:20,293 INFO     Train      | MSE: 1.43253
+2023-01-08 21:31:20,293 INFO     Validation | MSE: 1.40036
+2023-01-08 21:32:55,456 INFO     ===Epoch 066===
+2023-01-08 21:32:55,457 INFO     Train      | MSE: 1.42251
+2023-01-08 21:32:55,457 INFO     Validation | MSE: 1.34900
+2023-01-08 21:34:40,476 INFO     ===Epoch 067===
+2023-01-08 21:34:40,477 INFO     Train      | MSE: 1.43089
+2023-01-08 21:34:40,477 INFO     Validation | MSE: 1.35628
+2023-01-08 21:36:16,905 INFO     ===Epoch 068===
+2023-01-08 21:36:16,907 INFO     Train      | MSE: 1.42512
+2023-01-08 21:36:16,907 INFO     Validation | MSE: 1.41766
+2023-01-08 21:37:59,180 INFO     ===Epoch 069===
+2023-01-08 21:37:59,181 INFO     Train      | MSE: 1.42670
+2023-01-08 21:37:59,181 INFO     Validation | MSE: 1.36800
+2023-01-08 21:39:34,217 INFO     ===Epoch 070===
+2023-01-08 21:39:34,218 INFO     Train      | MSE: 1.41945
+2023-01-08 21:39:34,218 INFO     Validation | MSE: 1.37085
+2023-01-08 21:41:16,888 INFO     ===Epoch 071===
+2023-01-08 21:41:16,888 INFO     Train      | MSE: 1.41890
+2023-01-08 21:41:16,889 INFO     Validation | MSE: 1.37815
+2023-01-08 21:43:02,989 INFO     ===Epoch 072===
+2023-01-08 21:43:02,990 INFO     Train      | MSE: 1.41200
+2023-01-08 21:43:02,990 INFO     Validation | MSE: 1.35391
+2023-01-08 21:44:39,093 INFO     ===Epoch 073===
+2023-01-08 21:44:39,094 INFO     Train      | MSE: 1.42455
+2023-01-08 21:44:39,095 INFO     Validation | MSE: 1.35930
+2023-01-08 21:46:23,143 INFO     ===Epoch 074===
+2023-01-08 21:46:23,144 INFO     Train      | MSE: 1.42246
+2023-01-08 21:46:23,145 INFO     Validation | MSE: 1.34540
+2023-01-08 21:47:59,926 INFO     ===Epoch 075===
+2023-01-08 21:47:59,927 INFO     Train      | MSE: 1.41098
+2023-01-08 21:47:59,927 INFO     Validation | MSE: 1.42493
+2023-01-08 21:49:43,182 INFO     ===Epoch 076===
+2023-01-08 21:49:43,183 INFO     Train      | MSE: 1.41241
+2023-01-08 21:49:43,184 INFO     Validation | MSE: 1.30893
+2023-01-08 21:51:20,323 INFO     ===Epoch 077===
+2023-01-08 21:51:20,323 INFO     Train      | MSE: 1.41391
+2023-01-08 21:51:20,324 INFO     Validation | MSE: 1.33456
+2023-01-08 21:53:03,392 INFO     ===Epoch 078===
+2023-01-08 21:53:03,393 INFO     Train      | MSE: 1.40812
+2023-01-08 21:53:03,393 INFO     Validation | MSE: 1.34665
+2023-01-08 21:54:40,791 INFO     ===Epoch 079===
+2023-01-08 21:54:40,791 INFO     Train      | MSE: 1.41040
+2023-01-08 21:54:40,791 INFO     Validation | MSE: 1.36227
+2023-01-08 21:56:23,097 INFO     ===Epoch 080===
+2023-01-08 21:56:23,098 INFO     Train      | MSE: 1.40642
+2023-01-08 21:56:23,098 INFO     Validation | MSE: 1.35090
+2023-01-08 21:58:08,529 INFO     ===Epoch 081===
+2023-01-08 21:58:08,530 INFO     Train      | MSE: 1.40520
+2023-01-08 21:58:08,530 INFO     Validation | MSE: 1.34506
+2023-01-08 21:59:46,109 INFO     ===Epoch 082===
+2023-01-08 21:59:46,110 INFO     Train      | MSE: 1.39440
+2023-01-08 21:59:46,111 INFO     Validation | MSE: 1.32545
+2023-01-08 22:01:31,717 INFO     ===Epoch 083===
+2023-01-08 22:01:31,718 INFO     Train      | MSE: 1.41353
+2023-01-08 22:01:31,719 INFO     Validation | MSE: 1.37735
+2023-01-08 22:03:09,272 INFO     ===Epoch 084===
+2023-01-08 22:03:09,273 INFO     Train      | MSE: 1.40916
+2023-01-08 22:03:09,273 INFO     Validation | MSE: 1.34454
+2023-01-08 22:04:55,418 INFO     ===Epoch 085===
+2023-01-08 22:04:55,418 INFO     Train      | MSE: 1.40064
+2023-01-08 22:04:55,419 INFO     Validation | MSE: 1.33458
+2023-01-08 22:06:32,275 INFO     ===Epoch 086===
+2023-01-08 22:06:32,276 INFO     Train      | MSE: 1.40198
+2023-01-08 22:06:32,276 INFO     Validation | MSE: 1.33419
+2023-01-08 22:08:17,288 INFO     ===Epoch 087===
+2023-01-08 22:08:17,290 INFO     Train      | MSE: 1.39692
+2023-01-08 22:08:17,290 INFO     Validation | MSE: 1.31609
+2023-01-08 22:10:03,747 INFO     ===Epoch 088===
+2023-01-08 22:10:03,748 INFO     Train      | MSE: 1.39952
+2023-01-08 22:10:03,748 INFO     Validation | MSE: 1.36341
+2023-01-08 22:11:42,912 INFO     ===Epoch 089===
+2023-01-08 22:11:42,913 INFO     Train      | MSE: 1.39899
+2023-01-08 22:11:42,914 INFO     Validation | MSE: 1.36881
+2023-01-08 22:13:28,015 INFO     ===Epoch 090===
+2023-01-08 22:13:28,016 INFO     Train      | MSE: 1.38917
+2023-01-08 22:13:28,016 INFO     Validation | MSE: 1.34859
+2023-01-08 22:15:04,542 INFO     ===Epoch 091===
+2023-01-08 22:15:04,543 INFO     Train      | MSE: 1.39981
+2023-01-08 22:15:04,543 INFO     Validation | MSE: 1.34216
+2023-01-08 22:16:52,012 INFO     ===Epoch 092===
+2023-01-08 22:16:52,013 INFO     Train      | MSE: 1.39553
+2023-01-08 22:16:52,013 INFO     Validation | MSE: 1.35952
+2023-01-08 22:18:29,561 INFO     ===Epoch 093===
+2023-01-08 22:18:29,562 INFO     Train      | MSE: 1.39500
+2023-01-08 22:18:29,562 INFO     Validation | MSE: 1.31013
+2023-01-08 22:20:13,090 INFO     ===Epoch 094===
+2023-01-08 22:20:13,091 INFO     Train      | MSE: 1.39222
+2023-01-08 22:20:13,091 INFO     Validation | MSE: 1.32865
+2023-01-08 22:21:57,387 INFO     ===Epoch 095===
+2023-01-08 22:21:57,390 INFO     Train      | MSE: 1.38722
+2023-01-08 22:21:57,390 INFO     Validation | MSE: 1.31455
+2023-01-08 22:23:35,251 INFO     ===Epoch 096===
+2023-01-08 22:23:35,251 INFO     Train      | MSE: 1.39935
+2023-01-08 22:23:35,252 INFO     Validation | MSE: 1.30408
+2023-01-08 22:25:21,753 INFO     ===Epoch 097===
+2023-01-08 22:25:21,754 INFO     Train      | MSE: 1.39168
+2023-01-08 22:25:21,754 INFO     Validation | MSE: 1.31730
+2023-01-08 22:26:58,576 INFO     ===Epoch 098===
+2023-01-08 22:26:58,577 INFO     Train      | MSE: 1.38897
+2023-01-08 22:26:58,577 INFO     Validation | MSE: 1.31665
+2023-01-08 22:28:44,677 INFO     ===Epoch 099===
+2023-01-08 22:28:44,678 INFO     Train      | MSE: 1.38835
+2023-01-08 22:28:44,678 INFO     Validation | MSE: 1.33796
+2023-01-08 22:30:23,207 INFO     ===Epoch 100===
+2023-01-08 22:30:23,208 INFO     Train      | MSE: 1.39199
+2023-01-08 22:30:23,208 INFO     Validation | MSE: 1.31670
+2023-01-08 22:30:53,228 INFO     Test       | MSE: 1.28465
+2023-01-08 22:30:54,041 INFO                 Fold iteration k= 2...
+2023-01-08 22:30:54,110 INFO     train    shape: (99241, 9)
+2023-01-08 22:30:54,113 INFO     val      shape: (24810, 9)
+2023-01-08 22:30:54,116 INFO     test     shape: (13784, 9)
+2023-01-08 22:30:54,119 INFO     train_dataset:
+2023-01-08 22:30:54,122 INFO     GraphTabDataset Summary
+2023-01-08 22:30:54,125 INFO     =======================
+2023-01-08 22:30:54,127 INFO     # observations : 99241
+2023-01-08 22:30:54,210 INFO     # cell-lines   : 856
+2023-01-08 22:30:54,279 INFO     # drugs        : 181
+2023-01-08 22:30:54,279 INFO     # genes        : 293
+2023-01-08 22:30:54,279 INFO     val_dataset  :
+2023-01-08 22:30:54,280 INFO     GraphTabDataset Summary
+2023-01-08 22:30:54,280 INFO     =======================
+2023-01-08 22:30:54,280 INFO     # observations : 24810
+2023-01-08 22:30:54,295 INFO     # cell-lines   : 856
+2023-01-08 22:30:54,310 INFO     # drugs        : 181
+2023-01-08 22:30:54,310 INFO     # genes        : 293
+2023-01-08 22:30:54,310 INFO     test_dataset :
+2023-01-08 22:30:54,310 INFO     GraphTabDataset Summary
+2023-01-08 22:30:54,310 INFO     =======================
+2023-01-08 22:30:54,310 INFO     # observations : 13784
+2023-01-08 22:30:54,319 INFO     # cell-lines   : 856
+2023-01-08 22:30:54,326 INFO     # drugs        : 181
+2023-01-08 22:30:54,327 INFO     # genes        : 293
+2023-01-08 22:30:54,328 INFO     GraphTab_v2(
+  (cell_emb): Sequential(
+    (0): GATConv(4, 256, heads=1)
+    (1): ReLU(inplace=True)
+    (2): Dropout(p=0.1, inplace=False)
+    (3): GATConv(256, 128, heads=1)
+    (4): ReLU(inplace=True)
+    (5): <function global_max_pool at 0x7ff1fc88af80>
+    (6): Linear(in_features=128, out_features=128, bias=True)
+    (7): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Dropout(p=0.1, inplace=False)
+    (10): Linear(in_features=128, out_features=128, bias=True)
+    (11): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-01-08 22:32:34,345 INFO     ===Epoch 001===
+2023-01-08 22:32:34,347 INFO     Train      | MSE: 1.40414
+2023-01-08 22:32:34,347 INFO     Validation | MSE: 1.30701
+2023-01-08 22:34:22,146 INFO     ===Epoch 002===
+2023-01-08 22:34:22,147 INFO     Train      | MSE: 1.41132
+2023-01-08 22:34:22,147 INFO     Validation | MSE: 1.29792
+2023-01-08 22:36:01,172 INFO     ===Epoch 003===
+2023-01-08 22:36:01,173 INFO     Train      | MSE: 1.40372
+2023-01-08 22:36:01,173 INFO     Validation | MSE: 1.32457
+2023-01-08 22:37:48,840 INFO     ===Epoch 004===
+2023-01-08 22:37:48,841 INFO     Train      | MSE: 1.40371
+2023-01-08 22:37:48,842 INFO     Validation | MSE: 1.35032
+2023-01-08 22:39:24,839 INFO     ===Epoch 005===
+2023-01-08 22:39:24,840 INFO     Train      | MSE: 1.39218
+2023-01-08 22:39:24,841 INFO     Validation | MSE: 1.28610
+2023-01-08 22:41:09,299 INFO     ===Epoch 006===
+2023-01-08 22:41:09,301 INFO     Train      | MSE: 1.39998
+2023-01-08 22:41:09,301 INFO     Validation | MSE: 1.30415
+2023-01-08 22:42:54,751 INFO     ===Epoch 007===
+2023-01-08 22:42:54,753 INFO     Train      | MSE: 1.40484
+2023-01-08 22:42:54,753 INFO     Validation | MSE: 1.29683
+2023-01-08 22:44:33,216 INFO     ===Epoch 008===
+2023-01-08 22:44:33,217 INFO     Train      | MSE: 1.39371
+2023-01-08 22:44:33,217 INFO     Validation | MSE: 1.31093
+2023-01-08 22:46:17,567 INFO     ===Epoch 009===
+2023-01-08 22:46:17,567 INFO     Train      | MSE: 1.38645
+2023-01-08 22:46:17,568 INFO     Validation | MSE: 1.30015
+2023-01-08 22:47:53,616 INFO     ===Epoch 010===
+2023-01-08 22:47:53,617 INFO     Train      | MSE: 1.38877
+2023-01-08 22:47:53,617 INFO     Validation | MSE: 1.30469
+2023-01-08 22:49:38,237 INFO     ===Epoch 011===
+2023-01-08 22:49:38,238 INFO     Train      | MSE: 1.39654
+2023-01-08 22:49:38,238 INFO     Validation | MSE: 1.29454
+2023-01-08 22:51:13,884 INFO     ===Epoch 012===
+2023-01-08 22:51:13,884 INFO     Train      | MSE: 1.38186
+2023-01-08 22:51:13,885 INFO     Validation | MSE: 1.31027
+2023-01-08 22:52:58,347 INFO     ===Epoch 013===
+2023-01-08 22:52:58,348 INFO     Train      | MSE: 1.38725
+2023-01-08 22:52:58,348 INFO     Validation | MSE: 1.32941
+2023-01-08 22:54:37,085 INFO     ===Epoch 014===
+2023-01-08 22:54:37,086 INFO     Train      | MSE: 1.38567
+2023-01-08 22:54:37,086 INFO     Validation | MSE: 1.29422
+2023-01-08 22:56:20,394 INFO     ===Epoch 015===
+2023-01-08 22:56:20,395 INFO     Train      | MSE: 1.37997
+2023-01-08 22:56:20,395 INFO     Validation | MSE: 1.32020
+2023-01-08 22:58:06,923 INFO     ===Epoch 016===
+2023-01-08 22:58:06,932 INFO     Train      | MSE: 1.39033
+2023-01-08 22:58:06,933 INFO     Validation | MSE: 1.27764
+2023-01-08 22:59:44,663 INFO     ===Epoch 017===
+2023-01-08 22:59:44,664 INFO     Train      | MSE: 1.37802
+2023-01-08 22:59:44,664 INFO     Validation | MSE: 1.30071
+2023-01-08 23:01:29,017 INFO     ===Epoch 018===
+2023-01-08 23:01:29,018 INFO     Train      | MSE: 1.39016
+2023-01-08 23:01:29,018 INFO     Validation | MSE: 1.32577
+2023-01-08 23:03:06,299 INFO     ===Epoch 019===
+2023-01-08 23:03:06,300 INFO     Train      | MSE: 1.37976
+2023-01-08 23:03:06,300 INFO     Validation | MSE: 1.31307
+2023-01-08 23:04:51,783 INFO     ===Epoch 020===
+2023-01-08 23:04:51,784 INFO     Train      | MSE: 1.38293
+2023-01-08 23:04:51,784 INFO     Validation | MSE: 1.29403
+2023-01-08 23:06:27,815 INFO     ===Epoch 021===
+2023-01-08 23:06:27,816 INFO     Train      | MSE: 1.37992
+2023-01-08 23:06:27,816 INFO     Validation | MSE: 1.28076
+2023-01-08 23:08:11,117 INFO     ===Epoch 022===
+2023-01-08 23:08:11,118 INFO     Train      | MSE: 1.38131
+2023-01-08 23:08:11,118 INFO     Validation | MSE: 1.29690
+2023-01-08 23:09:56,833 INFO     ===Epoch 023===
+2023-01-08 23:09:56,834 INFO     Train      | MSE: 1.38336
+2023-01-08 23:09:56,834 INFO     Validation | MSE: 1.32641
+2023-01-08 23:11:33,474 INFO     ===Epoch 024===
+2023-01-08 23:11:33,475 INFO     Train      | MSE: 1.38482
+2023-01-08 23:11:33,475 INFO     Validation | MSE: 1.26493
+2023-01-08 23:13:18,499 INFO     ===Epoch 025===
+2023-01-08 23:13:18,500 INFO     Train      | MSE: 1.37637
+2023-01-08 23:13:18,500 INFO     Validation | MSE: 1.30854
+2023-01-08 23:14:56,614 INFO     ===Epoch 026===
+2023-01-08 23:14:56,615 INFO     Train      | MSE: 1.37714
+2023-01-08 23:14:56,615 INFO     Validation | MSE: 1.28897
+2023-01-08 23:16:42,660 INFO     ===Epoch 027===
+2023-01-08 23:16:42,661 INFO     Train      | MSE: 1.38047
+2023-01-08 23:16:42,661 INFO     Validation | MSE: 1.29772
+2023-01-08 23:18:20,077 INFO     ===Epoch 028===
+2023-01-08 23:18:20,077 INFO     Train      | MSE: 1.37308
+2023-01-08 23:18:20,078 INFO     Validation | MSE: 1.32032
+2023-01-08 23:20:03,243 INFO     ===Epoch 029===
+2023-01-08 23:20:03,243 INFO     Train      | MSE: 1.37626
+2023-01-08 23:20:03,244 INFO     Validation | MSE: 1.30562
+2023-01-08 23:21:38,450 INFO     ===Epoch 030===
+2023-01-08 23:21:38,453 INFO     Train      | MSE: 1.38693
+2023-01-08 23:21:38,453 INFO     Validation | MSE: 1.25342
+2023-01-08 23:23:23,370 INFO     ===Epoch 031===
+2023-01-08 23:23:23,371 INFO     Train      | MSE: 1.37362
+2023-01-08 23:23:23,371 INFO     Validation | MSE: 1.28239
+2023-01-08 23:25:09,587 INFO     ===Epoch 032===
+2023-01-08 23:25:09,588 INFO     Train      | MSE: 1.36754
+2023-01-08 23:25:09,588 INFO     Validation | MSE: 1.29497
+2023-01-08 23:26:44,937 INFO     ===Epoch 033===
+2023-01-08 23:26:44,938 INFO     Train      | MSE: 1.37287
+2023-01-08 23:26:44,938 INFO     Validation | MSE: 1.30835
+2023-01-08 23:28:30,103 INFO     ===Epoch 034===
+2023-01-08 23:28:30,103 INFO     Train      | MSE: 1.37408
+2023-01-08 23:28:30,104 INFO     Validation | MSE: 1.30895
+2023-01-08 23:30:09,518 INFO     ===Epoch 035===
+2023-01-08 23:30:09,519 INFO     Train      | MSE: 1.37368
+2023-01-08 23:30:09,519 INFO     Validation | MSE: 1.29949
+2023-01-08 23:31:55,772 INFO     ===Epoch 036===
+2023-01-08 23:31:55,774 INFO     Train      | MSE: 1.36658
+2023-01-08 23:31:55,774 INFO     Validation | MSE: 1.32665
+2023-01-08 23:33:33,373 INFO     ===Epoch 037===
+2023-01-08 23:33:33,374 INFO     Train      | MSE: 1.37898
+2023-01-08 23:33:33,375 INFO     Validation | MSE: 1.27926
+2023-01-08 23:35:18,100 INFO     ===Epoch 038===
+2023-01-08 23:35:18,101 INFO     Train      | MSE: 1.36938
+2023-01-08 23:35:18,101 INFO     Validation | MSE: 1.26977
+2023-01-08 23:37:05,876 INFO     ===Epoch 039===
+2023-01-08 23:37:05,877 INFO     Train      | MSE: 1.36823
+2023-01-08 23:37:05,878 INFO     Validation | MSE: 1.31385
+2023-01-08 23:38:44,413 INFO     ===Epoch 040===
+2023-01-08 23:38:44,414 INFO     Train      | MSE: 1.37131
+2023-01-08 23:38:44,414 INFO     Validation | MSE: 1.30821
+2023-01-08 23:40:29,367 INFO     ===Epoch 041===
+2023-01-08 23:40:29,367 INFO     Train      | MSE: 1.36555
+2023-01-08 23:40:29,367 INFO     Validation | MSE: 1.26835
+2023-01-08 23:42:07,588 INFO     ===Epoch 042===
+2023-01-08 23:42:07,589 INFO     Train      | MSE: 1.36323
+2023-01-08 23:42:07,590 INFO     Validation | MSE: 1.30155
+2023-01-08 23:43:52,811 INFO     ===Epoch 043===
+2023-01-08 23:43:52,811 INFO     Train      | MSE: 1.36859
+2023-01-08 23:43:52,812 INFO     Validation | MSE: 1.29373
+2023-01-08 23:45:29,414 INFO     ===Epoch 044===
+2023-01-08 23:45:29,415 INFO     Train      | MSE: 1.36818
+2023-01-08 23:45:29,415 INFO     Validation | MSE: 1.32314
+2023-01-08 23:47:14,642 INFO     ===Epoch 045===
+2023-01-08 23:47:14,643 INFO     Train      | MSE: 1.36855
+2023-01-08 23:47:14,643 INFO     Validation | MSE: 1.28127
+2023-01-08 23:49:00,118 INFO     ===Epoch 046===
+2023-01-08 23:49:00,119 INFO     Train      | MSE: 1.36968
+2023-01-08 23:49:00,119 INFO     Validation | MSE: 1.25573
+2023-01-08 23:50:39,171 INFO     ===Epoch 047===
+2023-01-08 23:50:39,172 INFO     Train      | MSE: 1.37216
+2023-01-08 23:50:39,172 INFO     Validation | MSE: 1.27249
+2023-01-08 23:52:24,285 INFO     ===Epoch 048===
+2023-01-08 23:52:24,286 INFO     Train      | MSE: 1.35833
+2023-01-08 23:52:24,286 INFO     Validation | MSE: 1.29266
+2023-01-08 23:54:01,749 INFO     ===Epoch 049===
+2023-01-08 23:54:01,750 INFO     Train      | MSE: 1.37207
+2023-01-08 23:54:01,750 INFO     Validation | MSE: 1.29165
+2023-01-08 23:55:48,390 INFO     ===Epoch 050===
+2023-01-08 23:55:48,391 INFO     Train      | MSE: 1.36317
+2023-01-08 23:55:48,391 INFO     Validation | MSE: 1.30460
+2023-01-08 23:57:26,867 INFO     ===Epoch 051===
+2023-01-08 23:57:26,869 INFO     Train      | MSE: 1.36303
+2023-01-08 23:57:26,869 INFO     Validation | MSE: 1.29814
+2023-01-08 23:59:12,513 INFO     ===Epoch 052===
+2023-01-08 23:59:12,514 INFO     Train      | MSE: 1.36516
+2023-01-08 23:59:12,514 INFO     Validation | MSE: 1.27267
+2023-01-09 00:00:58,011 INFO     ===Epoch 053===
+2023-01-09 00:00:58,012 INFO     Train      | MSE: 1.36939
+2023-01-09 00:00:58,012 INFO     Validation | MSE: 1.28366
+2023-01-09 00:02:35,727 INFO     ===Epoch 054===
+2023-01-09 00:02:35,728 INFO     Train      | MSE: 1.36063
+2023-01-09 00:02:35,729 INFO     Validation | MSE: 1.28893
+2023-01-09 00:04:21,916 INFO     ===Epoch 055===
+2023-01-09 00:04:21,917 INFO     Train      | MSE: 1.35570
+2023-01-09 00:04:21,917 INFO     Validation | MSE: 1.28854
+2023-01-09 00:05:58,675 INFO     ===Epoch 056===
+2023-01-09 00:05:58,676 INFO     Train      | MSE: 1.36999
+2023-01-09 00:05:58,676 INFO     Validation | MSE: 1.27858
+2023-01-09 00:07:44,304 INFO     ===Epoch 057===
+2023-01-09 00:07:44,304 INFO     Train      | MSE: 1.36938
+2023-01-09 00:07:44,304 INFO     Validation | MSE: 1.25448
+2023-01-09 00:09:21,958 INFO     ===Epoch 058===
+2023-01-09 00:09:21,959 INFO     Train      | MSE: 1.35558
+2023-01-09 00:09:21,959 INFO     Validation | MSE: 1.25506
+2023-01-09 00:11:05,718 INFO     ===Epoch 059===
+2023-01-09 00:11:05,719 INFO     Train      | MSE: 1.35861
+2023-01-09 00:11:05,719 INFO     Validation | MSE: 1.25568
+2023-01-09 00:12:41,402 INFO     ===Epoch 060===
+2023-01-09 00:12:41,403 INFO     Train      | MSE: 1.36892
+2023-01-09 00:12:41,404 INFO     Validation | MSE: 1.25073
+2023-01-09 00:14:25,508 INFO     ===Epoch 061===
+2023-01-09 00:14:25,509 INFO     Train      | MSE: 1.36342
+2023-01-09 00:14:25,509 INFO     Validation | MSE: 1.30057
+2023-01-09 00:16:13,618 INFO     ===Epoch 062===
+2023-01-09 00:16:13,618 INFO     Train      | MSE: 1.35863
+2023-01-09 00:16:13,618 INFO     Validation | MSE: 1.24583
+2023-01-09 00:17:50,641 INFO     ===Epoch 063===
+2023-01-09 00:17:50,642 INFO     Train      | MSE: 1.36578
+2023-01-09 00:17:50,642 INFO     Validation | MSE: 1.25674
+2023-01-09 00:19:37,519 INFO     ===Epoch 064===
+2023-01-09 00:19:37,520 INFO     Train      | MSE: 1.35399
+2023-01-09 00:19:37,529 INFO     Validation | MSE: 1.26485
+2023-01-09 00:21:18,463 INFO     ===Epoch 065===
+2023-01-09 00:21:18,463 INFO     Train      | MSE: 1.36742
+2023-01-09 00:21:18,464 INFO     Validation | MSE: 1.26935
+2023-01-09 00:23:02,248 INFO     ===Epoch 066===
+2023-01-09 00:23:02,249 INFO     Train      | MSE: 1.35671
+2023-01-09 00:23:02,249 INFO     Validation | MSE: 1.29896
+2023-01-09 00:24:37,944 INFO     ===Epoch 067===
+2023-01-09 00:24:37,945 INFO     Train      | MSE: 1.35277
+2023-01-09 00:24:37,945 INFO     Validation | MSE: 1.27200
+2023-01-09 00:26:22,670 INFO     ===Epoch 068===
+2023-01-09 00:26:22,671 INFO     Train      | MSE: 1.34893
+2023-01-09 00:26:22,671 INFO     Validation | MSE: 1.26263
+2023-01-09 00:28:08,972 INFO     ===Epoch 069===
+2023-01-09 00:28:08,973 INFO     Train      | MSE: 1.35475
+2023-01-09 00:28:08,973 INFO     Validation | MSE: 1.26282
+2023-01-09 00:29:46,851 INFO     ===Epoch 070===
+2023-01-09 00:29:46,852 INFO     Train      | MSE: 1.35566
+2023-01-09 00:29:46,852 INFO     Validation | MSE: 1.25734
+2023-01-09 00:31:32,875 INFO     ===Epoch 071===
+2023-01-09 00:31:32,875 INFO     Train      | MSE: 1.36085
+2023-01-09 00:31:32,876 INFO     Validation | MSE: 1.26358
+2023-01-09 00:33:10,972 INFO     ===Epoch 072===
+2023-01-09 00:33:10,973 INFO     Train      | MSE: 1.35697
+2023-01-09 00:33:10,973 INFO     Validation | MSE: 1.27777
+2023-01-09 00:34:54,300 INFO     ===Epoch 073===
+2023-01-09 00:34:54,301 INFO     Train      | MSE: 1.35433
+2023-01-09 00:34:54,301 INFO     Validation | MSE: 1.26287
+2023-01-09 00:36:31,869 INFO     ===Epoch 074===
+2023-01-09 00:36:31,870 INFO     Train      | MSE: 1.36207
+2023-01-09 00:36:31,870 INFO     Validation | MSE: 1.26354
+2023-01-09 00:38:17,143 INFO     ===Epoch 075===
+2023-01-09 00:38:17,144 INFO     Train      | MSE: 1.34771
+2023-01-09 00:38:17,144 INFO     Validation | MSE: 1.26572
+2023-01-09 00:40:01,763 INFO     ===Epoch 076===
+2023-01-09 00:40:01,764 INFO     Train      | MSE: 1.35490
+2023-01-09 00:40:01,764 INFO     Validation | MSE: 1.25519
+2023-01-09 00:41:38,295 INFO     ===Epoch 077===
+2023-01-09 00:41:38,296 INFO     Train      | MSE: 1.35581
+2023-01-09 00:41:38,296 INFO     Validation | MSE: 1.24300
+2023-01-09 00:43:22,674 INFO     ===Epoch 078===
+2023-01-09 00:43:22,675 INFO     Train      | MSE: 1.35311
+2023-01-09 00:43:22,675 INFO     Validation | MSE: 1.26386
+2023-01-09 00:44:58,543 INFO     ===Epoch 079===
+2023-01-09 00:44:58,545 INFO     Train      | MSE: 1.35062
+2023-01-09 00:44:58,545 INFO     Validation | MSE: 1.27406
+2023-01-09 00:46:43,998 INFO     ===Epoch 080===
+2023-01-09 00:46:43,999 INFO     Train      | MSE: 1.34586
+2023-01-09 00:46:43,999 INFO     Validation | MSE: 1.25922
+2023-01-09 00:48:21,544 INFO     ===Epoch 081===
+2023-01-09 00:48:21,545 INFO     Train      | MSE: 1.34931
+2023-01-09 00:48:21,545 INFO     Validation | MSE: 1.25962
+2023-01-09 00:50:06,471 INFO     ===Epoch 082===
+2023-01-09 00:50:06,472 INFO     Train      | MSE: 1.35573
+2023-01-09 00:50:06,472 INFO     Validation | MSE: 1.25044
+2023-01-09 00:51:53,842 INFO     ===Epoch 083===
+2023-01-09 00:51:53,843 INFO     Train      | MSE: 1.35791
+2023-01-09 00:51:53,843 INFO     Validation | MSE: 1.27521
+2023-01-09 00:53:31,451 INFO     ===Epoch 084===
+2023-01-09 00:53:31,451 INFO     Train      | MSE: 1.34636
+2023-01-09 00:53:31,452 INFO     Validation | MSE: 1.26244
+2023-01-09 00:55:16,670 INFO     ===Epoch 085===
+2023-01-09 00:55:16,671 INFO     Train      | MSE: 1.35293
+2023-01-09 00:55:16,671 INFO     Validation | MSE: 1.25625
+2023-01-09 00:56:54,787 INFO     ===Epoch 086===
+2023-01-09 00:56:54,788 INFO     Train      | MSE: 1.35526
+2023-01-09 00:56:54,788 INFO     Validation | MSE: 1.27621
+2023-01-09 00:58:40,809 INFO     ===Epoch 087===
+2023-01-09 00:58:40,810 INFO     Train      | MSE: 1.35413
+2023-01-09 00:58:40,810 INFO     Validation | MSE: 1.26514
+2023-01-09 01:00:17,801 INFO     ===Epoch 088===
+2023-01-09 01:00:17,802 INFO     Train      | MSE: 1.34038
+2023-01-09 01:00:17,802 INFO     Validation | MSE: 1.30286
+2023-01-09 01:02:02,843 INFO     ===Epoch 089===
+2023-01-09 01:02:02,843 INFO     Train      | MSE: 1.35522
+2023-01-09 01:02:02,844 INFO     Validation | MSE: 1.26573
+2023-01-09 01:03:39,895 INFO     ===Epoch 090===
+2023-01-09 01:03:39,896 INFO     Train      | MSE: 1.34565
+2023-01-09 01:03:39,896 INFO     Validation | MSE: 1.28311
+2023-01-09 01:05:21,921 INFO     ===Epoch 091===
+2023-01-09 01:05:21,922 INFO     Train      | MSE: 1.35209
+2023-01-09 01:05:21,922 INFO     Validation | MSE: 1.28914
+2023-01-09 01:07:08,339 INFO     ===Epoch 092===
+2023-01-09 01:07:08,340 INFO     Train      | MSE: 1.34336
+2023-01-09 01:07:08,340 INFO     Validation | MSE: 1.26137
+2023-01-09 01:08:46,797 INFO     ===Epoch 093===
+2023-01-09 01:08:46,797 INFO     Train      | MSE: 1.34586
+2023-01-09 01:08:46,797 INFO     Validation | MSE: 1.26920
+2023-01-09 01:10:32,717 INFO     ===Epoch 094===
+2023-01-09 01:10:32,717 INFO     Train      | MSE: 1.34171
+2023-01-09 01:10:32,717 INFO     Validation | MSE: 1.25494
+2023-01-09 01:12:09,413 INFO     ===Epoch 095===
+2023-01-09 01:12:09,413 INFO     Train      | MSE: 1.35023
+2023-01-09 01:12:09,414 INFO     Validation | MSE: 1.28475
+2023-01-09 01:13:55,854 INFO     ===Epoch 096===
+2023-01-09 01:13:55,855 INFO     Train      | MSE: 1.34532
+2023-01-09 01:13:55,855 INFO     Validation | MSE: 1.24834
+2023-01-09 01:15:32,692 INFO     ===Epoch 097===
+2023-01-09 01:15:32,693 INFO     Train      | MSE: 1.34659
+2023-01-09 01:15:32,693 INFO     Validation | MSE: 1.26408
+2023-01-09 01:17:17,153 INFO     ===Epoch 098===
+2023-01-09 01:17:17,154 INFO     Train      | MSE: 1.34761
+2023-01-09 01:17:17,154 INFO     Validation | MSE: 1.26075
+2023-01-09 01:19:02,501 INFO     ===Epoch 099===
+2023-01-09 01:19:02,502 INFO     Train      | MSE: 1.34634
+2023-01-09 01:19:02,502 INFO     Validation | MSE: 1.26017
+2023-01-09 01:20:41,627 INFO     ===Epoch 100===
+2023-01-09 01:20:41,627 INFO     Train      | MSE: 1.34903
+2023-01-09 01:20:41,628 INFO     Validation | MSE: 1.29174
+2023-01-09 01:21:02,682 INFO     Test       | MSE: 1.24645
+2023-01-09 01:21:13,479 INFO                 Fold iteration k= 3...
+2023-01-09 01:21:13,549 INFO     train    shape: (99241, 9)
+2023-01-09 01:21:13,552 INFO     val      shape: (24810, 9)
+2023-01-09 01:21:13,555 INFO     test     shape: (13784, 9)
+2023-01-09 01:21:13,558 INFO     train_dataset:
+2023-01-09 01:21:13,561 INFO     GraphTabDataset Summary
+2023-01-09 01:21:13,564 INFO     =======================
+2023-01-09 01:21:13,565 INFO     # observations : 99241
+2023-01-09 01:21:13,658 INFO     # cell-lines   : 856
+2023-01-09 01:21:13,745 INFO     # drugs        : 181
+2023-01-09 01:21:13,748 INFO     # genes        : 293
+2023-01-09 01:21:13,749 INFO     val_dataset  :
+2023-01-09 01:21:13,754 INFO     GraphTabDataset Summary
+2023-01-09 01:21:13,754 INFO     =======================
+2023-01-09 01:21:13,756 INFO     # observations : 24810
+2023-01-09 01:21:13,841 INFO     # cell-lines   : 856
+2023-01-09 01:21:13,924 INFO     # drugs        : 181
+2023-01-09 01:21:13,925 INFO     # genes        : 293
+2023-01-09 01:21:13,929 INFO     test_dataset :
+2023-01-09 01:21:13,931 INFO     GraphTabDataset Summary
+2023-01-09 01:21:13,934 INFO     =======================
+2023-01-09 01:21:13,948 INFO     # observations : 13784
+2023-01-09 01:21:14,016 INFO     # cell-lines   : 856
+2023-01-09 01:21:14,115 INFO     # drugs        : 181
+2023-01-09 01:21:14,117 INFO     # genes        : 293
+2023-01-09 01:21:14,143 INFO     GraphTab_v2(
+  (cell_emb): Sequential(
+    (0): GATConv(4, 256, heads=1)
+    (1): ReLU(inplace=True)
+    (2): Dropout(p=0.1, inplace=False)
+    (3): GATConv(256, 128, heads=1)
+    (4): ReLU(inplace=True)
+    (5): <function global_max_pool at 0x7ff1fc88af80>
+    (6): Linear(in_features=128, out_features=128, bias=True)
+    (7): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Dropout(p=0.1, inplace=False)
+    (10): Linear(in_features=128, out_features=128, bias=True)
+    (11): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-01-09 01:23:05,934 INFO     ===Epoch 001===
+2023-01-09 01:23:05,935 INFO     Train      | MSE: 1.36755
+2023-01-09 01:23:05,935 INFO     Validation | MSE: 1.27155
+2023-01-09 01:24:54,974 INFO     ===Epoch 002===
+2023-01-09 01:24:54,975 INFO     Train      | MSE: 1.35859
+2023-01-09 01:24:54,976 INFO     Validation | MSE: 1.26220
+2023-01-09 01:26:34,720 INFO     ===Epoch 003===
+2023-01-09 01:26:34,721 INFO     Train      | MSE: 1.35313
+2023-01-09 01:26:34,722 INFO     Validation | MSE: 1.23995
+2023-01-09 01:28:23,010 INFO     ===Epoch 004===
+2023-01-09 01:28:23,011 INFO     Train      | MSE: 1.34927
+2023-01-09 01:28:23,012 INFO     Validation | MSE: 1.28403
+2023-01-09 01:30:03,272 INFO     ===Epoch 005===
+2023-01-09 01:30:03,274 INFO     Train      | MSE: 1.35229
+2023-01-09 01:30:03,274 INFO     Validation | MSE: 1.25496
+2023-01-09 01:31:49,935 INFO     ===Epoch 006===
+2023-01-09 01:31:49,936 INFO     Train      | MSE: 1.34954
+2023-01-09 01:31:49,936 INFO     Validation | MSE: 1.24738
+2023-01-09 01:33:28,641 INFO     ===Epoch 007===
+2023-01-09 01:33:28,642 INFO     Train      | MSE: 1.35086
+2023-01-09 01:33:28,642 INFO     Validation | MSE: 1.27507
+2023-01-09 01:35:13,356 INFO     ===Epoch 008===
+2023-01-09 01:35:13,363 INFO     Train      | MSE: 1.35254
+2023-01-09 01:35:13,363 INFO     Validation | MSE: 1.26175
+2023-01-09 01:36:57,878 INFO     ===Epoch 009===
+2023-01-09 01:36:57,879 INFO     Train      | MSE: 1.34438
+2023-01-09 01:36:57,879 INFO     Validation | MSE: 1.21973
+2023-01-09 01:38:35,215 INFO     ===Epoch 010===
+2023-01-09 01:38:35,216 INFO     Train      | MSE: 1.35493
+2023-01-09 01:38:35,216 INFO     Validation | MSE: 1.25396
+2023-01-09 01:40:20,827 INFO     ===Epoch 011===
+2023-01-09 01:40:20,828 INFO     Train      | MSE: 1.34729
+2023-01-09 01:40:20,828 INFO     Validation | MSE: 1.26153
+2023-01-09 01:41:57,596 INFO     ===Epoch 012===
+2023-01-09 01:41:57,598 INFO     Train      | MSE: 1.34606
+2023-01-09 01:41:57,598 INFO     Validation | MSE: 1.24990
+2023-01-09 01:43:43,822 INFO     ===Epoch 013===
+2023-01-09 01:43:43,823 INFO     Train      | MSE: 1.35424
+2023-01-09 01:43:43,823 INFO     Validation | MSE: 1.22582
+2023-01-09 01:45:21,319 INFO     ===Epoch 014===
+2023-01-09 01:45:21,320 INFO     Train      | MSE: 1.35157
+2023-01-09 01:45:21,320 INFO     Validation | MSE: 1.25912
+2023-01-09 01:47:07,482 INFO     ===Epoch 015===
+2023-01-09 01:47:07,483 INFO     Train      | MSE: 1.35416
+2023-01-09 01:47:07,483 INFO     Validation | MSE: 1.26387
+2023-01-09 01:48:53,644 INFO     ===Epoch 016===
+2023-01-09 01:48:53,645 INFO     Train      | MSE: 1.34411
+2023-01-09 01:48:53,645 INFO     Validation | MSE: 1.26290
+2023-01-09 01:50:29,715 INFO     ===Epoch 017===
+2023-01-09 01:50:29,716 INFO     Train      | MSE: 1.34960
+2023-01-09 01:50:29,716 INFO     Validation | MSE: 1.27431
+2023-01-09 01:52:16,992 INFO     ===Epoch 018===
+2023-01-09 01:52:16,993 INFO     Train      | MSE: 1.34512
+2023-01-09 01:52:16,993 INFO     Validation | MSE: 1.23613
+2023-01-09 01:53:54,612 INFO     ===Epoch 019===
+2023-01-09 01:53:54,613 INFO     Train      | MSE: 1.33802
+2023-01-09 01:53:54,613 INFO     Validation | MSE: 1.24341
+2023-01-09 01:55:41,077 INFO     ===Epoch 020===
+2023-01-09 01:55:41,078 INFO     Train      | MSE: 1.34240
+2023-01-09 01:55:41,079 INFO     Validation | MSE: 1.26311
+2023-01-09 01:57:19,373 INFO     ===Epoch 021===
+2023-01-09 01:57:19,374 INFO     Train      | MSE: 1.34624
+2023-01-09 01:57:19,374 INFO     Validation | MSE: 1.25281
+2023-01-09 01:59:05,399 INFO     ===Epoch 022===
+2023-01-09 01:59:05,400 INFO     Train      | MSE: 1.34877
+2023-01-09 01:59:05,400 INFO     Validation | MSE: 1.28673
+2023-01-09 02:00:53,255 INFO     ===Epoch 023===
+2023-01-09 02:00:53,256 INFO     Train      | MSE: 1.34729
+2023-01-09 02:00:53,256 INFO     Validation | MSE: 1.24322
+2023-01-09 02:02:32,852 INFO     ===Epoch 024===
+2023-01-09 02:02:32,853 INFO     Train      | MSE: 1.34753
+2023-01-09 02:02:32,854 INFO     Validation | MSE: 1.23963
+2023-01-09 02:04:19,109 INFO     ===Epoch 025===
+2023-01-09 02:04:19,110 INFO     Train      | MSE: 1.34729
+2023-01-09 02:04:19,110 INFO     Validation | MSE: 1.28084
+2023-01-09 02:05:58,809 INFO     ===Epoch 026===
+2023-01-09 02:05:58,810 INFO     Train      | MSE: 1.35334
+2023-01-09 02:05:58,810 INFO     Validation | MSE: 1.23844
+2023-01-09 02:07:45,580 INFO     ===Epoch 027===
+2023-01-09 02:07:45,581 INFO     Train      | MSE: 1.34208
+2023-01-09 02:07:45,581 INFO     Validation | MSE: 1.26147
+2023-01-09 02:09:25,135 INFO     ===Epoch 028===
+2023-01-09 02:09:25,137 INFO     Train      | MSE: 1.33046
+2023-01-09 02:09:25,137 INFO     Validation | MSE: 1.24515
+2023-01-09 02:11:08,846 INFO     ===Epoch 029===
+2023-01-09 02:11:08,847 INFO     Train      | MSE: 1.34666
+2023-01-09 02:11:08,847 INFO     Validation | MSE: 1.25862
+2023-01-09 02:12:57,492 INFO     ===Epoch 030===
+2023-01-09 02:12:57,494 INFO     Train      | MSE: 1.34525
+2023-01-09 02:12:57,494 INFO     Validation | MSE: 1.26487
+2023-01-09 02:14:37,193 INFO     ===Epoch 031===
+2023-01-09 02:14:37,194 INFO     Train      | MSE: 1.34271
+2023-01-09 02:14:37,194 INFO     Validation | MSE: 1.23441
+2023-01-09 02:16:23,622 INFO     ===Epoch 032===
+2023-01-09 02:16:23,623 INFO     Train      | MSE: 1.34399
+2023-01-09 02:16:23,623 INFO     Validation | MSE: 1.24638
+2023-01-09 02:18:01,090 INFO     ===Epoch 033===
+2023-01-09 02:18:01,091 INFO     Train      | MSE: 1.33445
+2023-01-09 02:18:01,091 INFO     Validation | MSE: 1.25380
+2023-01-09 02:19:48,695 INFO     ===Epoch 034===
+2023-01-09 02:19:48,696 INFO     Train      | MSE: 1.34915
+2023-01-09 02:19:48,696 INFO     Validation | MSE: 1.25026
+2023-01-09 02:21:25,118 INFO     ===Epoch 035===
+2023-01-09 02:21:25,119 INFO     Train      | MSE: 1.33407
+2023-01-09 02:21:25,119 INFO     Validation | MSE: 1.24664
+2023-01-09 02:23:09,942 INFO     ===Epoch 036===
+2023-01-09 02:23:09,942 INFO     Train      | MSE: 1.33871
+2023-01-09 02:23:09,943 INFO     Validation | MSE: 1.26668
+2023-01-09 02:24:54,838 INFO     ===Epoch 037===
+2023-01-09 02:24:54,839 INFO     Train      | MSE: 1.33331
+2023-01-09 02:24:54,839 INFO     Validation | MSE: 1.25408
+2023-01-09 02:26:34,677 INFO     ===Epoch 038===
+2023-01-09 02:26:34,678 INFO     Train      | MSE: 1.33763
+2023-01-09 02:26:34,678 INFO     Validation | MSE: 1.25881
+2023-01-09 02:28:20,729 INFO     ===Epoch 039===
+2023-01-09 02:28:20,730 INFO     Train      | MSE: 1.34087
+2023-01-09 02:28:20,731 INFO     Validation | MSE: 1.25754
+2023-01-09 02:29:58,444 INFO     ===Epoch 040===
+2023-01-09 02:29:58,445 INFO     Train      | MSE: 1.33742
+2023-01-09 02:29:58,445 INFO     Validation | MSE: 1.32397
+2023-01-09 02:31:45,135 INFO     ===Epoch 041===
+2023-01-09 02:31:45,146 INFO     Train      | MSE: 1.33129
+2023-01-09 02:31:45,146 INFO     Validation | MSE: 1.24377
+2023-01-09 02:33:23,523 INFO     ===Epoch 042===
+2023-01-09 02:33:23,524 INFO     Train      | MSE: 1.35183
+2023-01-09 02:33:23,524 INFO     Validation | MSE: 1.24321
+2023-01-09 02:35:07,958 INFO     ===Epoch 043===
+2023-01-09 02:35:07,960 INFO     Train      | MSE: 1.34005
+2023-01-09 02:35:07,960 INFO     Validation | MSE: 1.26479
+2023-01-09 02:36:54,089 INFO     ===Epoch 044===
+2023-01-09 02:36:54,090 INFO     Train      | MSE: 1.33047
+2023-01-09 02:36:54,090 INFO     Validation | MSE: 1.29814
+2023-01-09 02:38:32,980 INFO     ===Epoch 045===
+2023-01-09 02:38:32,991 INFO     Train      | MSE: 1.33820
+2023-01-09 02:38:32,991 INFO     Validation | MSE: 1.24875
+2023-01-09 02:40:19,734 INFO     ===Epoch 046===
+2023-01-09 02:40:19,735 INFO     Train      | MSE: 1.33477
+2023-01-09 02:40:19,735 INFO     Validation | MSE: 1.24509
+2023-01-09 02:41:59,096 INFO     ===Epoch 047===
+2023-01-09 02:41:59,097 INFO     Train      | MSE: 1.33664
+2023-01-09 02:41:59,097 INFO     Validation | MSE: 1.24379
+2023-01-09 02:43:45,119 INFO     ===Epoch 048===
+2023-01-09 02:43:45,120 INFO     Train      | MSE: 1.33928
+2023-01-09 02:43:45,120 INFO     Validation | MSE: 1.24790
+2023-01-09 02:45:23,566 INFO     ===Epoch 049===
+2023-01-09 02:45:23,567 INFO     Train      | MSE: 1.33780
+2023-01-09 02:45:23,567 INFO     Validation | MSE: 1.22000
+2023-01-09 02:47:09,216 INFO     ===Epoch 050===
+2023-01-09 02:47:09,217 INFO     Train      | MSE: 1.33422
+2023-01-09 02:47:09,217 INFO     Validation | MSE: 1.25087
+2023-01-09 02:48:54,577 INFO     ===Epoch 051===
+2023-01-09 02:48:54,578 INFO     Train      | MSE: 1.32939
+2023-01-09 02:48:54,579 INFO     Validation | MSE: 1.24218
+2023-01-09 02:50:30,764 INFO     ===Epoch 052===
+2023-01-09 02:50:30,766 INFO     Train      | MSE: 1.34550
+2023-01-09 02:50:30,766 INFO     Validation | MSE: 1.23005
+2023-01-09 02:52:17,312 INFO     ===Epoch 053===
+2023-01-09 02:52:17,313 INFO     Train      | MSE: 1.32895
+2023-01-09 02:52:17,313 INFO     Validation | MSE: 1.25048
+2023-01-09 02:53:55,587 INFO     ===Epoch 054===
+2023-01-09 02:53:55,588 INFO     Train      | MSE: 1.33939
+2023-01-09 02:53:55,588 INFO     Validation | MSE: 1.22427
+2023-01-09 02:55:41,344 INFO     ===Epoch 055===
+2023-01-09 02:55:41,345 INFO     Train      | MSE: 1.33836
+2023-01-09 02:55:41,345 INFO     Validation | MSE: 1.23803
+2023-01-09 02:57:17,775 INFO     ===Epoch 056===
+2023-01-09 02:57:17,784 INFO     Train      | MSE: 1.33332
+2023-01-09 02:57:17,785 INFO     Validation | MSE: 1.24898
+2023-01-09 02:59:03,634 INFO     ===Epoch 057===
+2023-01-09 02:59:03,635 INFO     Train      | MSE: 1.33562
+2023-01-09 02:59:03,635 INFO     Validation | MSE: 1.25538
+2023-01-09 03:00:40,926 INFO     ===Epoch 058===
+2023-01-09 03:00:40,927 INFO     Train      | MSE: 1.33944
+2023-01-09 03:00:40,927 INFO     Validation | MSE: 1.22546
+2023-01-09 03:02:24,156 INFO     ===Epoch 059===
+2023-01-09 03:02:24,158 INFO     Train      | MSE: 1.32587
+2023-01-09 03:02:24,158 INFO     Validation | MSE: 1.25203
+2023-01-09 03:04:08,990 INFO     ===Epoch 060===
+2023-01-09 03:04:08,991 INFO     Train      | MSE: 1.33803
+2023-01-09 03:04:08,991 INFO     Validation | MSE: 1.22252
+2023-01-09 03:05:46,603 INFO     ===Epoch 061===
+2023-01-09 03:05:46,604 INFO     Train      | MSE: 1.33526
+2023-01-09 03:05:46,604 INFO     Validation | MSE: 1.23327
+2023-01-09 03:07:31,815 INFO     ===Epoch 062===
+2023-01-09 03:07:31,816 INFO     Train      | MSE: 1.33776
+2023-01-09 03:07:31,816 INFO     Validation | MSE: 1.28685
+2023-01-09 03:09:09,074 INFO     ===Epoch 063===
+2023-01-09 03:09:09,075 INFO     Train      | MSE: 1.33116
+2023-01-09 03:09:09,075 INFO     Validation | MSE: 1.23902
+2023-01-09 03:10:54,424 INFO     ===Epoch 064===
+2023-01-09 03:10:54,425 INFO     Train      | MSE: 1.33606
+2023-01-09 03:10:54,425 INFO     Validation | MSE: 1.24453
+2023-01-09 03:12:32,251 INFO     ===Epoch 065===
+2023-01-09 03:12:32,251 INFO     Train      | MSE: 1.33778
+2023-01-09 03:12:32,251 INFO     Validation | MSE: 1.22683
+2023-01-09 03:14:16,060 INFO     ===Epoch 066===
+2023-01-09 03:14:16,061 INFO     Train      | MSE: 1.33378
+2023-01-09 03:14:16,061 INFO     Validation | MSE: 1.24102
+2023-01-09 03:15:59,813 INFO     ===Epoch 067===
+2023-01-09 03:15:59,815 INFO     Train      | MSE: 1.33120
+2023-01-09 03:15:59,815 INFO     Validation | MSE: 1.25439
+2023-01-09 03:17:38,744 INFO     ===Epoch 068===
+2023-01-09 03:17:38,745 INFO     Train      | MSE: 1.32655
+2023-01-09 03:17:38,745 INFO     Validation | MSE: 1.23937
+2023-01-09 03:19:24,290 INFO     ===Epoch 069===
+2023-01-09 03:19:24,291 INFO     Train      | MSE: 1.32586
+2023-01-09 03:19:24,291 INFO     Validation | MSE: 1.21866
+2023-01-09 03:21:02,042 INFO     ===Epoch 070===
+2023-01-09 03:21:02,043 INFO     Train      | MSE: 1.33324
+2023-01-09 03:21:02,043 INFO     Validation | MSE: 1.27127
+2023-01-09 03:22:47,539 INFO     ===Epoch 071===
+2023-01-09 03:22:47,539 INFO     Train      | MSE: 1.33700
+2023-01-09 03:22:47,540 INFO     Validation | MSE: 1.22890
+2023-01-09 03:24:26,343 INFO     ===Epoch 072===
+2023-01-09 03:24:26,344 INFO     Train      | MSE: 1.31966
+2023-01-09 03:24:26,344 INFO     Validation | MSE: 1.21904
+2023-01-09 03:26:14,340 INFO     ===Epoch 073===
+2023-01-09 03:26:14,342 INFO     Train      | MSE: 1.32992
+2023-01-09 03:26:14,343 INFO     Validation | MSE: 1.21242
+2023-01-09 03:28:05,571 INFO     ===Epoch 074===
+2023-01-09 03:28:05,572 INFO     Train      | MSE: 1.32761
+2023-01-09 03:28:05,572 INFO     Validation | MSE: 1.24300
+2023-01-09 03:29:47,276 INFO     ===Epoch 075===
+2023-01-09 03:29:47,277 INFO     Train      | MSE: 1.32218
+2023-01-09 03:29:47,277 INFO     Validation | MSE: 1.25496
+2023-01-09 03:31:34,560 INFO     ===Epoch 076===
+2023-01-09 03:31:34,561 INFO     Train      | MSE: 1.33018
+2023-01-09 03:31:34,561 INFO     Validation | MSE: 1.24580
+2023-01-09 03:33:14,865 INFO     ===Epoch 077===
+2023-01-09 03:33:14,865 INFO     Train      | MSE: 1.32349
+2023-01-09 03:33:14,866 INFO     Validation | MSE: 1.22156
+2023-01-09 03:34:58,722 INFO     ===Epoch 078===
+2023-01-09 03:34:58,723 INFO     Train      | MSE: 1.32960
+2023-01-09 03:34:58,724 INFO     Validation | MSE: 1.24126
+2023-01-09 03:36:39,628 INFO     ===Epoch 079===
+2023-01-09 03:36:39,629 INFO     Train      | MSE: 1.32476
+2023-01-09 03:36:39,629 INFO     Validation | MSE: 1.24569
+2023-01-09 03:38:26,101 INFO     ===Epoch 080===
+2023-01-09 03:38:26,102 INFO     Train      | MSE: 1.33145
+2023-01-09 03:38:26,103 INFO     Validation | MSE: 1.21912
+2023-01-09 03:40:13,362 INFO     ===Epoch 081===
+2023-01-09 03:40:13,363 INFO     Train      | MSE: 1.33881
+2023-01-09 03:40:13,363 INFO     Validation | MSE: 1.24129
+2023-01-09 03:41:51,080 INFO     ===Epoch 082===
+2023-01-09 03:41:51,081 INFO     Train      | MSE: 1.32850
+2023-01-09 03:41:51,081 INFO     Validation | MSE: 1.20671
+2023-01-09 03:43:37,918 INFO     ===Epoch 083===
+2023-01-09 03:43:37,919 INFO     Train      | MSE: 1.32917
+2023-01-09 03:43:37,919 INFO     Validation | MSE: 1.26766
+2023-01-09 03:45:16,283 INFO     ===Epoch 084===
+2023-01-09 03:45:16,284 INFO     Train      | MSE: 1.32959
+2023-01-09 03:45:16,284 INFO     Validation | MSE: 1.22752
+2023-01-09 03:46:58,868 INFO     ===Epoch 085===
+2023-01-09 03:46:58,869 INFO     Train      | MSE: 1.31613
+2023-01-09 03:46:58,869 INFO     Validation | MSE: 1.21329
+2023-01-09 03:48:37,171 INFO     ===Epoch 086===
+2023-01-09 03:48:37,171 INFO     Train      | MSE: 1.32402
+2023-01-09 03:48:37,172 INFO     Validation | MSE: 1.21984
+2023-01-09 03:50:20,008 INFO     ===Epoch 087===
+2023-01-09 03:50:20,009 INFO     Train      | MSE: 1.32908
+2023-01-09 03:50:20,009 INFO     Validation | MSE: 1.24566
+2023-01-09 03:52:06,771 INFO     ===Epoch 088===
+2023-01-09 03:52:06,772 INFO     Train      | MSE: 1.33012
+2023-01-09 03:52:06,772 INFO     Validation | MSE: 1.21607
+2023-01-09 03:53:46,555 INFO     ===Epoch 089===
+2023-01-09 03:53:46,555 INFO     Train      | MSE: 1.32798
+2023-01-09 03:53:46,555 INFO     Validation | MSE: 1.26269
+2023-01-09 03:55:32,384 INFO     ===Epoch 090===
+2023-01-09 03:55:32,386 INFO     Train      | MSE: 1.33337
+2023-01-09 03:55:32,386 INFO     Validation | MSE: 1.28995
+2023-01-09 03:57:12,218 INFO     ===Epoch 091===
+2023-01-09 03:57:12,219 INFO     Train      | MSE: 1.32620
+2023-01-09 03:57:12,219 INFO     Validation | MSE: 1.23148
+2023-01-09 03:58:57,530 INFO     ===Epoch 092===
+2023-01-09 03:58:57,531 INFO     Train      | MSE: 1.33086
+2023-01-09 03:58:57,531 INFO     Validation | MSE: 1.22971
+2023-01-09 04:00:36,011 INFO     ===Epoch 093===
+2023-01-09 04:00:36,011 INFO     Train      | MSE: 1.32922
+2023-01-09 04:00:36,011 INFO     Validation | MSE: 1.23292
+2023-01-09 04:02:19,795 INFO     ===Epoch 094===
+2023-01-09 04:02:19,796 INFO     Train      | MSE: 1.32214
+2023-01-09 04:02:19,796 INFO     Validation | MSE: 1.22148
+2023-01-09 04:04:05,886 INFO     ===Epoch 095===
+2023-01-09 04:04:05,887 INFO     Train      | MSE: 1.32622
+2023-01-09 04:04:05,887 INFO     Validation | MSE: 1.25956
+2023-01-09 04:05:43,700 INFO     ===Epoch 096===
+2023-01-09 04:05:43,701 INFO     Train      | MSE: 1.32251
+2023-01-09 04:05:43,701 INFO     Validation | MSE: 1.23578
+2023-01-09 04:07:28,745 INFO     ===Epoch 097===
+2023-01-09 04:07:28,746 INFO     Train      | MSE: 1.33410
+2023-01-09 04:07:28,746 INFO     Validation | MSE: 1.23692
+2023-01-09 04:09:07,574 INFO     ===Epoch 098===
+2023-01-09 04:09:07,574 INFO     Train      | MSE: 1.33036
+2023-01-09 04:09:07,575 INFO     Validation | MSE: 1.24308
+2023-01-09 04:10:52,231 INFO     ===Epoch 099===
+2023-01-09 04:10:52,232 INFO     Train      | MSE: 1.31884
+2023-01-09 04:10:52,232 INFO     Validation | MSE: 1.22435
+2023-01-09 04:12:29,525 INFO     ===Epoch 100===
+2023-01-09 04:12:29,526 INFO     Train      | MSE: 1.33160
+2023-01-09 04:12:29,526 INFO     Validation | MSE: 1.24684
+2023-01-09 04:12:58,144 INFO     Test       | MSE: 1.22286
+2023-01-09 04:13:09,404 INFO                 Fold iteration k= 4...
+2023-01-09 04:13:09,489 INFO     train    shape: (99241, 9)
+2023-01-09 04:13:09,492 INFO     val      shape: (24810, 9)
+2023-01-09 04:13:09,495 INFO     test     shape: (13784, 9)
+2023-01-09 04:13:09,499 INFO     train_dataset:
+2023-01-09 04:13:09,502 INFO     GraphTabDataset Summary
+2023-01-09 04:13:09,505 INFO     =======================
+2023-01-09 04:13:09,509 INFO     # observations : 99241
+2023-01-09 04:13:09,593 INFO     # cell-lines   : 856
+2023-01-09 04:13:09,733 INFO     # drugs        : 181
+2023-01-09 04:13:09,747 INFO     # genes        : 293
+2023-01-09 04:13:09,754 INFO     val_dataset  :
+2023-01-09 04:13:09,755 INFO     GraphTabDataset Summary
+2023-01-09 04:13:09,757 INFO     =======================
+2023-01-09 04:13:09,757 INFO     # observations : 24810
+2023-01-09 04:13:09,873 INFO     # cell-lines   : 856
+2023-01-09 04:13:09,997 INFO     # drugs        : 181
+2023-01-09 04:13:10,003 INFO     # genes        : 293
+2023-01-09 04:13:10,014 INFO     test_dataset :
+2023-01-09 04:13:10,015 INFO     GraphTabDataset Summary
+2023-01-09 04:13:10,017 INFO     =======================
+2023-01-09 04:13:10,022 INFO     # observations : 13784
+2023-01-09 04:13:10,084 INFO     # cell-lines   : 856
+2023-01-09 04:13:10,160 INFO     # drugs        : 181
+2023-01-09 04:13:10,161 INFO     # genes        : 293
+2023-01-09 04:13:10,163 INFO     GraphTab_v2(
+  (cell_emb): Sequential(
+    (0): GATConv(4, 256, heads=1)
+    (1): ReLU(inplace=True)
+    (2): Dropout(p=0.1, inplace=False)
+    (3): GATConv(256, 128, heads=1)
+    (4): ReLU(inplace=True)
+    (5): <function global_max_pool at 0x7ff1fc88af80>
+    (6): Linear(in_features=128, out_features=128, bias=True)
+    (7): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Dropout(p=0.1, inplace=False)
+    (10): Linear(in_features=128, out_features=128, bias=True)
+    (11): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-01-09 04:14:56,869 INFO     ===Epoch 001===
+2023-01-09 04:14:56,870 INFO     Train      | MSE: 1.34023
+2023-01-09 04:14:56,870 INFO     Validation | MSE: 1.27610
+2023-01-09 04:16:46,460 INFO     ===Epoch 002===
+2023-01-09 04:16:46,463 INFO     Train      | MSE: 1.34311
+2023-01-09 04:16:46,463 INFO     Validation | MSE: 1.23665
+2023-01-09 04:18:28,083 INFO     ===Epoch 003===
+2023-01-09 04:18:28,087 INFO     Train      | MSE: 1.34705
+2023-01-09 04:18:28,087 INFO     Validation | MSE: 1.27321
+2023-01-09 04:20:14,767 INFO     ===Epoch 004===
+2023-01-09 04:20:14,768 INFO     Train      | MSE: 1.33732
+2023-01-09 04:20:14,768 INFO     Validation | MSE: 1.25536
+2023-01-09 04:22:05,911 INFO     ===Epoch 005===
+2023-01-09 04:22:05,912 INFO     Train      | MSE: 1.33586
+2023-01-09 04:22:05,912 INFO     Validation | MSE: 1.22626
+2023-01-09 04:23:44,440 INFO     ===Epoch 006===
+2023-01-09 04:23:44,441 INFO     Train      | MSE: 1.33295
+2023-01-09 04:23:44,442 INFO     Validation | MSE: 1.22514
+2023-01-09 04:25:31,465 INFO     ===Epoch 007===
+2023-01-09 04:25:31,466 INFO     Train      | MSE: 1.33261
+2023-01-09 04:25:31,466 INFO     Validation | MSE: 1.23866
+2023-01-09 04:27:12,404 INFO     ===Epoch 008===
+2023-01-09 04:27:12,406 INFO     Train      | MSE: 1.33848
+2023-01-09 04:27:12,406 INFO     Validation | MSE: 1.22591
+2023-01-09 04:28:59,756 INFO     ===Epoch 009===
+2023-01-09 04:28:59,757 INFO     Train      | MSE: 1.33749
+2023-01-09 04:28:59,757 INFO     Validation | MSE: 1.24894
+2023-01-09 04:30:38,509 INFO     ===Epoch 010===
+2023-01-09 04:30:38,511 INFO     Train      | MSE: 1.34187
+2023-01-09 04:30:38,511 INFO     Validation | MSE: 1.24339
+2023-01-09 04:32:24,565 INFO     ===Epoch 011===
+2023-01-09 04:32:24,566 INFO     Train      | MSE: 1.33429
+2023-01-09 04:32:24,566 INFO     Validation | MSE: 1.25609
+2023-01-09 04:34:13,377 INFO     ===Epoch 012===
+2023-01-09 04:34:13,378 INFO     Train      | MSE: 1.32832
+2023-01-09 04:34:13,378 INFO     Validation | MSE: 1.22882
+2023-01-09 04:35:51,113 INFO     ===Epoch 013===
+2023-01-09 04:35:51,114 INFO     Train      | MSE: 1.33234
+2023-01-09 04:35:51,115 INFO     Validation | MSE: 1.23480
+2023-01-09 04:37:38,709 INFO     ===Epoch 014===
+2023-01-09 04:37:38,710 INFO     Train      | MSE: 1.33274
+2023-01-09 04:37:38,710 INFO     Validation | MSE: 1.21335
+2023-01-09 04:39:16,995 INFO     ===Epoch 015===
+2023-01-09 04:39:16,996 INFO     Train      | MSE: 1.33619
+2023-01-09 04:39:16,997 INFO     Validation | MSE: 1.22350
+2023-01-09 04:41:02,561 INFO     ===Epoch 016===
+2023-01-09 04:41:02,562 INFO     Train      | MSE: 1.33377
+2023-01-09 04:41:02,562 INFO     Validation | MSE: 1.25563
+2023-01-09 04:42:41,167 INFO     ===Epoch 017===
+2023-01-09 04:42:41,168 INFO     Train      | MSE: 1.33439
+2023-01-09 04:42:41,168 INFO     Validation | MSE: 1.25624
+2023-01-09 04:44:24,087 INFO     ===Epoch 018===
+2023-01-09 04:44:24,088 INFO     Train      | MSE: 1.32702
+2023-01-09 04:44:24,088 INFO     Validation | MSE: 1.22830
+2023-01-09 04:46:10,825 INFO     ===Epoch 019===
+2023-01-09 04:46:10,826 INFO     Train      | MSE: 1.32985
+2023-01-09 04:46:10,826 INFO     Validation | MSE: 1.26716
+2023-01-09 04:47:48,844 INFO     ===Epoch 020===
+2023-01-09 04:47:48,845 INFO     Train      | MSE: 1.33461
+2023-01-09 04:47:48,845 INFO     Validation | MSE: 1.23990
+2023-01-09 04:49:34,412 INFO     ===Epoch 021===
+2023-01-09 04:49:34,413 INFO     Train      | MSE: 1.32797
+2023-01-09 04:49:34,413 INFO     Validation | MSE: 1.25916
+2023-01-09 04:51:12,471 INFO     ===Epoch 022===
+2023-01-09 04:51:12,472 INFO     Train      | MSE: 1.32676
+2023-01-09 04:51:12,472 INFO     Validation | MSE: 1.23431
+2023-01-09 04:52:58,863 INFO     ===Epoch 023===
+2023-01-09 04:52:58,863 INFO     Train      | MSE: 1.32575
+2023-01-09 04:52:58,864 INFO     Validation | MSE: 1.24792
+2023-01-09 04:54:37,184 INFO     ===Epoch 024===
+2023-01-09 04:54:37,186 INFO     Train      | MSE: 1.33824
+2023-01-09 04:54:37,186 INFO     Validation | MSE: 1.23850
+2023-01-09 04:56:21,939 INFO     ===Epoch 025===
+2023-01-09 04:56:21,940 INFO     Train      | MSE: 1.33125
+2023-01-09 04:56:21,941 INFO     Validation | MSE: 1.23601
+2023-01-09 04:58:09,463 INFO     ===Epoch 026===
+2023-01-09 04:58:09,464 INFO     Train      | MSE: 1.32777
+2023-01-09 04:58:09,464 INFO     Validation | MSE: 1.23994
+2023-01-09 04:59:47,817 INFO     ===Epoch 027===
+2023-01-09 04:59:47,818 INFO     Train      | MSE: 1.32860
+2023-01-09 04:59:47,818 INFO     Validation | MSE: 1.22967
+2023-01-09 05:01:33,345 INFO     ===Epoch 028===
+2023-01-09 05:01:33,346 INFO     Train      | MSE: 1.32640
+2023-01-09 05:01:33,346 INFO     Validation | MSE: 1.26276
+2023-01-09 05:03:11,101 INFO     ===Epoch 029===
+2023-01-09 05:03:11,102 INFO     Train      | MSE: 1.32668
+2023-01-09 05:03:11,102 INFO     Validation | MSE: 1.24418
+2023-01-09 05:04:57,243 INFO     ===Epoch 030===
+2023-01-09 05:04:57,244 INFO     Train      | MSE: 1.32959
+2023-01-09 05:04:57,245 INFO     Validation | MSE: 1.22486
+2023-01-09 05:06:34,052 INFO     ===Epoch 031===
+2023-01-09 05:06:34,053 INFO     Train      | MSE: 1.31980
+2023-01-09 05:06:34,053 INFO     Validation | MSE: 1.24314
+2023-01-09 05:08:16,819 INFO     ===Epoch 032===
+2023-01-09 05:08:16,820 INFO     Train      | MSE: 1.32764
+2023-01-09 05:08:16,820 INFO     Validation | MSE: 1.25088
+2023-01-09 05:10:05,875 INFO     ===Epoch 033===
+2023-01-09 05:10:05,876 INFO     Train      | MSE: 1.33738
+2023-01-09 05:10:05,876 INFO     Validation | MSE: 1.27153
+2023-01-09 05:11:43,701 INFO     ===Epoch 034===
+2023-01-09 05:11:43,702 INFO     Train      | MSE: 1.32321
+2023-01-09 05:11:43,702 INFO     Validation | MSE: 1.26486
+2023-01-09 05:13:29,297 INFO     ===Epoch 035===
+2023-01-09 05:13:29,299 INFO     Train      | MSE: 1.32872
+2023-01-09 05:13:29,299 INFO     Validation | MSE: 1.23268
+2023-01-09 05:15:09,385 INFO     ===Epoch 036===
+2023-01-09 05:15:09,386 INFO     Train      | MSE: 1.33083
+2023-01-09 05:15:09,386 INFO     Validation | MSE: 1.22057
+2023-01-09 05:16:54,796 INFO     ===Epoch 037===
+2023-01-09 05:16:54,798 INFO     Train      | MSE: 1.32389
+2023-01-09 05:16:54,798 INFO     Validation | MSE: 1.26669
+2023-01-09 05:18:32,681 INFO     ===Epoch 038===
+2023-01-09 05:18:32,682 INFO     Train      | MSE: 1.32176
+2023-01-09 05:18:32,682 INFO     Validation | MSE: 1.22391
+2023-01-09 05:20:17,132 INFO     ===Epoch 039===
+2023-01-09 05:20:17,133 INFO     Train      | MSE: 1.32785
+2023-01-09 05:20:17,133 INFO     Validation | MSE: 1.23378
+2023-01-09 05:22:05,847 INFO     ===Epoch 040===
+2023-01-09 05:22:05,848 INFO     Train      | MSE: 1.32798
+2023-01-09 05:22:05,848 INFO     Validation | MSE: 1.26502
+2023-01-09 05:23:45,871 INFO     ===Epoch 041===
+2023-01-09 05:23:45,873 INFO     Train      | MSE: 1.32799
+2023-01-09 05:23:45,873 INFO     Validation | MSE: 1.24747
+2023-01-09 05:25:31,132 INFO     ===Epoch 042===
+2023-01-09 05:25:31,133 INFO     Train      | MSE: 1.32757
+2023-01-09 05:25:31,133 INFO     Validation | MSE: 1.22514
+2023-01-09 05:27:07,723 INFO     ===Epoch 043===
+2023-01-09 05:27:07,724 INFO     Train      | MSE: 1.32489
+2023-01-09 05:27:07,724 INFO     Validation | MSE: 1.21959
+2023-01-09 05:28:52,828 INFO     ===Epoch 044===
+2023-01-09 05:28:52,829 INFO     Train      | MSE: 1.32374
+2023-01-09 05:28:52,829 INFO     Validation | MSE: 1.23394
+2023-01-09 05:30:30,663 INFO     ===Epoch 045===
+2023-01-09 05:30:30,664 INFO     Train      | MSE: 1.32211
+2023-01-09 05:30:30,664 INFO     Validation | MSE: 1.23901
+2023-01-09 05:32:15,019 INFO     ===Epoch 046===
+2023-01-09 05:32:15,020 INFO     Train      | MSE: 1.32393
+2023-01-09 05:32:15,020 INFO     Validation | MSE: 1.21499
+2023-01-09 05:33:59,432 INFO     ===Epoch 047===
+2023-01-09 05:33:59,433 INFO     Train      | MSE: 1.32687
+2023-01-09 05:33:59,433 INFO     Validation | MSE: 1.25474
+2023-01-09 05:35:39,518 INFO     ===Epoch 048===
+2023-01-09 05:35:39,527 INFO     Train      | MSE: 1.32451
+2023-01-09 05:35:39,528 INFO     Validation | MSE: 1.22902
+2023-01-09 05:37:25,558 INFO     ===Epoch 049===
+2023-01-09 05:37:25,560 INFO     Train      | MSE: 1.31918
+2023-01-09 05:37:25,560 INFO     Validation | MSE: 1.22364
+2023-01-09 05:39:03,908 INFO     ===Epoch 050===
+2023-01-09 05:39:03,909 INFO     Train      | MSE: 1.32559
+2023-01-09 05:39:03,909 INFO     Validation | MSE: 1.24193
+2023-01-09 05:40:49,943 INFO     ===Epoch 051===
+2023-01-09 05:40:49,944 INFO     Train      | MSE: 1.32565
+2023-01-09 05:40:49,944 INFO     Validation | MSE: 1.22084
+2023-01-09 05:42:27,157 INFO     ===Epoch 052===
+2023-01-09 05:42:27,158 INFO     Train      | MSE: 1.32561
+2023-01-09 05:42:27,158 INFO     Validation | MSE: 1.22653
+2023-01-09 05:44:12,109 INFO     ===Epoch 053===
+2023-01-09 05:44:12,110 INFO     Train      | MSE: 1.32425
+2023-01-09 05:44:12,110 INFO     Validation | MSE: 1.23518
+2023-01-09 05:45:56,703 INFO     ===Epoch 054===
+2023-01-09 05:45:56,704 INFO     Train      | MSE: 1.32325
+2023-01-09 05:45:56,704 INFO     Validation | MSE: 1.22315
+2023-01-09 05:47:35,556 INFO     ===Epoch 055===
+2023-01-09 05:47:35,558 INFO     Train      | MSE: 1.32723
+2023-01-09 05:47:35,558 INFO     Validation | MSE: 1.23764
+2023-01-09 05:49:21,197 INFO     ===Epoch 056===
+2023-01-09 05:49:21,199 INFO     Train      | MSE: 1.32214
+2023-01-09 05:49:21,199 INFO     Validation | MSE: 1.24676
+2023-01-09 05:50:59,497 INFO     ===Epoch 057===
+2023-01-09 05:50:59,498 INFO     Train      | MSE: 1.31848
+2023-01-09 05:50:59,498 INFO     Validation | MSE: 1.25277
+2023-01-09 05:52:45,642 INFO     ===Epoch 058===
+2023-01-09 05:52:45,643 INFO     Train      | MSE: 1.32551
+2023-01-09 05:52:45,643 INFO     Validation | MSE: 1.22596
+2023-01-09 05:54:22,351 INFO     ===Epoch 059===
+2023-01-09 05:54:22,352 INFO     Train      | MSE: 1.33259
+2023-01-09 05:54:22,352 INFO     Validation | MSE: 1.21427
+2023-01-09 05:56:06,154 INFO     ===Epoch 060===
+2023-01-09 05:56:06,155 INFO     Train      | MSE: 1.31771
+2023-01-09 05:56:06,155 INFO     Validation | MSE: 1.21897
+2023-01-09 05:57:53,299 INFO     ===Epoch 061===
+2023-01-09 05:57:53,300 INFO     Train      | MSE: 1.32977
+2023-01-09 05:57:53,300 INFO     Validation | MSE: 1.23232
+2023-01-09 05:59:31,064 INFO     ===Epoch 062===
+2023-01-09 05:59:31,065 INFO     Train      | MSE: 1.31834
+2023-01-09 05:59:31,066 INFO     Validation | MSE: 1.23613
+2023-01-09 06:01:17,855 INFO     ===Epoch 063===
+2023-01-09 06:01:17,856 INFO     Train      | MSE: 1.32249
+2023-01-09 06:01:17,856 INFO     Validation | MSE: 1.22959
+2023-01-09 06:02:54,032 INFO     ===Epoch 064===
+2023-01-09 06:02:54,033 INFO     Train      | MSE: 1.33264
+2023-01-09 06:02:54,034 INFO     Validation | MSE: 1.26516
+2023-01-09 06:04:40,207 INFO     ===Epoch 065===
+2023-01-09 06:04:40,208 INFO     Train      | MSE: 1.32311
+2023-01-09 06:04:40,208 INFO     Validation | MSE: 1.23084
+2023-01-09 06:06:16,787 INFO     ===Epoch 066===
+2023-01-09 06:06:16,788 INFO     Train      | MSE: 1.32683
+2023-01-09 06:06:16,788 INFO     Validation | MSE: 1.23766
+2023-01-09 06:08:02,145 INFO     ===Epoch 067===
+2023-01-09 06:08:02,146 INFO     Train      | MSE: 1.32833
+2023-01-09 06:08:02,146 INFO     Validation | MSE: 1.25248
+2023-01-09 06:09:40,136 INFO     ===Epoch 068===
+2023-01-09 06:09:40,138 INFO     Train      | MSE: 1.32805
+2023-01-09 06:09:40,138 INFO     Validation | MSE: 1.24162
+2023-01-09 06:11:21,875 INFO     ===Epoch 069===
+2023-01-09 06:11:21,877 INFO     Train      | MSE: 1.31929
+2023-01-09 06:11:21,877 INFO     Validation | MSE: 1.26197
+2023-01-09 06:13:13,597 INFO     ===Epoch 070===
+2023-01-09 06:13:13,598 INFO     Train      | MSE: 1.32549
+2023-01-09 06:13:13,598 INFO     Validation | MSE: 1.22009
+2023-01-09 06:14:55,088 INFO     ===Epoch 071===
+2023-01-09 06:14:55,088 INFO     Train      | MSE: 1.32674
+2023-01-09 06:14:55,089 INFO     Validation | MSE: 1.21945
+2023-01-09 06:16:46,142 INFO     ===Epoch 072===
+2023-01-09 06:16:46,143 INFO     Train      | MSE: 1.32101
+2023-01-09 06:16:46,143 INFO     Validation | MSE: 1.22909
+2023-01-09 06:18:26,414 INFO     ===Epoch 073===
+2023-01-09 06:18:26,416 INFO     Train      | MSE: 1.32659
+2023-01-09 06:18:26,416 INFO     Validation | MSE: 1.23126
+2023-01-09 06:20:13,499 INFO     ===Epoch 074===
+2023-01-09 06:20:13,500 INFO     Train      | MSE: 1.32772
+2023-01-09 06:20:13,500 INFO     Validation | MSE: 1.24101
+2023-01-09 06:22:00,712 INFO     ===Epoch 075===
+2023-01-09 06:22:00,714 INFO     Train      | MSE: 1.31770
+2023-01-09 06:22:00,714 INFO     Validation | MSE: 1.25733
+2023-01-09 06:23:38,205 INFO     ===Epoch 076===
+2023-01-09 06:23:38,206 INFO     Train      | MSE: 1.32624
+2023-01-09 06:23:38,206 INFO     Validation | MSE: 1.24586
+2023-01-09 06:25:23,985 INFO     ===Epoch 077===
+2023-01-09 06:25:23,985 INFO     Train      | MSE: 1.31647
+2023-01-09 06:25:23,985 INFO     Validation | MSE: 1.24477
+2023-01-09 06:27:02,784 INFO     ===Epoch 078===
+2023-01-09 06:27:02,786 INFO     Train      | MSE: 1.32528
+2023-01-09 06:27:02,786 INFO     Validation | MSE: 1.21902
+2023-01-09 06:28:50,339 INFO     ===Epoch 079===
+2023-01-09 06:28:50,340 INFO     Train      | MSE: 1.31686
+2023-01-09 06:28:50,340 INFO     Validation | MSE: 1.23573
+2023-01-09 06:30:30,266 INFO     ===Epoch 080===
+2023-01-09 06:30:30,267 INFO     Train      | MSE: 1.32624
+2023-01-09 06:30:30,267 INFO     Validation | MSE: 1.21878
+2023-01-09 06:32:14,335 INFO     ===Epoch 081===
+2023-01-09 06:32:14,335 INFO     Train      | MSE: 1.32056
+2023-01-09 06:32:14,336 INFO     Validation | MSE: 1.25102
+2023-01-09 06:34:01,147 INFO     ===Epoch 082===
+2023-01-09 06:34:01,148 INFO     Train      | MSE: 1.31390
+2023-01-09 06:34:01,148 INFO     Validation | MSE: 1.24387
+2023-01-09 06:35:40,317 INFO     ===Epoch 083===
+2023-01-09 06:35:40,318 INFO     Train      | MSE: 1.31562
+2023-01-09 06:35:40,318 INFO     Validation | MSE: 1.27519
+2023-01-09 06:37:25,547 INFO     ===Epoch 084===
+2023-01-09 06:37:25,548 INFO     Train      | MSE: 1.31433
+2023-01-09 06:37:25,548 INFO     Validation | MSE: 1.24756
+2023-01-09 06:39:06,382 INFO     ===Epoch 085===
+2023-01-09 06:39:06,383 INFO     Train      | MSE: 1.31978
+2023-01-09 06:39:06,383 INFO     Validation | MSE: 1.25636
+2023-01-09 06:40:54,653 INFO     ===Epoch 086===
+2023-01-09 06:40:54,654 INFO     Train      | MSE: 1.31593
+2023-01-09 06:40:54,654 INFO     Validation | MSE: 1.25025
+2023-01-09 06:42:31,425 INFO     ===Epoch 087===
+2023-01-09 06:42:31,426 INFO     Train      | MSE: 1.32085
+2023-01-09 06:42:31,426 INFO     Validation | MSE: 1.22793
+2023-01-09 06:44:16,553 INFO     ===Epoch 088===
+2023-01-09 06:44:16,554 INFO     Train      | MSE: 1.31696
+2023-01-09 06:44:16,554 INFO     Validation | MSE: 1.24492
+2023-01-09 06:45:58,904 INFO     ===Epoch 089===
+2023-01-09 06:45:58,905 INFO     Train      | MSE: 1.32886
+2023-01-09 06:45:58,905 INFO     Validation | MSE: 1.21633
+2023-01-09 06:47:36,767 INFO     ===Epoch 090===
+2023-01-09 06:47:36,768 INFO     Train      | MSE: 1.33160
+2023-01-09 06:47:36,768 INFO     Validation | MSE: 1.23187
+2023-01-09 06:49:21,115 INFO     ===Epoch 091===
+2023-01-09 06:49:21,117 INFO     Train      | MSE: 1.31600
+2023-01-09 06:49:21,117 INFO     Validation | MSE: 1.20440
+2023-01-09 06:50:58,873 INFO     ===Epoch 092===
+2023-01-09 06:50:58,873 INFO     Train      | MSE: 1.31907
+2023-01-09 06:50:58,874 INFO     Validation | MSE: 1.22583
+2023-01-09 06:52:43,178 INFO     ===Epoch 093===
+2023-01-09 06:52:43,178 INFO     Train      | MSE: 1.31878
+2023-01-09 06:52:43,179 INFO     Validation | MSE: 1.25686
+2023-01-09 06:54:18,726 INFO     ===Epoch 094===
+2023-01-09 06:54:18,727 INFO     Train      | MSE: 1.31929
+2023-01-09 06:54:18,727 INFO     Validation | MSE: 1.21780
+2023-01-09 06:56:02,234 INFO     ===Epoch 095===
+2023-01-09 06:56:02,235 INFO     Train      | MSE: 1.31512
+2023-01-09 06:56:02,235 INFO     Validation | MSE: 1.22359
+2023-01-09 06:57:42,008 INFO     ===Epoch 096===
+2023-01-09 06:57:42,009 INFO     Train      | MSE: 1.32416
+2023-01-09 06:57:42,009 INFO     Validation | MSE: 1.23090
+2023-01-09 06:59:24,811 INFO     ===Epoch 097===
+2023-01-09 06:59:24,811 INFO     Train      | MSE: 1.32318
+2023-01-09 06:59:24,812 INFO     Validation | MSE: 1.24548
+2023-01-09 07:01:10,051 INFO     ===Epoch 098===
+2023-01-09 07:01:10,060 INFO     Train      | MSE: 1.32303
+2023-01-09 07:01:10,060 INFO     Validation | MSE: 1.27790
+2023-01-09 07:02:47,103 INFO     ===Epoch 099===
+2023-01-09 07:02:47,111 INFO     Train      | MSE: 1.31439
+2023-01-09 07:02:47,111 INFO     Validation | MSE: 1.22556
+2023-01-09 07:04:32,622 INFO     ===Epoch 100===
+2023-01-09 07:04:32,623 INFO     Train      | MSE: 1.31810
+2023-01-09 07:04:32,623 INFO     Validation | MSE: 1.21828
+2023-01-09 07:04:54,361 INFO     Test       | MSE: 1.16701
+2023-01-09 07:05:07,025 INFO                 Fold iteration k= 5...
+2023-01-09 07:05:07,099 INFO     train    shape: (99241, 9)
+2023-01-09 07:05:07,102 INFO     val      shape: (24810, 9)
+2023-01-09 07:05:07,104 INFO     test     shape: (13784, 9)
+2023-01-09 07:05:07,107 INFO     train_dataset:
+2023-01-09 07:05:07,110 INFO     GraphTabDataset Summary
+2023-01-09 07:05:07,113 INFO     =======================
+2023-01-09 07:05:07,115 INFO     # observations : 99241
+2023-01-09 07:05:07,212 INFO     # cell-lines   : 856
+2023-01-09 07:05:07,316 INFO     # drugs        : 181
+2023-01-09 07:05:07,318 INFO     # genes        : 293
+2023-01-09 07:05:07,320 INFO     val_dataset  :
+2023-01-09 07:05:07,320 INFO     GraphTabDataset Summary
+2023-01-09 07:05:07,321 INFO     =======================
+2023-01-09 07:05:07,321 INFO     # observations : 24810
+2023-01-09 07:05:07,364 INFO     # cell-lines   : 856
+2023-01-09 07:05:07,411 INFO     # drugs        : 181
+2023-01-09 07:05:07,414 INFO     # genes        : 293
+2023-01-09 07:05:07,415 INFO     test_dataset :
+2023-01-09 07:05:07,417 INFO     GraphTabDataset Summary
+2023-01-09 07:05:07,425 INFO     =======================
+2023-01-09 07:05:07,426 INFO     # observations : 13784
+2023-01-09 07:05:07,477 INFO     # cell-lines   : 856
+2023-01-09 07:05:07,536 INFO     # drugs        : 181
+2023-01-09 07:05:07,536 INFO     # genes        : 293
+2023-01-09 07:05:07,556 INFO     GraphTab_v2(
+  (cell_emb): Sequential(
+    (0): GATConv(4, 256, heads=1)
+    (1): ReLU(inplace=True)
+    (2): Dropout(p=0.1, inplace=False)
+    (3): GATConv(256, 128, heads=1)
+    (4): ReLU(inplace=True)
+    (5): <function global_max_pool at 0x7ff1fc88af80>
+    (6): Linear(in_features=128, out_features=128, bias=True)
+    (7): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Dropout(p=0.1, inplace=False)
+    (10): Linear(in_features=128, out_features=128, bias=True)
+    (11): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-01-09 07:07:02,487 INFO     ===Epoch 001===
+2023-01-09 07:07:02,495 INFO     Train      | MSE: 1.33147
+2023-01-09 07:07:02,495 INFO     Validation | MSE: 1.21175
+2023-01-09 07:08:45,455 INFO     ===Epoch 002===
+2023-01-09 07:08:45,456 INFO     Train      | MSE: 1.33894
+2023-01-09 07:08:45,456 INFO     Validation | MSE: 1.22758
+2023-01-09 07:10:35,815 INFO     ===Epoch 003===
+2023-01-09 07:10:35,816 INFO     Train      | MSE: 1.33435
+2023-01-09 07:10:35,816 INFO     Validation | MSE: 1.21029
+2023-01-09 07:12:18,384 INFO     ===Epoch 004===
+2023-01-09 07:12:18,385 INFO     Train      | MSE: 1.33401
+2023-01-09 07:12:18,385 INFO     Validation | MSE: 1.27141
+2023-01-09 07:14:06,326 INFO     ===Epoch 005===
+2023-01-09 07:14:06,327 INFO     Train      | MSE: 1.33316
+2023-01-09 07:14:06,327 INFO     Validation | MSE: 1.23942
+2023-01-09 07:15:56,186 INFO     ===Epoch 006===
+2023-01-09 07:15:56,187 INFO     Train      | MSE: 1.33149
+2023-01-09 07:15:56,187 INFO     Validation | MSE: 1.21633
+2023-01-09 07:17:35,838 INFO     ===Epoch 007===
+2023-01-09 07:17:35,839 INFO     Train      | MSE: 1.33608
+2023-01-09 07:17:35,839 INFO     Validation | MSE: 1.22695
+2023-01-09 07:19:24,325 INFO     ===Epoch 008===
+2023-01-09 07:19:24,326 INFO     Train      | MSE: 1.33643
+2023-01-09 07:19:24,326 INFO     Validation | MSE: 1.21342
+2023-01-09 07:21:05,729 INFO     ===Epoch 009===
+2023-01-09 07:21:05,730 INFO     Train      | MSE: 1.32814
+2023-01-09 07:21:05,730 INFO     Validation | MSE: 1.23970
+2023-01-09 07:22:53,793 INFO     ===Epoch 010===
+2023-01-09 07:22:53,794 INFO     Train      | MSE: 1.32696
+2023-01-09 07:22:53,794 INFO     Validation | MSE: 1.26221
+2023-01-09 07:24:35,201 INFO     ===Epoch 011===
+2023-01-09 07:24:35,202 INFO     Train      | MSE: 1.32803
+2023-01-09 07:24:35,202 INFO     Validation | MSE: 1.23792
+2023-01-09 07:26:20,769 INFO     ===Epoch 012===
+2023-01-09 07:26:20,770 INFO     Train      | MSE: 1.32629
+2023-01-09 07:26:20,770 INFO     Validation | MSE: 1.21688
+2023-01-09 07:28:09,966 INFO     ===Epoch 013===
+2023-01-09 07:28:09,967 INFO     Train      | MSE: 1.33044
+2023-01-09 07:28:09,968 INFO     Validation | MSE: 1.27018
+2023-01-09 07:29:48,960 INFO     ===Epoch 014===
+2023-01-09 07:29:48,961 INFO     Train      | MSE: 1.33039
+2023-01-09 07:29:48,962 INFO     Validation | MSE: 1.20784
+2023-01-09 07:31:37,017 INFO     ===Epoch 015===
+2023-01-09 07:31:37,018 INFO     Train      | MSE: 1.32523
+2023-01-09 07:31:37,018 INFO     Validation | MSE: 1.19856
+2023-01-09 07:33:15,554 INFO     ===Epoch 016===
+2023-01-09 07:33:15,555 INFO     Train      | MSE: 1.32126
+2023-01-09 07:33:15,555 INFO     Validation | MSE: 1.22428
+2023-01-09 07:35:01,091 INFO     ===Epoch 017===
+2023-01-09 07:35:01,092 INFO     Train      | MSE: 1.32191
+2023-01-09 07:35:01,092 INFO     Validation | MSE: 1.28968
+2023-01-09 07:36:40,226 INFO     ===Epoch 018===
+2023-01-09 07:36:40,227 INFO     Train      | MSE: 1.32807
+2023-01-09 07:36:40,227 INFO     Validation | MSE: 1.22831
+2023-01-09 07:38:23,002 INFO     ===Epoch 019===
+2023-01-09 07:38:23,003 INFO     Train      | MSE: 1.32468
+2023-01-09 07:38:23,004 INFO     Validation | MSE: 1.21039
+2023-01-09 07:40:11,854 INFO     ===Epoch 020===
+2023-01-09 07:40:11,855 INFO     Train      | MSE: 1.32480
+2023-01-09 07:40:11,855 INFO     Validation | MSE: 1.20167
+2023-01-09 07:41:50,467 INFO     ===Epoch 021===
+2023-01-09 07:41:50,468 INFO     Train      | MSE: 1.33023
+2023-01-09 07:41:50,468 INFO     Validation | MSE: 1.21337
+2023-01-09 07:43:37,164 INFO     ===Epoch 022===
+2023-01-09 07:43:37,165 INFO     Train      | MSE: 1.32275
+2023-01-09 07:43:37,165 INFO     Validation | MSE: 1.19795
+2023-01-09 07:45:15,350 INFO     ===Epoch 023===
+2023-01-09 07:45:15,351 INFO     Train      | MSE: 1.32717
+2023-01-09 07:45:15,351 INFO     Validation | MSE: 1.22296
+2023-01-09 07:47:00,346 INFO     ===Epoch 024===
+2023-01-09 07:47:00,347 INFO     Train      | MSE: 1.33411
+2023-01-09 07:47:00,347 INFO     Validation | MSE: 1.19630
+2023-01-09 07:48:38,758 INFO     ===Epoch 025===
+2023-01-09 07:48:38,759 INFO     Train      | MSE: 1.33279
+2023-01-09 07:48:38,759 INFO     Validation | MSE: 1.23009
+2023-01-09 07:50:23,778 INFO     ===Epoch 026===
+2023-01-09 07:50:23,779 INFO     Train      | MSE: 1.33639
+2023-01-09 07:50:23,779 INFO     Validation | MSE: 1.20818
+2023-01-09 07:52:09,959 INFO     ===Epoch 027===
+2023-01-09 07:52:09,960 INFO     Train      | MSE: 1.32254
+2023-01-09 07:52:09,960 INFO     Validation | MSE: 1.23070
+2023-01-09 07:53:49,196 INFO     ===Epoch 028===
+2023-01-09 07:53:49,196 INFO     Train      | MSE: 1.31796
+2023-01-09 07:53:49,197 INFO     Validation | MSE: 1.22532
+2023-01-09 07:55:33,849 INFO     ===Epoch 029===
+2023-01-09 07:55:33,850 INFO     Train      | MSE: 1.32668
+2023-01-09 07:55:33,850 INFO     Validation | MSE: 1.24987
+2023-01-09 07:57:11,971 INFO     ===Epoch 030===
+2023-01-09 07:57:11,972 INFO     Train      | MSE: 1.32045
+2023-01-09 07:57:11,972 INFO     Validation | MSE: 1.22777
+2023-01-09 07:58:58,013 INFO     ===Epoch 031===
+2023-01-09 07:58:58,014 INFO     Train      | MSE: 1.31909
+2023-01-09 07:58:58,014 INFO     Validation | MSE: 1.23375
+2023-01-09 08:00:34,567 INFO     ===Epoch 032===
+2023-01-09 08:00:34,568 INFO     Train      | MSE: 1.32578
+2023-01-09 08:00:34,568 INFO     Validation | MSE: 1.26238
+2023-01-09 08:02:20,909 INFO     ===Epoch 033===
+2023-01-09 08:02:20,910 INFO     Train      | MSE: 1.33577
+2023-01-09 08:02:20,910 INFO     Validation | MSE: 1.29705
+2023-01-09 08:04:07,393 INFO     ===Epoch 034===
+2023-01-09 08:04:07,393 INFO     Train      | MSE: 1.32477
+2023-01-09 08:04:07,394 INFO     Validation | MSE: 1.22847
+2023-01-09 08:05:46,256 INFO     ===Epoch 035===
+2023-01-09 08:05:46,257 INFO     Train      | MSE: 1.32432
+2023-01-09 08:05:46,258 INFO     Validation | MSE: 1.23689
+2023-01-09 08:07:30,570 INFO     ===Epoch 036===
+2023-01-09 08:07:30,571 INFO     Train      | MSE: 1.31860
+2023-01-09 08:07:30,571 INFO     Validation | MSE: 1.23309
+2023-01-09 08:09:08,960 INFO     ===Epoch 037===
+2023-01-09 08:09:08,961 INFO     Train      | MSE: 1.31509
+2023-01-09 08:09:08,961 INFO     Validation | MSE: 1.22228
+2023-01-09 08:10:56,222 INFO     ===Epoch 038===
+2023-01-09 08:10:56,223 INFO     Train      | MSE: 1.31716
+2023-01-09 08:10:56,223 INFO     Validation | MSE: 1.22129
+2023-01-09 08:12:35,293 INFO     ===Epoch 039===
+2023-01-09 08:12:35,294 INFO     Train      | MSE: 1.32452
+2023-01-09 08:12:35,294 INFO     Validation | MSE: 1.24364
+2023-01-09 08:14:20,865 INFO     ===Epoch 040===
+2023-01-09 08:14:20,867 INFO     Train      | MSE: 1.33323
+2023-01-09 08:14:20,867 INFO     Validation | MSE: 1.21801
+2023-01-09 08:16:08,925 INFO     ===Epoch 041===
+2023-01-09 08:16:08,926 INFO     Train      | MSE: 1.32519
+2023-01-09 08:16:08,927 INFO     Validation | MSE: 1.20560
+2023-01-09 08:17:48,679 INFO     ===Epoch 042===
+2023-01-09 08:17:48,682 INFO     Train      | MSE: 1.33160
+2023-01-09 08:17:48,682 INFO     Validation | MSE: 1.20188
+2023-01-09 08:19:35,462 INFO     ===Epoch 043===
+2023-01-09 08:19:35,463 INFO     Train      | MSE: 1.32752
+2023-01-09 08:19:35,463 INFO     Validation | MSE: 1.26055
+2023-01-09 08:21:16,128 INFO     ===Epoch 044===
+2023-01-09 08:21:16,129 INFO     Train      | MSE: 1.32693
+2023-01-09 08:21:16,129 INFO     Validation | MSE: 1.20598
+2023-01-09 08:23:03,500 INFO     ===Epoch 045===
+2023-01-09 08:23:03,501 INFO     Train      | MSE: 1.32757
+2023-01-09 08:23:03,501 INFO     Validation | MSE: 1.22482
+2023-01-09 08:24:42,877 INFO     ===Epoch 046===
+2023-01-09 08:24:42,878 INFO     Train      | MSE: 1.32290
+2023-01-09 08:24:42,878 INFO     Validation | MSE: 1.20904
+2023-01-09 08:26:28,500 INFO     ===Epoch 047===
+2023-01-09 08:26:28,501 INFO     Train      | MSE: 1.31877
+2023-01-09 08:26:28,501 INFO     Validation | MSE: 1.25128
+2023-01-09 08:28:18,312 INFO     ===Epoch 048===
+2023-01-09 08:28:18,322 INFO     Train      | MSE: 1.31683
+2023-01-09 08:28:18,323 INFO     Validation | MSE: 1.21692
+2023-01-09 08:29:57,775 INFO     ===Epoch 049===
+2023-01-09 08:29:57,776 INFO     Train      | MSE: 1.31947
+2023-01-09 08:29:57,776 INFO     Validation | MSE: 1.21089
+2023-01-09 08:31:46,571 INFO     ===Epoch 050===
+2023-01-09 08:31:46,572 INFO     Train      | MSE: 1.31777
+2023-01-09 08:31:46,572 INFO     Validation | MSE: 1.21167
