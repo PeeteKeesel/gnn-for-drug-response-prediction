@@ -379,9 +379,9 @@ def main():
         # Define hyperparameters to optimize for.
         param_space = [
             Real(name='learning_rate', low=0.0001, high=0.1, prior='log-uniform'),
-#             Real(name='dropout', low=0.0, high=0.5, prior='uniform'),
             Real(name='weight_decay', low=0.000000001, high=0.001, prior='log-uniform'),
-            Integer(name='batch_size', low=16, high=1024)#, prior='uniform')            
+            Integer(name='batch_size', low=16, high=1024)#, prior='uniform')      
+#             Real(name='dropout', low=0.0, high=0.5, prior='uniform'),            
             # Real(0.0, 0.5, prior='uniform', name='dropout'),
             # Real(0.0, 0.001, prior='log-uniform', name='weight_decay')
             # Dimension(low=16, high=1024, prior='uniform', name='batch_size')
@@ -416,7 +416,7 @@ def main():
         bayes_res = gbrt_minimize(
             objective_gt_fixed, 
             param_space, 
-            n_calls=50, # TODO: make this higher
+            n_calls=10, # TODO: make this higher
             random_state=args.seed,
             n_jobs=args.num_workers
         )

@@ -28,3 +28,50 @@
         - `number of cell GNN layers`
         - `number of drug GNN layers`
         - `type of cell GNN layer`
+        
+        
+        
+        
+GraphTab
+--> GATConv - 2
+
+        
+conv_type = {GATConv, GCNConv}
+num_conv_layers = {2,3,4}
+
+GATConv - 2 
+-> 
+
+
+        
+90% 10%
+1 mal
+train 80 
+val 80
+ 
+train.  val 
+___ ___ ___
+train val train 
+
+      
+train , validation , test 
+
+1st appraoch
+------------
+10 * 2,5 h * 5 = 5 days
+- holdout in inner train-val loop
+    - best params train on train U val --> test on test
+    - iterate 5-times with different test sets
+- plus early stopping 
+
+2nd approach
+------------
+- holdout in inner train-val loop
+    - best params train on train U val --> test on test
+- optimize on train U val
+- plus early stopping
+
+optimal_params --> over combined_thresh in {850, 900, 950, 990}
+
+
+- performance per cell-line --> mu, sigma
