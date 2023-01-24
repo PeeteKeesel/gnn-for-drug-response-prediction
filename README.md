@@ -1,6 +1,6 @@
 <h1 align="center">Graph Neural Networks for Drug Response Prediction in Cancer :dna:</h1>
 
-![Example One-Hop Neighbor Plot for Gene Symbol E2F2](/imgs/GraphPlotForGene_E2F2_GITHUB.pdf)
+![Example One-Hop Neighbor Plot for Gene Symbol E2F2](/imgs/GraphPlotForGene_E2F2_GITHUB.png)
 
 ## :bulb: Introduction
 This repository contains the process and the final code for my master thesis "_Gene-Interaction Graph Neural Network to Predict Cancer Drug Response_".
