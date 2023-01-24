@@ -1,4 +1,4 @@
-*.pdf
+docs/*.pdf
 *.pkl
 *.xlsx
 *.csv
