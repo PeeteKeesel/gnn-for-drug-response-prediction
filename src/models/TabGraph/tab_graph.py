@@ -8,7 +8,6 @@ from torch_geometric.data    import Dataset
 from sklearn.model_selection import train_test_split
 from torch_geometric.loader  import DataLoader as PyG_DataLoader
 from torch_geometric.nn      import Sequential, GCNConv, global_mean_pool, global_max_pool
-from torch_geometric.nn      import Sequential, GINConv, global_mean_pool, global_max_pool
 from tqdm                    import tqdm
 from time                    import sleep
 from sklearn.metrics         import r2_score, mean_absolute_error

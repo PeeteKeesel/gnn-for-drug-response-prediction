@@ -1,0 +1,110 @@
+2023-03-05 17:14:04,447 INFO     Finished reading drug response matrix: (137835, 9)
+2023-03-05 17:14:04,454 INFO     DRM Number of unique cell-lines: 856
+2023-03-05 17:14:06,327 INFO     Finished reading cell-line gene matrix: (856, 1833)
+2023-03-05 17:14:06,443 INFO     Finished reading drug SMILES matrix: (181, 257)
+2023-03-05 17:14:06,443 INFO     ARGUMENTS SUMMARY
+2023-03-05 17:14:06,443 INFO     =================
+2023-03-05 17:14:06,443 INFO     seed        : 42
+2023-03-05 17:14:06,443 INFO     batch_size  : 128
+2023-03-05 17:14:06,443 INFO     lr          : 0.0001
+2023-03-05 17:14:06,443 INFO     num_epochs  : 100
+2023-03-05 17:14:06,443 INFO     num_workers : 8
+2023-03-05 17:14:06,443 INFO     dropout     : 0.2
+2023-03-05 17:14:06,443 INFO     kfolds      : 5
+2023-03-05 17:14:06,443 INFO     conv_type   : 
+2023-03-05 17:14:06,443 INFO     conv_layers : 2
+2023-03-05 17:14:06,443 INFO     global_pooling : global_max_pooling
+2023-03-05 17:14:06,443 INFO     early_stopping_threshold : 20
+2023-03-05 17:14:06,444 INFO     combined_score_thresh    : 950
+2023-03-05 17:14:06,444 INFO     gdsc        : gdsc2
+2023-03-05 17:14:06,444 INFO     file_ending : 040323Thresh950GATConv3GINConvMax100Epochs
+2023-03-05 17:14:06,446 INFO     Finished building TabTabDataset!
+2023-03-05 17:14:06,446 INFO     TabTabDataset Summary
+2023-03-05 17:14:06,446 INFO     =====================
+2023-03-05 17:14:06,446 INFO     # observations : 137835
+2023-03-05 17:14:06,539 INFO     # cell-lines   : 856
+2023-03-05 17:14:06,615 INFO     # drugs        : 181
+2023-03-05 17:14:06,615 INFO     # genes        : 458
+2023-03-05 17:14:06,621 INFO     
+
+
+
+
+KFold iteration 0
+2023-03-05 17:14:06,633 INFO             train shape: (110268, 9)
+2023-03-05 17:14:06,633 INFO             test  shape: (27567, 9)
+2023-03-05 17:14:06,634 INFO             train_dataset:
+2023-03-05 17:14:06,634 INFO     TabTabDataset Summary
+2023-03-05 17:14:06,634 INFO     =====================
+2023-03-05 17:14:06,634 INFO     # observations : 110268
+2023-03-05 17:14:06,709 INFO     # cell-lines   : 856
+2023-03-05 17:14:06,768 INFO     # drugs        : 181
+2023-03-05 17:14:06,769 INFO     # genes        : 458
+2023-03-05 17:14:06,769 INFO             test_dataset :
+2023-03-05 17:14:06,769 INFO     TabTabDataset Summary
+2023-03-05 17:14:06,769 INFO     =====================
+2023-03-05 17:14:06,769 INFO     # observations : 27567
+2023-03-05 17:14:06,786 INFO     # cell-lines   : 856
+2023-03-05 17:14:06,799 INFO     # drugs        : 181
+2023-03-05 17:14:06,800 INFO     # genes        : 458
+2023-03-05 17:14:06,800 INFO         Finished creating pytorch training datasets!
+2023-03-05 17:14:06,800 INFO         Number of batches per dataset:
+2023-03-05 17:14:06,800 INFO             train : 862
+2023-03-05 17:14:06,800 INFO             test  : 216
+2023-03-05 17:14:06,800 INFO     device: cuda
+2023-03-05 17:14:06,833 INFO     Number of GPUs: 1
+2023-03-05 17:14:06,833 INFO     GPU Usage: 0
+2023-03-05 17:14:09,234 INFO     TabTab(
+  (cell_emb): Sequential(
+    (0): Linear(in_features=1832, out_features=516, bias=True)
+    (1): BatchNorm1d(516, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.2, inplace=False)
+    (4): Linear(in_features=516, out_features=256, bias=True)
+    (5): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+    (7): Dropout(p=0.2, inplace=False)
+    (8): Linear(in_features=256, out_features=128, bias=True)
+    (9): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (10): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.2, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.2, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.2, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-03-05 17:14:09,235 INFO     TRAINING the model
+2023-03-05 17:14:30,627 INFO     Engine run starting with max_epochs=1.
+2023-03-05 17:14:37,750 INFO     Epoch[1] Complete. Time taken: 00:00:06.898
+2023-03-05 17:14:37,751 INFO     Engine run complete. Time taken: 00:00:07.123
+2023-03-05 17:14:37,838 INFO     =====Epoch 1
+2023-03-05 17:14:37,839 INFO     Train | MSE: 6.36317
+2023-03-05 17:14:37,839 INFO     Test  | MSE: 2.79664
+2023-03-05 17:14:58,747 INFO     Engine run starting with max_epochs=1.
+2023-03-05 17:15:06,220 INFO     Epoch[1] Complete. Time taken: 00:00:07.251
+2023-03-05 17:15:06,222 INFO     Engine run complete. Time taken: 00:00:07.474
+2023-03-05 17:15:06,329 INFO     =====Epoch 2
+2023-03-05 17:15:06,329 INFO     Train | MSE: 2.39110
+2023-03-05 17:15:06,329 INFO     Test  | MSE: 1.54371
+2023-03-05 17:15:27,221 INFO     Engine run starting with max_epochs=1.
+2023-03-05 17:15:34,293 INFO     Epoch[1] Complete. Time taken: 00:00:06.850
+2023-03-05 17:15:34,294 INFO     Engine run complete. Time taken: 00:00:07.073
+2023-03-05 17:15:34,407 INFO     =====Epoch 3
+2023-03-05 17:15:34,407 INFO     Train | MSE: 1.90475
+2023-03-05 17:15:34,407 INFO     Test  | MSE: 1.41719

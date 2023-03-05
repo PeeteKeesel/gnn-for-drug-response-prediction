@@ -1,0 +1,134 @@
+2023-02-26 20:55:24,571 INFO     Finished reading drug response matrix: (137835, 9)
+2023-02-26 20:55:24,578 INFO     DRM Number of unique cell-lines: 856
+2023-02-26 20:55:25,338 INFO     Finished reading cell-line gene matrix: (856, 1173)
+2023-02-26 20:55:25,341 INFO     Finished reading drug SMILES matrix: (181, 257)
+2023-02-26 20:55:25,341 INFO     ARGUMENTS SUMMARY
+2023-02-26 20:55:25,341 INFO     =================
+2023-02-26 20:55:25,341 INFO     seed        : 42
+2023-02-26 20:55:25,341 INFO     batch_size  : 128
+2023-02-26 20:55:25,341 INFO     lr          : 0.0001
+2023-02-26 20:55:25,341 INFO     num_epochs  : 150
+2023-02-26 20:55:25,341 INFO     num_workers : 8
+2023-02-26 20:55:25,341 INFO     dropout     : 0.1
+2023-02-26 20:55:25,341 INFO     kfolds      : 5
+2023-02-26 20:55:25,341 INFO     conv_type   : 
+2023-02-26 20:55:25,341 INFO     conv_layers : 2
+2023-02-26 20:55:25,341 INFO     global_pooling : global_max_pooling
+2023-02-26 20:55:25,342 INFO     early_stopping_threshold : 20
+2023-02-26 20:55:25,342 INFO     combined_score_thresh    : 990
+2023-02-26 20:55:25,342 INFO     gdsc        : gdsc2
+2023-02-26 20:55:25,342 INFO     file_ending : 260223TabTab
+2023-02-26 20:55:25,344 INFO     Finished building TabTabDataset!
+2023-02-26 20:55:25,344 INFO     TabTabDataset Summary
+2023-02-26 20:55:25,344 INFO     =====================
+2023-02-26 20:55:25,344 INFO     # observations : 137835
+2023-02-26 20:55:25,438 INFO     # cell-lines   : 856
+2023-02-26 20:55:25,514 INFO     # drugs        : 181
+2023-02-26 20:55:25,514 INFO     # genes        : 293
+2023-02-26 20:55:25,682 INFO             train shape: (110268, 9)
+2023-02-26 20:55:25,682 INFO             test  shape: (27567, 9)
+2023-02-26 20:55:25,683 INFO             train_dataset:
+2023-02-26 20:55:25,683 INFO     TabTabDataset Summary
+2023-02-26 20:55:25,683 INFO     =====================
+2023-02-26 20:55:25,683 INFO     # observations : 110268
+2023-02-26 20:55:25,755 INFO     # cell-lines   : 856
+2023-02-26 20:55:25,825 INFO     # drugs        : 181
+2023-02-26 20:55:25,825 INFO     # genes        : 293
+2023-02-26 20:55:25,825 INFO             test_dataset :
+2023-02-26 20:55:25,825 INFO     TabTabDataset Summary
+2023-02-26 20:55:25,825 INFO     =====================
+2023-02-26 20:55:25,825 INFO     # observations : 27567
+2023-02-26 20:55:25,842 INFO     # cell-lines   : 856
+2023-02-26 20:55:25,859 INFO     # drugs        : 181
+2023-02-26 20:55:25,859 INFO     # genes        : 293
+2023-02-26 20:55:25,860 INFO         Finished creating pytorch training datasets!
+2023-02-26 20:55:25,860 INFO         Number of batches per dataset:
+2023-02-26 20:55:25,860 INFO             train : 862
+2023-02-26 20:55:25,860 INFO             test  : 216
+2023-02-26 20:55:25,860 INFO     device: cuda
+2023-02-26 20:55:25,891 INFO     Number of GPUs: 1
+2023-02-26 20:55:25,891 INFO     GPU Usage: 0
+2023-02-26 20:55:29,307 INFO     TabTab(
+  (cell_emb): Sequential(
+    (0): Linear(in_features=1172, out_features=516, bias=True)
+    (1): BatchNorm1d(516, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=516, out_features=256, bias=True)
+    (5): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=256, out_features=128, bias=True)
+    (9): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (10): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-02-26 20:55:29,307 INFO     TRAINING the model
+2023-02-26 20:55:51,078 INFO     Engine run starting with max_epochs=1.
+2023-02-26 20:55:58,814 INFO     Epoch[1] Complete. Time taken: 00:00:07.485
+2023-02-26 20:55:58,816 INFO     Engine run complete. Time taken: 00:00:07.737
+2023-02-26 20:55:58,915 INFO     =====Epoch 1
+2023-02-26 20:55:58,915 INFO     Train | MSE: 6.31272
+2023-02-26 20:55:58,916 INFO     Test  | MSE: 3.03755
+2023-02-26 20:56:20,940 INFO     Engine run starting with max_epochs=1.
+2023-02-26 20:56:28,183 INFO     Epoch[1] Complete. Time taken: 00:00:07.008
+2023-02-26 20:56:28,185 INFO     Engine run complete. Time taken: 00:00:07.244
+2023-02-26 20:56:28,301 INFO     =====Epoch 2
+2023-02-26 20:56:28,302 INFO     Train | MSE: 2.29636
+2023-02-26 20:56:28,302 INFO     Test  | MSE: 1.55480
+2023-02-26 20:56:49,242 INFO     Engine run starting with max_epochs=1.
+2023-02-26 20:56:56,867 INFO     Epoch[1] Complete. Time taken: 00:00:07.390
+2023-02-26 20:56:56,869 INFO     Engine run complete. Time taken: 00:00:07.627
+2023-02-26 20:56:56,985 INFO     =====Epoch 3
+2023-02-26 20:56:56,985 INFO     Train | MSE: 1.67512
+2023-02-26 20:56:56,986 INFO     Test  | MSE: 1.42115
+2023-02-26 20:57:18,109 INFO     Engine run starting with max_epochs=1.
+2023-02-26 20:57:25,116 INFO     Epoch[1] Complete. Time taken: 00:00:06.763
+2023-02-26 20:57:25,117 INFO     Engine run complete. Time taken: 00:00:07.007
+2023-02-26 20:57:25,231 INFO     =====Epoch 4
+2023-02-26 20:57:25,231 INFO     Train | MSE: 1.58723
+2023-02-26 20:57:25,232 INFO     Test  | MSE: 1.39828
+2023-02-26 20:57:46,331 INFO     Engine run starting with max_epochs=1.
+2023-02-26 20:57:53,701 INFO     Epoch[1] Complete. Time taken: 00:00:07.109
+2023-02-26 20:57:53,703 INFO     Engine run complete. Time taken: 00:00:07.371
+2023-02-26 20:57:53,826 INFO     =====Epoch 5
+2023-02-26 20:57:53,826 INFO     Train | MSE: 1.52527
+2023-02-26 20:57:53,826 INFO     Test  | MSE: 1.36440
+2023-02-26 20:58:15,000 INFO     Engine run starting with max_epochs=1.
+2023-02-26 20:58:22,306 INFO     Epoch[1] Complete. Time taken: 00:00:07.056
+2023-02-26 20:58:22,316 INFO     Engine run complete. Time taken: 00:00:07.315
+2023-02-26 20:58:22,418 INFO     =====Epoch 6
+2023-02-26 20:58:22,418 INFO     Train | MSE: 1.48350
+2023-02-26 20:58:22,418 INFO     Test  | MSE: 1.32520
+2023-02-26 20:58:43,673 INFO     Engine run starting with max_epochs=1.
+2023-02-26 20:58:51,213 INFO     Epoch[1] Complete. Time taken: 00:00:07.263
+2023-02-26 20:58:51,214 INFO     Engine run complete. Time taken: 00:00:07.541
+2023-02-26 20:58:51,359 INFO     =====Epoch 7
+2023-02-26 20:58:51,359 INFO     Train | MSE: 1.44577
+2023-02-26 20:58:51,359 INFO     Test  | MSE: 1.29644
+2023-02-26 20:59:13,949 INFO     Engine run starting with max_epochs=1.
+2023-02-26 20:59:21,782 INFO     Epoch[1] Complete. Time taken: 00:00:07.577
+2023-02-26 20:59:21,784 INFO     Engine run complete. Time taken: 00:00:07.834
+2023-02-26 20:59:21,904 INFO     =====Epoch 8
+2023-02-26 20:59:21,905 INFO     Train | MSE: 1.41450
+2023-02-26 20:59:21,905 INFO     Test  | MSE: 1.25712

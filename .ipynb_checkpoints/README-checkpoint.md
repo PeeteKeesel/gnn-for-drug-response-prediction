@@ -1,23 +1,27 @@
-# Graph Neural Networks for Drug Response Prediction in Cancer :dna:
+<h1 align="center">Graph Neural Networks for Drug Response Prediction in Cancer :dna:</h1>
+
+![Example One-Hop Neighbor Plot for Gene Symbol E2F2](/imgs/GraphPlotForGene_E2F2_GITHUB.png)
 
 ## :bulb: Introduction
 This repository contains the process and the final code for my master thesis "_Gene-Interaction Graph Neural Network to Predict Cancer Drug Response_".
 
 ## Table of Contents
-* [Environment Setup](#environment-setup)
-    * [Using conda](#using-conda)
-    * [Using pip](#using-pip)
-* [Download Raw Datasets](#download-raw-datasets)
-* [How to Run](#how-to-run)
-* [Contents](#contents)
-    * [Notebooks](#notebooks)
-* [Todos](#todos)
-* [Questions](#questions)
+- [:bulb: Introduction](#bulb-introduction)
+- [Table of Contents](#table-of-contents)
+- [:computer: Environment Setup ](#computer-environment-setup-)
+  - [Using conda ](#using-conda-)
+  - [Using pip ](#using-pip-)
+- [:arrow\_double\_down: Download Raw Datasets ](#arrow_double_down-download-raw-datasets-)
+- [:runner: How To Run ](#runner-how-to-run-)
+- [:books: Contents ](#books-contents-)
+  - [Notebooks ](#notebooks-)
+- [:calendar: Todos ](#calendar-todos-)
+- [:eyes: Questions ](#eyes-questions-)
 
 ## :computer: Environment Setup <a name="environment-setup"/>
 ### Using conda <a name="using-conda"/>
 To create the virtual environment via `conda` run
-```bash
+```console
 # Option 1: by using the environment.yml file (recommended).
 conda env create -n ENVNAME --file environment.yml
 
@@ -25,7 +29,7 @@ conda env create -n ENVNAME --file environment.yml
 conda create -n ENVNAME --file requirements.txt
 ```
 Now activate the environment.
-```bash
+```console
 conda activate ENVNAME
 ```
 
@@ -34,7 +38,7 @@ conda activate ENVNAME
 - [ ] This may not work yet. I have only tested the conda method yet.
 
 To create and activate the virtual environment via `pip` run
-```bash
+```console
 python3 -m venv env
 source env/bin/activate
 pip install -r requirements.txt
@@ -78,6 +82,35 @@ python3 main.py \
     num_workers=8 \
     dropout=0.1 \ 
 ```
+
+All supported arguments are listed below:
+```
+usage: 
+  main.py [--seed] [--batch_size] [--lr] [--train_ratio] [--val_ratio] [--num_epochs] 
+          [--num_workers] [--dropout] [--model] [--version] [--download] [--process] 
+          [--raw_path] [--processed_path] [--combined_score_thresh] [--gdsc]
+
+optional arguments:
+  --seed                    the random seed (for reproducibility)
+  --batch_size              the size of each batch
+  --lr                      learning rate
+  --train_ratio             train set ratio
+  --val_ratio               validation set ratio. (1-val_ratio) will be the test set ratio
+  --num_epochs              number of epochs
+  --num_workers             number of workers for DataLoader
+  --dropout                 dropout probability
+  --model                   name of the model to use
+  --version                 model version to use
+  --download                if enabled, the raw data will be download and saved in the 
+                            raw path
+  --process                 if enabled, the data in the raw path will be processed and 
+                            saved in the processed path
+  --raw_path                path to the raw datasets
+  --processed_path          path to the processed datasets
+  --combined_score_thresh   threshold below which to cut off the gene-gene interactions
+  --gdsc                    the type of GDSC database to use for training
+```
+
 
 | Argument | Default | Options | Description | Notes |
 | --------: | :------- | ------- | ----------- | ----- | 

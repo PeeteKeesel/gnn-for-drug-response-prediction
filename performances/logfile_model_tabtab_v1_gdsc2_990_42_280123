@@ -1,0 +1,494 @@
+2023-01-29 00:38:36,043 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-29 00:38:36,050 INFO     DRM Number of unique cell-lines: 856
+2023-01-29 00:38:36,081 INFO     Finished reading cell-line gene matrix: (856, 1173)
+2023-01-29 00:38:36,084 INFO     Finished reading drug SMILES matrix: (181, 257)
+2023-01-29 00:38:36,086 INFO     Finished building TabTabDataset!
+2023-01-29 00:38:36,086 INFO     TabTabDataset Summary
+2023-01-29 00:38:36,086 INFO     =====================
+2023-01-29 00:38:36,086 INFO     # observations : 137835
+2023-01-29 00:38:36,166 INFO     # cell-lines   : 856
+2023-01-29 00:38:36,229 INFO     # drugs        : 181
+2023-01-29 00:38:36,230 INFO     # genes        : 293
+2023-01-29 00:38:36,230 INFO     HyperParameters
+2023-01-29 00:38:36,230 INFO     ===============
+2023-01-29 00:38:36,230 INFO     batch_size: 64
+2023-01-29 00:38:36,230 INFO     learning_rate: 0.0001
+2023-01-29 00:38:36,230 INFO     weight_decay: 0.0001
+2023-01-29 00:38:36,230 INFO     train_ratio: 0.8
+2023-01-29 00:38:36,230 INFO     val_ratio: 0.5
+2023-01-29 00:38:36,230 INFO     test_ratio: 0.5
+2023-01-29 00:38:36,230 INFO     num_epochs: 150
+2023-01-29 00:38:36,230 INFO     num_workers: 8
+2023-01-29 00:38:36,230 INFO     random_seed: 42
+2023-01-29 00:38:36,230 INFO     None
+2023-01-29 00:38:36,419 INFO     train_set.shape: (110268, 9)
+2023-01-29 00:38:36,419 INFO     test_set.shape: (13783, 9)
+2023-01-29 00:38:36,420 INFO     val_set.shape: (13784, 9)
+2023-01-29 00:38:36,420 INFO     train_dataset
+2023-01-29 00:38:36,420 INFO     TabTabDataset Summary
+2023-01-29 00:38:36,420 INFO     =====================
+2023-01-29 00:38:36,420 INFO     # observations : 110268
+2023-01-29 00:38:36,482 INFO     # cell-lines   : 856
+2023-01-29 00:38:36,541 INFO     # drugs        : 181
+2023-01-29 00:38:36,541 INFO     # genes        : 293
+2023-01-29 00:38:36,541 INFO     test_dataset
+2023-01-29 00:38:36,542 INFO     TabTabDataset Summary
+2023-01-29 00:38:36,542 INFO     =====================
+2023-01-29 00:38:36,542 INFO     # observations : 13783
+2023-01-29 00:38:36,549 INFO     # cell-lines   : 856
+2023-01-29 00:38:36,556 INFO     # drugs        : 181
+2023-01-29 00:38:36,556 INFO     # genes        : 293
+2023-01-29 00:38:36,556 INFO     val_dataset
+2023-01-29 00:38:36,556 INFO     TabTabDataset Summary
+2023-01-29 00:38:36,556 INFO     =====================
+2023-01-29 00:38:36,556 INFO     # observations : 13784
+2023-01-29 00:38:36,564 INFO     # cell-lines   : 856
+2023-01-29 00:38:36,570 INFO     # drugs        : 181
+2023-01-29 00:38:36,571 INFO     # genes        : 293
+2023-01-29 00:38:36,571 INFO     Finished creating pytorch training datasets!
+2023-01-29 00:38:36,571 INFO     Number of batches per dataset:
+2023-01-29 00:38:36,571 INFO       train : 1723
+2023-01-29 00:38:36,572 INFO       test  : 216
+2023-01-29 00:38:36,572 INFO       val   : 216
+2023-01-29 00:38:36,572 INFO     device: cpu
+2023-01-29 00:38:36,582 INFO     TabTab_v1(
+  (cell_emb): Sequential(
+    (0): Linear(in_features=1172, out_features=516, bias=True)
+    (1): BatchNorm1d(516, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=516, out_features=256, bias=True)
+    (5): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=256, out_features=128, bias=True)
+    (9): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (10): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-01-29 00:38:36,582 INFO     TRAINING the model
+2023-01-29 00:39:16,673 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:39:19,427 INFO     Epoch[1] Complete. Time taken: 00:00:02.581
+2023-01-29 00:39:19,427 INFO     Engine run complete. Time taken: 00:00:02.754
+2023-01-29 00:39:19,480 INFO     =====Epoch 1
+2023-01-29 00:39:19,480 INFO     Train      | MSE: 4.70781
+2023-01-29 00:39:19,480 INFO     Validation | MSE: 1.61900
+2023-01-29 00:39:59,800 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:40:02,810 INFO     Epoch[1] Complete. Time taken: 00:00:02.796
+2023-01-29 00:40:02,811 INFO     Engine run complete. Time taken: 00:00:03.010
+2023-01-29 00:40:02,886 INFO     =====Epoch 2
+2023-01-29 00:40:02,886 INFO     Train      | MSE: 1.80301
+2023-01-29 00:40:02,886 INFO     Validation | MSE: 1.43442
+2023-01-29 00:40:52,566 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:40:55,743 INFO     Epoch[1] Complete. Time taken: 00:00:02.910
+2023-01-29 00:40:55,743 INFO     Engine run complete. Time taken: 00:00:03.177
+2023-01-29 00:40:55,872 INFO     =====Epoch 3
+2023-01-29 00:40:55,872 INFO     Train      | MSE: 1.66526
+2023-01-29 00:40:55,872 INFO     Validation | MSE: 1.41229
+2023-01-29 00:41:38,866 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:41:41,831 INFO     Epoch[1] Complete. Time taken: 00:00:02.610
+2023-01-29 00:41:41,831 INFO     Engine run complete. Time taken: 00:00:02.965
+2023-01-29 00:41:41,966 INFO     =====Epoch 4
+2023-01-29 00:41:41,966 INFO     Train      | MSE: 1.59591
+2023-01-29 00:41:41,966 INFO     Validation | MSE: 1.34735
+2023-01-29 00:42:25,132 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:42:28,277 INFO     Epoch[1] Complete. Time taken: 00:00:02.739
+2023-01-29 00:42:28,277 INFO     Engine run complete. Time taken: 00:00:03.145
+2023-01-29 00:42:28,451 INFO     =====Epoch 5
+2023-01-29 00:42:28,451 INFO     Train      | MSE: 1.54216
+2023-01-29 00:42:28,452 INFO     Validation | MSE: 1.31146
+2023-01-29 00:43:12,805 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:43:16,291 INFO     Epoch[1] Complete. Time taken: 00:00:03.025
+2023-01-29 00:43:16,292 INFO     Engine run complete. Time taken: 00:00:03.486
+2023-01-29 00:43:16,504 INFO     =====Epoch 6
+2023-01-29 00:43:16,504 INFO     Train      | MSE: 1.49912
+2023-01-29 00:43:16,504 INFO     Validation | MSE: 1.27996
+2023-01-29 00:44:08,112 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:44:11,411 INFO     Epoch[1] Complete. Time taken: 00:00:02.775
+2023-01-29 00:44:11,412 INFO     Engine run complete. Time taken: 00:00:03.299
+2023-01-29 00:44:11,637 INFO     =====Epoch 7
+2023-01-29 00:44:11,637 INFO     Train      | MSE: 1.46135
+2023-01-29 00:44:11,637 INFO     Validation | MSE: 1.27750
+2023-01-29 00:44:56,779 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:45:00,076 INFO     Epoch[1] Complete. Time taken: 00:00:02.693
+2023-01-29 00:45:00,076 INFO     Engine run complete. Time taken: 00:00:03.297
+2023-01-29 00:45:00,331 INFO     =====Epoch 8
+2023-01-29 00:45:00,331 INFO     Train      | MSE: 1.42213
+2023-01-29 00:45:00,331 INFO     Validation | MSE: 1.22841
+2023-01-29 00:45:46,175 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:45:49,752 INFO     Epoch[1] Complete. Time taken: 00:00:02.894
+2023-01-29 00:45:49,752 INFO     Engine run complete. Time taken: 00:00:03.576
+2023-01-29 00:45:50,024 INFO     =====Epoch 9
+2023-01-29 00:45:50,024 INFO     Train      | MSE: 1.40447
+2023-01-29 00:45:50,024 INFO     Validation | MSE: 1.22466
+2023-01-29 00:46:44,517 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:46:48,224 INFO     Epoch[1] Complete. Time taken: 00:00:02.977
+2023-01-29 00:46:48,225 INFO     Engine run complete. Time taken: 00:00:03.707
+2023-01-29 00:46:48,503 INFO     =====Epoch 10
+2023-01-29 00:46:48,503 INFO     Train      | MSE: 1.37177
+2023-01-29 00:46:48,503 INFO     Validation | MSE: 1.19078
+2023-01-29 00:47:34,536 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:47:38,108 INFO     Epoch[1] Complete. Time taken: 00:00:02.786
+2023-01-29 00:47:38,108 INFO     Engine run complete. Time taken: 00:00:03.571
+2023-01-29 00:47:38,416 INFO     =====Epoch 11
+2023-01-29 00:47:38,416 INFO     Train      | MSE: 1.34702
+2023-01-29 00:47:38,417 INFO     Validation | MSE: 1.16648
+2023-01-29 00:48:24,950 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:48:28,597 INFO     Epoch[1] Complete. Time taken: 00:00:02.792
+2023-01-29 00:48:28,597 INFO     Engine run complete. Time taken: 00:00:03.647
+2023-01-29 00:48:28,909 INFO     =====Epoch 12
+2023-01-29 00:48:28,909 INFO     Train      | MSE: 1.32984
+2023-01-29 00:48:28,909 INFO     Validation | MSE: 1.16355
+2023-01-29 00:49:15,906 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:49:20,429 INFO     Epoch[1] Complete. Time taken: 00:00:03.576
+2023-01-29 00:49:20,429 INFO     Engine run complete. Time taken: 00:00:04.522
+2023-01-29 00:49:20,794 INFO     =====Epoch 13
+2023-01-29 00:49:20,794 INFO     Train      | MSE: 1.31430
+2023-01-29 00:49:20,794 INFO     Validation | MSE: 1.16698
+2023-01-29 00:50:09,534 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:50:13,554 INFO     Epoch[1] Complete. Time taken: 00:00:03.027
+2023-01-29 00:50:13,555 INFO     Engine run complete. Time taken: 00:00:04.020
+2023-01-29 00:50:13,896 INFO     =====Epoch 14
+2023-01-29 00:50:13,896 INFO     Train      | MSE: 1.29661
+2023-01-29 00:50:13,896 INFO     Validation | MSE: 1.12642
+2023-01-29 00:51:00,167 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:51:04,116 INFO     Epoch[1] Complete. Time taken: 00:00:02.874
+2023-01-29 00:51:04,116 INFO     Engine run complete. Time taken: 00:00:03.949
+2023-01-29 00:51:04,491 INFO     =====Epoch 15
+2023-01-29 00:51:04,492 INFO     Train      | MSE: 1.27641
+2023-01-29 00:51:04,492 INFO     Validation | MSE: 1.12400
+2023-01-29 00:51:51,245 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:51:55,594 INFO     Epoch[1] Complete. Time taken: 00:00:03.211
+2023-01-29 00:51:55,595 INFO     Engine run complete. Time taken: 00:00:04.349
+2023-01-29 00:51:56,003 INFO     =====Epoch 16
+2023-01-29 00:51:56,003 INFO     Train      | MSE: 1.26791
+2023-01-29 00:51:56,003 INFO     Validation | MSE: 1.09671
+2023-01-29 00:52:50,925 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:52:54,967 INFO     Epoch[1] Complete. Time taken: 00:00:02.850
+2023-01-29 00:52:54,967 INFO     Engine run complete. Time taken: 00:00:04.041
+2023-01-29 00:52:55,370 INFO     =====Epoch 17
+2023-01-29 00:52:55,371 INFO     Train      | MSE: 1.24732
+2023-01-29 00:52:55,371 INFO     Validation | MSE: 1.08934
+2023-01-29 00:53:41,652 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:53:45,639 INFO     Epoch[1] Complete. Time taken: 00:00:02.756
+2023-01-29 00:53:45,640 INFO     Engine run complete. Time taken: 00:00:03.987
+2023-01-29 00:53:46,057 INFO     =====Epoch 18
+2023-01-29 00:53:46,057 INFO     Train      | MSE: 1.23331
+2023-01-29 00:53:46,057 INFO     Validation | MSE: 1.09538
+2023-01-29 00:54:31,356 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:54:35,317 INFO     Epoch[1] Complete. Time taken: 00:00:02.651
+2023-01-29 00:54:35,317 INFO     Engine run complete. Time taken: 00:00:03.960
+2023-01-29 00:54:35,730 INFO     =====Epoch 19
+2023-01-29 00:54:35,730 INFO     Train      | MSE: 1.21517
+2023-01-29 00:54:35,730 INFO     Validation | MSE: 1.08062
+2023-01-29 00:55:31,492 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:55:36,210 INFO     Epoch[1] Complete. Time taken: 00:00:03.322
+2023-01-29 00:55:36,211 INFO     Engine run complete. Time taken: 00:00:04.717
+2023-01-29 00:55:36,690 INFO     =====Epoch 20
+2023-01-29 00:55:36,690 INFO     Train      | MSE: 1.21391
+2023-01-29 00:55:36,690 INFO     Validation | MSE: 1.06807
+2023-01-29 00:56:23,646 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:56:28,047 INFO     Epoch[1] Complete. Time taken: 00:00:02.934
+2023-01-29 00:56:28,048 INFO     Engine run complete. Time taken: 00:00:04.401
+2023-01-29 00:56:28,515 INFO     =====Epoch 21
+2023-01-29 00:56:28,515 INFO     Train      | MSE: 1.20205
+2023-01-29 00:56:28,515 INFO     Validation | MSE: 1.06351
+2023-01-29 00:57:15,288 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:57:19,531 INFO     Epoch[1] Complete. Time taken: 00:00:02.732
+2023-01-29 00:57:19,532 INFO     Engine run complete. Time taken: 00:00:04.243
+2023-01-29 00:57:19,998 INFO     =====Epoch 22
+2023-01-29 00:57:19,998 INFO     Train      | MSE: 1.19298
+2023-01-29 00:57:19,998 INFO     Validation | MSE: 1.04093
+2023-01-29 00:58:07,017 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:58:11,424 INFO     Epoch[1] Complete. Time taken: 00:00:02.826
+2023-01-29 00:58:11,424 INFO     Engine run complete. Time taken: 00:00:04.406
+2023-01-29 00:58:11,962 INFO     =====Epoch 23
+2023-01-29 00:58:11,962 INFO     Train      | MSE: 1.17843
+2023-01-29 00:58:11,962 INFO     Validation | MSE: 1.04113
+2023-01-29 00:59:05,912 INFO     Engine run starting with max_epochs=1.
+2023-01-29 00:59:10,588 INFO     Epoch[1] Complete. Time taken: 00:00:02.993
+2023-01-29 00:59:10,589 INFO     Engine run complete. Time taken: 00:00:04.676
+2023-01-29 00:59:11,127 INFO     =====Epoch 24
+2023-01-29 00:59:11,127 INFO     Train      | MSE: 1.17198
+2023-01-29 00:59:11,128 INFO     Validation | MSE: 1.03315
+2023-01-29 00:59:59,556 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:00:04,862 INFO     Epoch[1] Complete. Time taken: 00:00:03.513
+2023-01-29 01:00:04,863 INFO     Engine run complete. Time taken: 00:00:05.306
+2023-01-29 01:00:05,454 INFO     =====Epoch 25
+2023-01-29 01:00:05,454 INFO     Train      | MSE: 1.16564
+2023-01-29 01:00:05,454 INFO     Validation | MSE: 1.03878
+2023-01-29 01:00:55,847 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:01:00,646 INFO     Epoch[1] Complete. Time taken: 00:00:02.944
+2023-01-29 01:01:00,646 INFO     Engine run complete. Time taken: 00:00:04.799
+2023-01-29 01:01:01,217 INFO     =====Epoch 26
+2023-01-29 01:01:01,217 INFO     Train      | MSE: 1.14799
+2023-01-29 01:01:01,218 INFO     Validation | MSE: 1.02068
+2023-01-29 01:01:56,831 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:01:56,834 ERROR    Engine run is terminating due to exception: [Errno 12] Cannot allocate memory
+2023-01-29 01:22:51,552 INFO     Finished reading drug response matrix: (137835, 9)
+2023-01-29 01:22:51,559 INFO     DRM Number of unique cell-lines: 856
+2023-01-29 01:22:51,563 INFO     Finished reading cell-line gene matrix: (856, 1173)
+2023-01-29 01:22:51,564 INFO     Finished reading drug SMILES matrix: (181, 257)
+2023-01-29 01:22:51,566 INFO     Finished building TabTabDataset!
+2023-01-29 01:22:51,566 INFO     TabTabDataset Summary
+2023-01-29 01:22:51,566 INFO     =====================
+2023-01-29 01:22:51,566 INFO     # observations : 137835
+2023-01-29 01:22:51,646 INFO     # cell-lines   : 856
+2023-01-29 01:22:51,709 INFO     # drugs        : 181
+2023-01-29 01:22:51,710 INFO     # genes        : 293
+2023-01-29 01:22:51,710 INFO     HyperParameters
+2023-01-29 01:22:51,710 INFO     ===============
+2023-01-29 01:22:51,710 INFO     batch_size: 64
+2023-01-29 01:22:51,710 INFO     learning_rate: 0.0001
+2023-01-29 01:22:51,710 INFO     weight_decay: 0.0001
+2023-01-29 01:22:51,710 INFO     train_ratio: 0.8
+2023-01-29 01:22:51,710 INFO     val_ratio: 0.5
+2023-01-29 01:22:51,710 INFO     test_ratio: 0.5
+2023-01-29 01:22:51,710 INFO     num_epochs: 150
+2023-01-29 01:22:51,710 INFO     num_workers: 8
+2023-01-29 01:22:51,710 INFO     random_seed: 42
+2023-01-29 01:22:51,710 INFO     None
+2023-01-29 01:22:51,897 INFO     train_set.shape: (110268, 9)
+2023-01-29 01:22:51,898 INFO     test_set.shape: (13783, 9)
+2023-01-29 01:22:51,898 INFO     val_set.shape: (13784, 9)
+2023-01-29 01:22:51,898 INFO     train_dataset
+2023-01-29 01:22:51,898 INFO     TabTabDataset Summary
+2023-01-29 01:22:51,898 INFO     =====================
+2023-01-29 01:22:51,898 INFO     # observations : 110268
+2023-01-29 01:22:51,961 INFO     # cell-lines   : 856
+2023-01-29 01:22:52,020 INFO     # drugs        : 181
+2023-01-29 01:22:52,020 INFO     # genes        : 293
+2023-01-29 01:22:52,020 INFO     test_dataset
+2023-01-29 01:22:52,020 INFO     TabTabDataset Summary
+2023-01-29 01:22:52,020 INFO     =====================
+2023-01-29 01:22:52,020 INFO     # observations : 13783
+2023-01-29 01:22:52,028 INFO     # cell-lines   : 856
+2023-01-29 01:22:52,035 INFO     # drugs        : 181
+2023-01-29 01:22:52,035 INFO     # genes        : 293
+2023-01-29 01:22:52,035 INFO     val_dataset
+2023-01-29 01:22:52,035 INFO     TabTabDataset Summary
+2023-01-29 01:22:52,035 INFO     =====================
+2023-01-29 01:22:52,035 INFO     # observations : 13784
+2023-01-29 01:22:52,042 INFO     # cell-lines   : 856
+2023-01-29 01:22:52,049 INFO     # drugs        : 181
+2023-01-29 01:22:52,049 INFO     # genes        : 293
+2023-01-29 01:22:52,050 INFO     Finished creating pytorch training datasets!
+2023-01-29 01:22:52,050 INFO     Number of batches per dataset:
+2023-01-29 01:22:52,050 INFO       train : 1723
+2023-01-29 01:22:52,050 INFO       test  : 216
+2023-01-29 01:22:52,050 INFO       val   : 216
+2023-01-29 01:22:52,050 INFO     device: cpu
+2023-01-29 01:22:52,061 INFO     TabTab_v1(
+  (cell_emb): Sequential(
+    (0): Linear(in_features=1172, out_features=516, bias=True)
+    (1): BatchNorm1d(516, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=516, out_features=256, bias=True)
+    (5): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=256, out_features=128, bias=True)
+    (9): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (10): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-01-29 01:22:52,061 INFO     TRAINING the model
+2023-01-29 01:23:32,868 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:23:35,635 INFO     Epoch[1] Complete. Time taken: 00:00:02.569
+2023-01-29 01:23:35,636 INFO     Engine run complete. Time taken: 00:00:02.768
+2023-01-29 01:23:35,696 INFO     =====Epoch 1
+2023-01-29 01:23:35,696 INFO     Train      | MSE: 4.70781
+2023-01-29 01:23:35,696 INFO     Validation | MSE: 1.61900
+2023-01-29 01:24:16,715 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:24:19,601 INFO     Epoch[1] Complete. Time taken: 00:00:02.688
+2023-01-29 01:24:19,601 INFO     Engine run complete. Time taken: 00:00:02.886
+2023-01-29 01:24:19,679 INFO     =====Epoch 2
+2023-01-29 01:24:19,679 INFO     Train      | MSE: 1.80301
+2023-01-29 01:24:19,679 INFO     Validation | MSE: 1.43442
+2023-01-29 01:25:01,234 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:25:04,603 INFO     Epoch[1] Complete. Time taken: 00:00:03.080
+2023-01-29 01:25:04,603 INFO     Engine run complete. Time taken: 00:00:03.369
+2023-01-29 01:25:04,739 INFO     =====Epoch 3
+2023-01-29 01:25:04,739 INFO     Train      | MSE: 1.66526
+2023-01-29 01:25:04,740 INFO     Validation | MSE: 1.41229
+2023-01-29 01:25:57,730 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:26:00,871 INFO     Epoch[1] Complete. Time taken: 00:00:02.799
+2023-01-29 01:26:00,872 INFO     Engine run complete. Time taken: 00:00:03.141
+2023-01-29 01:26:01,037 INFO     =====Epoch 4
+2023-01-29 01:26:01,037 INFO     Train      | MSE: 1.59591
+2023-01-29 01:26:01,037 INFO     Validation | MSE: 1.34735
+2023-01-29 01:26:45,009 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:26:48,150 INFO     Epoch[1] Complete. Time taken: 00:00:02.747
+2023-01-29 01:26:48,151 INFO     Engine run complete. Time taken: 00:00:03.141
+2023-01-29 01:26:48,315 INFO     =====Epoch 5
+2023-01-29 01:26:48,315 INFO     Train      | MSE: 1.54216
+2023-01-29 01:26:48,315 INFO     Validation | MSE: 1.31146
+2023-01-29 01:27:32,591 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:27:36,121 INFO     Epoch[1] Complete. Time taken: 00:00:03.063
+2023-01-29 01:27:36,122 INFO     Engine run complete. Time taken: 00:00:03.530
+2023-01-29 01:27:36,332 INFO     =====Epoch 6
+2023-01-29 01:27:36,332 INFO     Train      | MSE: 1.49912
+2023-01-29 01:27:36,332 INFO     Validation | MSE: 1.27996
+2023-01-29 01:28:30,260 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:28:34,011 INFO     Epoch[1] Complete. Time taken: 00:00:03.201
+2023-01-29 01:28:34,011 INFO     Engine run complete. Time taken: 00:00:03.751
+2023-01-29 01:28:34,233 INFO     =====Epoch 7
+2023-01-29 01:28:34,234 INFO     Train      | MSE: 1.46135
+2023-01-29 01:28:34,234 INFO     Validation | MSE: 1.27750
+2023-01-29 01:29:19,579 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:29:22,922 INFO     Epoch[1] Complete. Time taken: 00:00:02.723
+2023-01-29 01:29:22,923 INFO     Engine run complete. Time taken: 00:00:03.343
+2023-01-29 01:29:23,154 INFO     =====Epoch 8
+2023-01-29 01:29:23,154 INFO     Train      | MSE: 1.42213
+2023-01-29 01:29:23,154 INFO     Validation | MSE: 1.22841
+2023-01-29 01:30:08,337 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:30:11,808 INFO     Epoch[1] Complete. Time taken: 00:00:02.800
+2023-01-29 01:30:11,809 INFO     Engine run complete. Time taken: 00:00:03.471
+2023-01-29 01:30:12,097 INFO     =====Epoch 9
+2023-01-29 01:30:12,097 INFO     Train      | MSE: 1.40447
+2023-01-29 01:30:12,097 INFO     Validation | MSE: 1.22466
+2023-01-29 01:30:58,848 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:31:02,696 INFO     Epoch[1] Complete. Time taken: 00:00:03.115
+2023-01-29 01:31:02,696 INFO     Engine run complete. Time taken: 00:00:03.847
+2023-01-29 01:31:02,948 INFO     =====Epoch 10
+2023-01-29 01:31:02,948 INFO     Train      | MSE: 1.37177
+2023-01-29 01:31:02,948 INFO     Validation | MSE: 1.19078
+2023-01-29 01:31:57,804 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:32:01,706 INFO     Epoch[1] Complete. Time taken: 00:00:03.111
+2023-01-29 01:32:01,707 INFO     Engine run complete. Time taken: 00:00:03.902
+2023-01-29 01:32:02,035 INFO     =====Epoch 11
+2023-01-29 01:32:02,036 INFO     Train      | MSE: 1.34702
+2023-01-29 01:32:02,036 INFO     Validation | MSE: 1.16648
+2023-01-29 01:32:48,971 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:32:53,388 INFO     Epoch[1] Complete. Time taken: 00:00:03.507
+2023-01-29 01:32:53,388 INFO     Engine run complete. Time taken: 00:00:04.417
+2023-01-29 01:32:53,683 INFO     =====Epoch 12
+2023-01-29 01:32:53,684 INFO     Train      | MSE: 1.32984
+2023-01-29 01:32:53,684 INFO     Validation | MSE: 1.16355
+2023-01-29 01:33:40,719 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:33:44,915 INFO     Epoch[1] Complete. Time taken: 00:00:03.249
+2023-01-29 01:33:44,915 INFO     Engine run complete. Time taken: 00:00:04.195
+2023-01-29 01:33:45,256 INFO     =====Epoch 13
+2023-01-29 01:33:45,256 INFO     Train      | MSE: 1.31430
+2023-01-29 01:33:45,256 INFO     Validation | MSE: 1.16698
+2023-01-29 01:34:41,626 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:34:45,973 INFO     Epoch[1] Complete. Time taken: 00:00:03.343
+2023-01-29 01:34:45,973 INFO     Engine run complete. Time taken: 00:00:04.346
+2023-01-29 01:34:46,324 INFO     =====Epoch 14
+2023-01-29 01:34:46,324 INFO     Train      | MSE: 1.29661
+2023-01-29 01:34:46,325 INFO     Validation | MSE: 1.12642
+2023-01-29 01:35:33,131 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:35:37,008 INFO     Epoch[1] Complete. Time taken: 00:00:02.775
+2023-01-29 01:35:37,009 INFO     Engine run complete. Time taken: 00:00:03.877
+2023-01-29 01:35:37,392 INFO     =====Epoch 15
+2023-01-29 01:35:37,392 INFO     Train      | MSE: 1.27641
+2023-01-29 01:35:37,392 INFO     Validation | MSE: 1.12400
+2023-01-29 01:36:24,753 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:36:29,190 INFO     Epoch[1] Complete. Time taken: 00:00:03.296
+2023-01-29 01:36:29,191 INFO     Engine run complete. Time taken: 00:00:04.436
+2023-01-29 01:36:29,582 INFO     =====Epoch 16
+2023-01-29 01:36:29,582 INFO     Train      | MSE: 1.26791
+2023-01-29 01:36:29,582 INFO     Validation | MSE: 1.09671
+2023-01-29 01:37:16,658 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:37:21,437 INFO     Epoch[1] Complete. Time taken: 00:00:03.483
+2023-01-29 01:37:21,438 INFO     Engine run complete. Time taken: 00:00:04.778
+2023-01-29 01:37:21,916 INFO     =====Epoch 17
+2023-01-29 01:37:21,917 INFO     Train      | MSE: 1.24732
+2023-01-29 01:37:21,917 INFO     Validation | MSE: 1.08934
+2023-01-29 01:38:10,220 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:38:14,321 INFO     Epoch[1] Complete. Time taken: 00:00:02.805
+2023-01-29 01:38:14,322 INFO     Engine run complete. Time taken: 00:00:04.101
+2023-01-29 01:38:14,762 INFO     =====Epoch 18
+2023-01-29 01:38:14,763 INFO     Train      | MSE: 1.23331
+2023-01-29 01:38:14,763 INFO     Validation | MSE: 1.09538
+2023-01-29 01:39:01,580 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:39:06,016 INFO     Epoch[1] Complete. Time taken: 00:00:03.075
+2023-01-29 01:39:06,016 INFO     Engine run complete. Time taken: 00:00:04.435
+2023-01-29 01:39:06,466 INFO     =====Epoch 19
+2023-01-29 01:39:06,466 INFO     Train      | MSE: 1.21517
+2023-01-29 01:39:06,466 INFO     Validation | MSE: 1.08062
+2023-01-29 01:39:53,837 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:39:58,627 INFO     Epoch[1] Complete. Time taken: 00:00:03.405
+2023-01-29 01:39:58,627 INFO     Engine run complete. Time taken: 00:00:04.789
+2023-01-29 01:39:59,092 INFO     =====Epoch 20
+2023-01-29 01:39:59,092 INFO     Train      | MSE: 1.21391
+2023-01-29 01:39:59,093 INFO     Validation | MSE: 1.06807
+2023-01-29 01:40:55,282 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:40:59,831 INFO     Epoch[1] Complete. Time taken: 00:00:03.089
+2023-01-29 01:40:59,831 INFO     Engine run complete. Time taken: 00:00:04.548
+2023-01-29 01:41:00,303 INFO     =====Epoch 21
+2023-01-29 01:41:00,303 INFO     Train      | MSE: 1.20205
+2023-01-29 01:41:00,304 INFO     Validation | MSE: 1.06351
+2023-01-29 01:41:47,833 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:41:52,290 INFO     Epoch[1] Complete. Time taken: 00:00:02.921
+2023-01-29 01:41:52,290 INFO     Engine run complete. Time taken: 00:00:04.456
+2023-01-29 01:41:52,800 INFO     =====Epoch 22
+2023-01-29 01:41:52,800 INFO     Train      | MSE: 1.19298
+2023-01-29 01:41:52,800 INFO     Validation | MSE: 1.04093
+2023-01-29 01:42:40,602 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:42:45,652 INFO     Epoch[1] Complete. Time taken: 00:00:03.434
+2023-01-29 01:42:45,652 INFO     Engine run complete. Time taken: 00:00:05.050
+2023-01-29 01:42:46,160 INFO     =====Epoch 23
+2023-01-29 01:42:46,160 INFO     Train      | MSE: 1.17843
+2023-01-29 01:42:46,160 INFO     Validation | MSE: 1.04113
+2023-01-29 01:43:43,015 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:43:47,794 INFO     Epoch[1] Complete. Time taken: 00:00:03.092
+2023-01-29 01:43:47,794 INFO     Engine run complete. Time taken: 00:00:04.779
+2023-01-29 01:43:48,325 INFO     =====Epoch 24
+2023-01-29 01:43:48,325 INFO     Train      | MSE: 1.17198
+2023-01-29 01:43:48,325 INFO     Validation | MSE: 1.03315
+2023-01-29 01:44:36,019 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:44:41,045 INFO     Epoch[1] Complete. Time taken: 00:00:03.289
+2023-01-29 01:44:41,046 INFO     Engine run complete. Time taken: 00:00:05.026
+2023-01-29 01:44:41,614 INFO     =====Epoch 25
+2023-01-29 01:44:41,614 INFO     Train      | MSE: 1.16564
+2023-01-29 01:44:41,614 INFO     Validation | MSE: 1.03878
+2023-01-29 01:45:29,287 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:45:33,965 INFO     Epoch[1] Complete. Time taken: 00:00:02.901
+2023-01-29 01:45:33,966 INFO     Engine run complete. Time taken: 00:00:04.678
+2023-01-29 01:45:34,564 INFO     =====Epoch 26
+2023-01-29 01:45:34,564 INFO     Train      | MSE: 1.14799
+2023-01-29 01:45:34,565 INFO     Validation | MSE: 1.02068
+2023-01-29 01:46:33,866 INFO     Engine run starting with max_epochs=1.
+2023-01-29 01:46:34,334 ERROR    Engine run is terminating due to exception: [Errno 12] Cannot allocate memory

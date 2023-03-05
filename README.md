@@ -91,7 +91,7 @@ usage:
           [--raw_path] [--processed_path] [--combined_score_thresh] [--gdsc]
 
 optional arguments:
-  --seed                    the random seed (for reproducible sampling)
+  --seed                    the random seed (for reproducibility)
   --batch_size              the size of each batch
   --lr                      learning rate
   --train_ratio             train set ratio

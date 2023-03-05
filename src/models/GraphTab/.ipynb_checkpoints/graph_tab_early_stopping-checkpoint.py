@@ -14,6 +14,7 @@ from sklearn.metrics         import r2_score, mean_absolute_error
 from scipy.stats             import pearsonr, spearmanr
 from ignite.engine           import Engine, Events
 from ignite.handlers         import EarlyStopping
+from functools               import partial
 
 
 torch.multiprocessing.set_sharing_strategy('file_system')
@@ -65,7 +66,47 @@ class GraphTabDataset(Dataset):
         logging.info(f"# drugs        : {len(np.unique(self.drug_names))}")
         logging.info(f"# genes        : {self.cell_line_graphs[next(iter(self.cell_line_graphs))].x.shape[0]}")
 
-
+def create_gt_loaders(
+        drm_train,
+        drm_test,
+        cl_graphs,
+        drug_mat,
+        args
+    ):
+    """Create train and test pytorch.DataLoaders for outer k-fold cross validation."""
+    logging.info(f"{8*' '}train shape: {drm_train.shape}")   
+    logging.info(f"{8*' '}test  shape: {drm_test.shape}")
+    
+    train_dataset = GraphTabDataset(
+        cl_graphs=cl_graphs,
+        drugs=drug_mat,
+        drug_response_matrix=drm_train
+    )
+    test_dataset = GraphTabDataset(
+        cl_graphs=cl_graphs,
+        drugs=drug_mat,
+        drug_response_matrix=drm_test
+    )
+    
+    logging.info(f"{8*' '}train_dataset:"); train_dataset.print_dataset_summary()   
+    logging.info(f"{8*' '}test_dataset :"); test_dataset.print_dataset_summary()
+    
+    train_loader = PyG_DataLoader(
+        dataset=train_dataset, 
+        batch_size=int(args.batch_size), 
+        shuffle=True, 
+        num_workers=args.num_workers
+    )
+    test_loader = PyG_DataLoader(
+        dataset=test_dataset, 
+        batch_size=int(args.batch_size), 
+        shuffle=True, 
+        num_workers=args.num_workers
+    )
+    
+    return train_loader, test_loader
+    
+    
 def create_graph_tab_datasets(drm, cl_graphs, drug_mat, args):
     logging.info(f"Full     shape: {drm.shape}")
     train_set, test_val_set = train_test_split(drm, 
@@ -102,14 +143,14 @@ def create_graph_tab_datasets(drm, cl_graphs, drug_mat, args):
 
 class BuildGraphTabModel(Engine):
     def __init__(self, model, criterion, optimizer, num_epochs, 
-        train_loader, test_loader, val_loader, 
+        train_loader, test_loader, 
         early_stopping_threshold, device):
         self.train_losses = []
         self.test_losses = []
         self.val_losses = []
         self.train_loader = train_loader
         self.test_loader = test_loader
-        self.val_loader = val_loader
+#         self.val_loader = val_loader
         self.num_epochs = num_epochs
         self.model = model
         self.criterion = criterion
@@ -117,29 +158,39 @@ class BuildGraphTabModel(Engine):
         self.early_stopping_threshold = early_stopping_threshold
         self.device = device
         
-    def _score_function(self, engine):
-        mse = engine.state.metrics['mse']
-        return -mse
+#         self.evaluator = Engine(partial(self.validate, loader=self.test_loader))
+        
+#         super(BuildGraphTabModel, self).__init__(
+#             process_function=self.validate
+#         )        
+        
+#     def _score_function(self, engine):
+#         return -engine.state.metrics['mse']
 
     def train(self, loader): 
-        train_epoch_losses, val_epoch_losses = [], []
-        train_epoch_rmse, val_epoch_rmse = [], []
-        train_epoch_mae, val_epoch_mae = [], []
-        train_epoch_r2, val_epoch_r2 = [], []
-        train_epoch_pcc, val_epoch_pcc = [], []
-        train_epoch_scc, val_epoch_scc = [], []        
+        train_epoch_losses, test_epoch_losses = [], []
+        train_epoch_rmse, test_epoch_rmse = [], []
+        train_epoch_mae, test_epoch_mae = [], []
+        train_epoch_r2, test_epoch_r2 = [], []
+        train_epoch_pcc, test_epoch_pcc = [], []
+        train_epoch_scc, test_epoch_scc = [], []      
         train_epoch_time = []
         all_batch_losses = [] # TODO: this is just for monitoring
         n_batches = len(loader)
         
-        early_stopping = EarlyStopping(
-            patience=self.early_stopping_threshold,
-            score_function=self._score_function,
-            trainer=self
-        )
-#         early_stopping.attach(engine, 'early_stopping')
+#         # Early stopping.
+#         early_stopping = EarlyStopping(
+#             patience=self.early_stopping_threshold,
+#             score_function=self._score_function,
+#             trainer=self
+#         )
+#         self.evaluator.add_event_handler(Events.EPOCH_COMPLETED, early_stopping)
+        early_stopping_counter = 0
+        early_stopped_epoch = self.num_epochs
+        best_loss = float('inf')
 
-        self.model = self.model.float() # TODO: maybe remove
+        # Iterate through epochs.
+        self.model = self.model.float()
         for epoch in range(1, self.num_epochs+1):
             tic = time.time()
             self.model.train()
@@ -176,34 +227,46 @@ class BuildGraphTabModel(Engine):
             y_pred = torch.cat(y_pred, dim=0)
             train_mse = train_epoch_losses[-1]
             train_epoch_rmse.append(torch.sqrt(train_mse))
-            train_epoch_mae.append(mean_absolute_error(y_true.detach().cpu(), y_pred.detach().cpu()))
-            train_epoch_r2.append(r2_score(y_true.detach().cpu(), y_pred.detach().cpu()))
+            train_epoch_mae.append(mean_absolute_error(y_true.detach().cpu(), 
+                                                       y_pred.detach().cpu()))
+            train_epoch_r2.append(r2_score(y_true.detach().cpu(), 
+                                           y_pred.detach().cpu()))
             train_epoch_pcc.append(pearsonr(y_true.detach().cpu().numpy().flatten(), 
                                             y_pred.detach().cpu().numpy().flatten()))
             train_epoch_scc.append(spearmanr(y_true.detach().cpu().numpy().flatten(),
                                              y_pred.detach().cpu().numpy().flatten()))             
                      
-            mse, rmse, mae, r2, pcc, scc, _, _  = self.validate(self.val_loader)
-            val_epoch_losses.append(mse)
-            val_epoch_rmse.append(rmse)
-            val_epoch_mae.append(mae)
-            val_epoch_r2.append(r2)
-            val_epoch_pcc.append(pcc)
-            val_epoch_scc.append(scc)
+            # Validate the model.
+            mse, rmse, mae, r2, pcc, scc, _, _  = self.validate(self.test_loader)
+            test_epoch_losses.append(mse)
+            test_epoch_rmse.append(rmse)
+            test_epoch_mae.append(mae)
+            test_epoch_r2.append(r2)
+            test_epoch_pcc.append(pcc)
+            test_epoch_scc.append(scc)
             
             train_epoch_time.append(time.time() - tic)            
 
             logging.info(f"===Epoch {epoch:03.0f}===")
-            logging.info(f"Train      | MSE: {train_mse:2.5f}")
-            logging.info(f"Validation | MSE: {mse:2.5f}")
+            logging.info(f"Train | MSE: {train_mse:2.5f}")
+            logging.info(f"Test  | MSE: {mse:2.5f}")
             
-            if early_stopping.should_stop_early():
-                logging.info(f"Early stopping at epoch {epoch}!")
+            # Check early stopping criteria.
+            if mse < best_loss:
+                best_loss = mse
+                early_stopping_counter = 0 
+            else: 
+                early_stopping_counter += 1
+                
+            if early_stopping_counter >= self.early_stopping_threshold:  
+                logging.info("EarlyStopping: Stop training!")
+                logging.info(f"{4*' '}Stopped at epoch {epoch}")
+                early_stopped_epoch = epoch
                 break
             
-        # Final model performance.
-        mse_te, rmse_te, mae_te, r2_te, pcc_te, scc_te, _, _ = self.validate(self.test_loader)
-        logging.info(f"Test       | MSE: {mse_te:2.5f}")            
+#         # Final model performance.
+#         mse_te, rmse_te, mae_te, r2_te, pcc_te, scc_te, _, _ = self.validate(self.test_loader)
+#         logging.info(f"Test       | MSE: {mse_te:2.5f}")            
 
         performance_stats = {
             'train': {
@@ -212,25 +275,18 @@ class BuildGraphTabModel(Engine):
                 'mae': train_epoch_mae,
                 'r2': train_epoch_r2,
                 'pcc': train_epoch_pcc,
-                'scc': train_epoch_scc,
-                'epoch_times': train_epoch_time
-            },
-            'val': {
-                'mse': val_epoch_losses,
-                'rmse': val_epoch_rmse,
-                'mae': val_epoch_mae,
-                'r2': val_epoch_r2,
-                'pcc': val_epoch_pcc,
-                'scc': val_epoch_scc
+                'scc': train_epoch_scc,                
+                'epoch_times': train_epoch_time,
+                'early_stopped_epoch': early_stopped_epoch
             },
             'test': {
-                'mse': mse_te,
-                'rmse': rmse_te,
-                'mae': mae_te,
-                'r2': r2_te,
-                'pcc': pcc_te,
-                'scc': scc_te              
-            }             
+                'mse': test_epoch_losses,
+                'rmse': test_epoch_rmse,
+                'mae': test_epoch_mae,
+                'r2': test_epoch_r2,
+                'pcc': test_epoch_pcc,
+                'scc': test_epoch_scc                
+            }          
         }
 
         return performance_stats           
@@ -284,7 +340,7 @@ References:
     - https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html#torch_geometric.nn.sequential.Sequential
 """
 class GraphTab_v1(torch.nn.Module):
-    def __init__(self):
+    def __init__(self, dropout):
         super(GraphTab_v1, self).__init__()
 
         # Cell-line graph branch. Obtains node embeddings.
@@ -309,7 +365,7 @@ class GraphTab_v1(torch.nn.Module):
             nn.Linear(256, 128),
             nn.BatchNorm1d(128),
             nn.ReLU(),
-            nn.Dropout(p=0.1),
+            nn.Dropout(p=dropout),
             nn.Linear(128, 128),
             nn.BatchNorm1d(128),
             nn.ReLU()          
@@ -319,11 +375,11 @@ class GraphTab_v1(torch.nn.Module):
             nn.Linear(2*128, 128),
             nn.BatchNorm1d(128),
             nn.ELU(),
-            nn.Dropout(p=0.1),
+            nn.Dropout(p=dropout),
             nn.Linear(128, 64),
             nn.BatchNorm1d(64),
             nn.ELU(),
-            nn.Dropout(p=0.1),
+            nn.Dropout(p=dropout),
             nn.Linear(64, 1)
         )
 
@@ -345,33 +401,93 @@ References:
     - https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html#torch_geometric.nn.conv.GATConv
     - https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html#torch_geometric.nn.sequential.Sequential
 """
-class GraphTab_v2(torch.nn.Module):
-    def __init__(self):
-        super(GraphTab_v2, self).__init__()
+class GraphTab(torch.nn.Module):
+    def __init__(self, dropout, conv_type='GCNConv', conv_layers=2):
+        super(GraphTab, self).__init__()
 
         # Note: in_channels = number of features.
-        self.cell_emb = Sequential('x, edge_index, batch', 
-            [
-                (GATConv(in_channels=4, out_channels=256), 'x, edge_index -> x1'),
-                nn.ReLU(inplace=True),
-                nn.Dropout(p=0.1),
-                (GATConv(in_channels=256, out_channels=128), 'x1, edge_index -> x2'),
-                nn.ReLU(inplace=True),                
-                (global_max_pool, 'x2, batch -> x3'), 
-                nn.Linear(128, 128),
-                nn.BatchNorm1d(128),
-                nn.ReLU(),
-                nn.Dropout(p=0.1),
-                nn.Linear(128, 128),
-                nn.ReLU()
-            ]
-        )
+        if conv_type == 'GCNConv':
+            if conv_layers == 2:
+                self.cell_emb = Sequential('x, edge_index, batch', 
+                    [
+                        (GCNConv(in_channels=4, out_channels=256), 'x, edge_index -> x1'),
+                        nn.ReLU(inplace=True),
+                        nn.Dropout(p=dropout),
+                        (GCNConv(in_channels=256, out_channels=128), 'x1, edge_index -> x2'),
+                        nn.ReLU(inplace=True),                
+                        (global_max_pool, 'x2, batch -> x3'), 
+                        nn.Linear(128, 128),
+                        nn.BatchNorm1d(128),
+                        nn.ReLU(),
+                        nn.Dropout(p=dropout),
+                        nn.Linear(128, 128),
+                        nn.ReLU()
+                    ]
+                )
+            elif conv_layers == 3:
+                self.cell_emb = Sequential('x, edge_index, batch', 
+                    [
+                        (GCNConv(in_channels=4, out_channels=512), 'x, edge_index -> x1'),
+                        nn.ReLU(inplace=True),
+                        (GCNConv(in_channels=512, out_channels=256), 'x1, edge_index -> x2'),
+                        nn.ReLU(inplace=True),  
+                        (GCNConv(in_channels=256, out_channels=128), 'x2, edge_index -> x3'),
+                        nn.ReLU(inplace=True),                        
+                        (global_max_pool, 'x3, batch -> x4'), 
+                        nn.Linear(128, 128),
+                        nn.BatchNorm1d(128),
+                        nn.ReLU(),
+                        nn.Dropout(p=dropout),
+                        nn.Linear(128, 128),
+                        nn.ReLU()
+                    ]
+                )                
+        elif conv_type == 'GATConv':
+            if conv_layers == 2:
+                self.cell_emb = Sequential('x, edge_index, batch', 
+                    [
+                        (GATConv(in_channels=4, out_channels=256), 'x, edge_index -> x1'),
+                        nn.ReLU(inplace=True),
+                        nn.Dropout(p=dropout),
+                        (GATConv(in_channels=256, out_channels=128), 'x1, edge_index -> x2'),
+                        nn.ReLU(inplace=True),                
+                        (global_max_pool, 'x2, batch -> x3'), 
+                        nn.Linear(128, 128),
+                        nn.BatchNorm1d(128),
+                        nn.ReLU(),
+                        nn.Dropout(p=dropout),
+                        nn.Linear(128, 128),
+                        nn.ReLU()
+                    ]
+                )
+            elif conv_layers == 3:
+                self.cell_emb = Sequential('x, edge_index, batch', 
+                    [
+                        (GATConv(in_channels=4, out_channels=512), 'x, edge_index -> x1'),
+                        nn.ReLU(inplace=True),
+                        (GATConv(in_channels=512, out_channels=256), 'x1, edge_index -> x2'),
+                        nn.ReLU(inplace=True),  
+                        (GATConv(in_channels=256, out_channels=128), 'x2, edge_index -> x3'),
+                        nn.ReLU(inplace=True),                
+                        (global_max_pool, 'x3, batch -> x4'), 
+                        nn.Linear(128, 128),
+                        nn.BatchNorm1d(128),
+                        nn.ReLU(),
+                        nn.Dropout(p=dropout),
+                        nn.Linear(128, 128),
+                        nn.ReLU()
+                    ]
+                )
+        else:
+            raise ValueError(
+                f"Input conv_type `{conv_type}` has not been implemented! Choose out of [`GCNConv`, `GATConv`]"
+            )
 
         self.drug_emb = nn.Sequential(
             nn.Linear(256, 128),
             nn.BatchNorm1d(128),
             nn.ReLU(),
-            nn.Dropout(p=0.1),
+            nn.Dropout(p=dropout),
             nn.Linear(128, 128),
             nn.BatchNorm1d(128),
             nn.ReLU()          
@@ -381,11 +497,11 @@ class GraphTab_v2(torch.nn.Module):
             nn.Linear(2*128, 128),
             nn.BatchNorm1d(128),
             nn.ELU(),
-            nn.Dropout(p=0.1),
+            nn.Dropout(p=dropout),
             nn.Linear(128, 64),
             nn.BatchNorm1d(64),
             nn.ELU(),
-            nn.Dropout(p=0.1),
+            nn.Dropout(p=dropout),
             nn.Linear(64, 1)
         )
 

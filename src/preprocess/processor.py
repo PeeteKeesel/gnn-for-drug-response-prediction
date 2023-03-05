@@ -1,21 +1,24 @@
 import os        
 import shutil
 import torch
+import time
+import gc
 import pickle
+import logging
 import urllib.request
+import gzip
 import pandas as pd
 import numpy as np
+from argparse                      import ArgumentParser
+from pathlib                       import Path
  
-from zipfile import ZipFile
-from enum import Enum
+from zipfile                     import ZipFile
+from enum                        import Enum
 from src.utils.preprocess_helper import get_gdsc_gene_expression
-
-# For gene-gene interaction graph creation.
-from torch_geometric.data import Data
-from io import BytesIO
-from typing import List
-import gzip
-from typing import Tuple, Set, FrozenSet
+from sklearn.preprocessing       import StandardScaler
+from torch_geometric.data        import Data
+from io                          import BytesIO
+from typing                      import List, Tuple, Set, FrozenSet
 from tqdm import tqdm
 
 # For drug graphs
@@ -86,6 +89,24 @@ class Processor:
         
         self.combined_score_thresh = combined_score_thresh
         self.gdsc = gdsc.lower()
+        
+        # ---------------------------------------------------------------------
+        # Set up a logger object
+        logger2 = logging.getLogger(__name__)
+        logger2.setLevel(logging.INFO)
+
+        # Set up a file handler
+        file_handler = logging.FileHandler(self.gdsc_thresh_path + f'log_file')
+        file_handler.setLevel(logging.INFO)
+
+        # Set up a formatter
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        file_handler.setFormatter(formatter)
+
+        # Add the file handler to the logger
+        logger2.addHandler(file_handler)
+        
+        self.logger = logger2
 
     # ---------- #
     # DOWNLOADER #
@@ -93,9 +114,9 @@ class Processor:
     def _download_from_link(self, name: str, value: str):
         """Download file(s) from the given list and return the saved file name."""
         file_name = value.split('/')[-1]
-        print(f"Downloading from {value}")
+        self.logger.info(f"Downloading from {value}")
         urllib.request.urlretrieve(value, self.raw_path + file_name)
-        print(f"Finished download into {self.raw_path + file_name}.")
+        self.logger.info(f"Finished download into {self.raw_path + file_name}.")
         return file_name
     
     def _extract_zip_if_necessary(self, file_name):
@@ -104,17 +125,17 @@ class Processor:
         extracted_files = []
         if file_name.endswith('.zip'):
             with ZipFile(self.raw_path + file_name, 'r') as zipf:
-                print(f"{4*' '}Extrating zip file {self.raw_path + file_name} ...")
+                self.logger.info(f"{4*' '}Extrating zip file {self.raw_path + file_name} ...")
                 zipf.extractall(self.raw_path)
                 extracted_files = zipf.namelist()
                 for ef in extracted_files:
-                    print(f"{8*' '}Extracted file: {os.path.join(self.raw_path, ef)}")
+                    self.logger.info(f"{8*' '}Extracted file: {os.path.join(self.raw_path, ef)}")
         return extracted_files
 
     def download_raw_datasets(self):
         """Downloads provided dataset into the raw path."""
         for name in self.download_links.get_names():
-            print(f"{20*'='}\nDownloading {name}...")
+            self.logger.info(f"{20*'='}\nDownloading {name}...")
             file_name = self._download_from_link(name.lower(), self.download_links[name].value)
             
             # If the file is a zip, extract it.
@@ -155,15 +176,15 @@ class Processor:
         datasets, as well as the additional datasets."""
         raw_path_additional = 'data/additional/' 
         
-        print(f"{20*'='}\nCopying already existing {self.raw_smiles_file} from {raw_path_additional} ...")
+        self.logger.info(f"{20*'='}\nCopying already existing {self.raw_smiles_file} from {raw_path_additional} ...")
         shutil.copyfile(raw_path_additional + self.raw_smiles_file, 
                         self.raw_path + self.raw_smiles_file)
-        print(f"Finished copying into {self.raw_path + self.raw_smiles_file}")
+        self.logger.info(f"Finished copying into {self.raw_path + self.raw_smiles_file}")
         
-        print(f"{20*'='}\nCopying already existing {self.raw_landmark_genes_file} from {raw_path_additional} ...")
+        self.logger.info(f"{20*'='}\nCopying already existing {self.raw_landmark_genes_file} from {raw_path_additional} ...")
         shutil.copyfile(raw_path_additional + self.raw_landmark_genes_file, 
                         self.raw_path + self.raw_landmark_genes_file)
-        print(f"Finished copying into {self.raw_path + self.raw_landmark_genes_file}")
+        self.logger.info(f"Finished copying into {self.raw_path + self.raw_landmark_genes_file}")
                 
     def create_raw_datasets(self):
         self.download_raw_datasets()
@@ -173,8 +194,8 @@ class Processor:
     # PRE-PROCESSOR #
     # ------------- #
     def _process_gdsc_fitted(self):
-        print(40*'=')
-        print(f"{f'Processing GDSC datasets...':<40}")         
+        self.logger.info(40*'=')
+        self.logger.info(f"{f'Processing GDSC datasets...':<40}")         
         gdsc1 = pd.read_excel(self.raw_path + self.raw_gdsc1_file, header=0)
         gdsc2 = pd.read_excel(self.raw_path + self.raw_gdsc2_file, header=0)
 
@@ -188,7 +209,7 @@ class Processor:
                         'SANGER_MODEL_ID', 'AUC', 'RMSE', 'Z_SCORE', 'LN_IC50']
         gdsc_base = gdsc_join[cols_to_keep].drop_duplicates()
         gdsc_base.to_pickle(self.processed_path + 'drm_full.pkl')
-        print(f"Successfully saved full GDSC datasets in {self.processed_path + 'drm_full.pkl'}")
+        self.logger.info(f"Successfully saved full GDSC datasets in {self.processed_path + 'drm_full.pkl'}")
 
         del gdsc1, gdsc2, gdsc_join, cols_to_keep, gdsc_base
 
@@ -202,8 +223,8 @@ class Processor:
 
     
     def _process_gene_expression(self):
-        print(40*'=')
-        print(f"{f'Processing gene expression dataset...':<40}")        
+        self.logger.info(40*'=')
+        self.logger.info(f"{f'Processing gene expression dataset...':<40}")        
         gexpr = get_gdsc_gene_expression(path_cell_annotations=self.raw_path + self.raw_cl_details_file,
                                          path_gene_expression=self.raw_path + self.raw_gexpr_file)
            
@@ -221,17 +242,17 @@ class Processor:
                               how='left',
                               suffixes=['_gdsc', '_geneexpr'])
         
-        print(f"Shape of gdsc_full: {self.gdsc_full.shape}")        
+        self.logger.info(f"Shape of gdsc_full: {self.gdsc_full.shape}")        
         gdsc_full.to_pickle(self.processed_path + 'gexpr_full.pkl')
-        print(f"Successfully saved full Gene Expression dataset in {self.processed_path + 'gexpr_full.pkl'}.")
+        self.logger.info(f"Successfully saved full Gene Expression dataset in {self.processed_path + 'gexpr_full.pkl'}.")
 
         del gexpr, gexpr_sparse, drm, gdsc_full
 
     
     def _process_copy_number_variation(self, cnv_type: str):
         which_cnv = 'gistic' if cnv_type[-1]=='g' else 'picnic'
-        print(40*'=')
-        print(f"{f'Processing copy number variation {which_cnv} dataset... ':<40}")
+        self.logger.info(40*'=')
+        self.logger.info(f"{f'Processing copy number variation {which_cnv} dataset... ':<40}")
         # Process copy number picnic.
         cnv = None
         if cnv_type == 'cnvp':
@@ -268,16 +289,16 @@ class Processor:
                              how='left',
                              suffixes=['_gdsc', f'_{cnv_type}'])
 
-        print(f"Shape of {cnv_type}_full: {cnv_full.shape}")        
+        self.logger.info(f"Shape of {cnv_type}_full: {cnv_full.shape}")        
         cnv_full.to_pickle(self.processed_path + f'{cnv_type}_full.pkl')
-        print(f"Successfully saved full CNV {which_cnv} dataset in {self.processed_path}{cnv_type}_full.pkl.")
+        self.logger.info(f"Successfully saved full CNV {which_cnv} dataset in {self.processed_path}{cnv_type}_full.pkl.")
 
         del cnv3, drm, cnv_full, which_cnv
 
     
     def _process_mutations(self):
-        print(40*'=')
-        print(f"{f'Processing mutations dataset...':<40}")
+        self.logger.info(40*'=')
+        self.logger.info(f"{f'Processing mutations dataset...':<40}")
         mut = pd.read_csv(self.raw_path + self.raw_mut_file, sep=",", header=0)
 
         # Read already processed drug response matrix.
@@ -343,9 +364,9 @@ class Processor:
                              how='inner',
                              suffixes=['_gdsc', '_mut'])
         
-        print(f"Shape of mut_full: {mut_full.shape}")
+        self.logger.info(f"Shape of mut_full: {mut_full.shape}")
         mut_full.to_pickle(self.processed_path + 'mut_full.pkl')
-        print(f"Successfully saved full Mutations dataset in `{self.processed_path + 'mut_full.pkl'}`.")
+        self.logger.info(f"Successfully saved full Mutations dataset in `{self.processed_path + 'mut_full.pkl'}`.")
 
         del mut6, drm, mut_full         
 
@@ -355,12 +376,12 @@ class Processor:
                                  title: str, 
                                  inter_genes, 
                                  inter_cls):
-        print(f"{title}\n{len(title)*'='}")
+        self.logger.info(f"{title}\n{len(title)*'='}")
         df_inter = df[['DRUG_ID', 'DATASET', 'CELL_LINE_NAME'] + list(inter_genes)]
         df_inter = df_inter[df_inter.CELL_LINE_NAME.isin(list(inter_cls))]
-        print(f"Shape total: {df_inter.shape}")
-        print(f"Shape GDSC1: {df_inter[df_inter.DATASET=='GDSC1'].shape}")
-        print(f"Shape GDSC2: {df_inter[df_inter.DATASET=='GDSC2'].shape}")
+        self.logger.info(f"Shape total: {df_inter.shape}")
+        self.logger.info(f"Shape GDSC1: {df_inter[df_inter.DATASET=='GDSC1'].shape}")
+        self.logger.info(f"Shape GDSC2: {df_inter[df_inter.DATASET=='GDSC2'].shape}")
         return df_inter  
     
     def _get_only_first_row_per_cell_line(self, 
@@ -369,15 +390,25 @@ class Processor:
         return res.loc[:, ~res.columns.isin(['DRUG_ID', 'DATASET'])]
     
     def create_sparse_datasets(self):
-        print(40*'=')
-        print(f"{f'Creating sparse datasets...':<40}")
-        print(f"{4*' '}Reading full datasets...")
+        self.logger.info(40*'=')
+        self.logger.info(f"{f'Creating sparse datasets...':<40}")
+        self.logger.info(f"{4*' '}Reading full datasets...")
+        tic = time.time()
         drm = pd.read_pickle(self.processed_path + 'drm_full.pkl')
+        self.logger.info(f"{8*' '}{drm.shape} took {time.time()-tic} seconds")
+        tic = time.time()
         gexpr = pd.read_pickle(self.processed_path + 'gexpr_full.pkl')
+        self.logger.info(f"{8*' '}{gexpr.shape} took {time.time()-tic} seconds")
+        tic = time.time()
         cnvg = pd.read_pickle(self.processed_path + 'cnvg_full.pkl')
+        self.logger.info(f"{8*' '}{cnvg.shape} took {time.time()-tic} seconds")
+        tic = time.time()
         cnvp = pd.read_pickle(self.processed_path + 'cnvp_full.pkl')
+        self.logger.info(f"{8*' '}{cnvp.shape} took {time.time()-tic} seconds")
+        tic = time.time()
         mut = pd.read_pickle(self.processed_path + 'mut_full.pkl') 
-        print(f"{4*' '}Finished reading full datasets.")
+        self.logger.info(f"{8*' '}{mut.shape} took {time.time()-tic} seconds")
+        self.logger.info(f"{4*' '}Finished reading full datasets.")
         
         # We don't want any missing values for our features.
         # This would destroy the predictions of the network.
@@ -417,8 +448,8 @@ class Processor:
             .intersection(set(uniq_genes_cnvp))\
             .intersection(set(uniq_genes_mut))
 
-        print(f"{4*' '}Number of intersecting cell-lines:", len(INTER_CLS))
-        print(f"{4*' '}Number of intersecting genes:", len(INTER_GENES))        
+        self.logger.info(f"{4*' '}Number of intersecting cell-lines:", len(INTER_CLS))
+        self.logger.info(f"{4*' '}Number of intersecting genes:", len(INTER_GENES))        
         
         # Assign unique index to each of the genes.
         inter_genes_df = pd.DataFrame({'GENE_SYMBOL': list(INTER_GENES)})
@@ -439,7 +470,7 @@ class Processor:
         mut3 = self._get_only_first_row_per_cell_line(mut2)
         assert gexpr3.shape == cnvg3.shape == cnvp3.shape == mut3.shape,\
             "ERROR: Not all sparsed feature datasets have the same shape."  
-        print(f"{4*' '}gexpr3.shape: {gexpr3.shape}")
+        self.logger.info(f"{4*' '}gexpr3.shape: {gexpr3.shape}")
         
         # Save all new feature dataframes.
         gexpr3.to_pickle(self.processed_path + 'sparse_gexpr.pkl')
@@ -448,6 +479,14 @@ class Processor:
         mut3.to_pickle(self.processed_path + 'sparse_mut.pkl')        
     
     def create_processed_datasets(self):
+        # File to save logging output to.
+#         Path(self.gdsc_thresh_path).mkdir(parents=True, exist_ok=True)
+#         logger2 = logging.basicConfig(
+#             level=logging.INFO, filemode="a+",
+#             filename=self.gdsc_thresh_path + f'log_file',
+#             format="%(asctime)-15s %(levelname)-8s %(message)s"
+#         )       
+        
         # Process drug-response matrix feature datasets.
 #         self._process_gdsc_fitted()
 #         self._set_landmark_genes()
@@ -457,18 +496,20 @@ class Processor:
 #         self._process_mutations()
 
         # Create sparse datasets.
-        self.create_sparse_datasets()    
+        self.create_sparse_datasets()
+        
+        gc.collect()
     
     # ---------------------------------------- #
     # PROTEIN-PROTEIN INTERATION GRAPH METHODS #
     # ---------------------------------------- #  
 
     def _read_protein_links(self, path: str):
-        print(f"Start reading {path} ...")
+        self.logger.info(f"Start reading {path} ...")
         contents = gzip.open(path, "rb").read()
         data = BytesIO(contents)
         protein_links = pd.read_csv(data, sep=' ')
-        print("Finished reading.")
+        self.logger.info("Finished reading.")
 
         # Exclude the Homo Sapiens taxonomy ID from the protein columns.
         protein_links.protein1 = protein_links.protein1.str[5:]
@@ -477,11 +518,11 @@ class Processor:
         return protein_links
 
     def _read_protein_info(self, path: str):
-        print(f"Start reading {path} ...")
+        self.logger.info(f"Start reading {path} ...")
         contents = gzip.open(path, "rb").read()
         data = BytesIO(contents)
         protein_info_v1 = pd.read_csv(data, sep='\t')
-        print("Finished reading.")
+        self.logger.info("Finished reading.")
         protein_info_v2 = protein_info_v1.rename(columns={'#string_protein_id': 'string_protein_id'}, 
                                                  inplace=False)
 
@@ -560,7 +601,7 @@ class Processor:
             .groupby(['preferred_name']).size()\
             .reset_index(name='freq', inplace=False)\
             .sort_values(['freq'], ascending=False)
-        print(f"There are {freq_per_gene[freq_per_gene.freq>1].shape[0]} proteins with ID frequency > 2. "\
+        self.logger.info(f"There are {freq_per_gene[freq_per_gene.freq>1].shape[0]} proteins with ID frequency > 2. "\
             + "They will be deleted.")
 
         # Remove the gene symbols which have a frequency higher than 1.
@@ -589,9 +630,9 @@ class Processor:
                     found = True
                     break
             if not found:
-                print(f"ERROR: the list is directed since couldn't find ({b}, {a}) for {neigh}!")
+                self.logger.info(f"ERROR: the list is directed since couldn't find ({b}, {a}) for {neigh}!")
                 return False
-        print("SUCCESS: The given list of tuples is undirected!")
+        self.logger.info("SUCCESS: The given list of tuples is undirected!")
         return True
 
     def _create_graph_dict_with_indices(self,
@@ -615,7 +656,7 @@ class Processor:
             elif exists_in_gene_symbol2: 
                 neighbor_nodes = list(set(proteins.loc[proteins.index_gene_symbol2==gene].index_gene_symbol1))
             else: 
-                print(f"The gene {gene} couldn't be found in the dataset!") 
+                self.logger.info(f"The gene {gene} couldn't be found in the dataset!") 
 
             # Set neighbors for the gene.
             dict_as_indices[gene] += [neighbor_node for neighbor_node in neighbor_nodes if neighbor_node not in dict_as_indices[gene]]
@@ -629,9 +670,9 @@ class Processor:
         """Return new proteins dataframe and gene dataframe by only selecting 
         data above the chosen threshold."""
         p_sub = proteins[proteins['combined_score'] > thresh]
-        print(f"{4*' '}Choosing threshold {thresh} we have shape: {p_sub.shape}")
-        print(f"{4*' '}Number of unique gene_symbol1s: {len(p_sub.gene_symbol1.unique())}")
-        print(f"{4*' '}Number of unique gene_symbol2s: {len(p_sub.gene_symbol2.unique())}")        
+        self.logger.info(f"{4*' '}Choosing threshold {thresh} we have shape: {p_sub.shape}")
+        self.logger.info(f"{4*' '}Number of unique gene_symbol1s: {len(p_sub.gene_symbol1.unique())}")
+        self.logger.info(f"{4*' '}Number of unique gene_symbol2s: {len(p_sub.gene_symbol2.unique())}")        
         assert set(p_sub.gene_symbol1.unique()) == set(p_sub.gene_symbol2.unique()), \
             "ERROR: The unique gene_symbol1's are not the same as the unique gene_symbol2's!" 
         
@@ -660,7 +701,7 @@ class Processor:
             self.processed_path + f'thresh_{thresh}_inter_genes.csv', 
             header=True, index=False
         )
-        print(f"{4*' '}Created {self.processed_path + f'thresh_{thresh}_inter_genes.csv'}.")
+        self.logger.info(f"{4*' '}Created {self.processed_path + f'thresh_{thresh}_inter_genes.csv'}.")
         
         return inter_genes_above
     
@@ -788,7 +829,7 @@ class Processor:
         
         # Select only the rows above the chose threshold.
         # -----------------------------------------------
-        print(f"{4*' '}combined_score threshold: {self.combined_score_thresh}")
+        self.logger.info(f"{4*' '}combined_score threshold: {self.combined_score_thresh}")
         proteins3, gene_sub = self._get_proteins_and_genes_above_thresh(proteins2, 
                                                                         inter_genes, 
                                                                         self.combined_score_thresh)
@@ -810,12 +851,12 @@ class Processor:
 
         NODES_AS_SYMBOLS = list(np.unique(proteins4[['gene_symbol1', 'gene_symbol2']].values))
         NODES_AS_INDECES = list(np.unique(proteins4[['index_gene_symbol1', 'index_gene_symbol2']].values))
-        print(f"{4*' '}There will be {len(NODES_AS_SYMBOLS)} nodes in the graph.")
-        print(f"{4*' '}There will be {len(NODES_AS_INDECES)} indices in the graph.")
+        self.logger.info(f"{4*' '}There will be {len(NODES_AS_SYMBOLS)} nodes in the graph.")
+        self.logger.info(f"{4*' '}There will be {len(NODES_AS_INDECES)} indices in the graph.")
         
         neighbor_gene_tuples = self._get_neighbor_tuples(proteins4, 
                                                          inter_genes_above)
-        print(f"{4*' '}Number of neighbor tuples:", len(neighbor_gene_tuples))        
+        self.logger.info(f"{4*' '}Number of neighbor tuples:", len(neighbor_gene_tuples))        
         neighbor_gene_tuples_undirected = neighbor_gene_tuples if self._is_undirected_list_of_tuples(neighbor_gene_tuples) else None      
         
         # Dictionary of neighbors per genes.
@@ -831,8 +872,8 @@ class Processor:
         mut = pd.read_pickle(self.processed_path + 'sparse_mut.pkl')
         inter_cls = self._get_intersecting_cell_lines(gexpr, cnvg, cnvp, mut)
         inter_genes = self._get_intersecting_genes(gexpr, cnvg, cnvp, mut)
-        print(f"{8*' '}Intersecting cell-lines: {len(inter_cls)}")
-        print(f"{8*' '}Intersecting genes.    : {len(inter_genes)}")        
+        self.logger.info(f"{8*' '}Intersecting cell-lines: {len(inter_cls)}")
+        self.logger.info(f"{8*' '}Intersecting genes.    : {len(inter_genes)}")        
   
         
 #         # Build gene-gene interaction graph.
@@ -841,7 +882,7 @@ class Processor:
 #         cnvg.set_index('CELL_LINE_NAME', inplace=True)
 #         cnvp.set_index('CELL_LINE_NAME', inplace=True)
 #         mut.set_index('CELL_LINE_NAME', inplace=True) 
-#         print(f"{4*' '}Creating gene-gene interaction graph...")
+#         self.logger.info(f"{4*' '}Creating gene-gene interaction graph...")
 #         cl_graphs = self._create_cell_line_gene_graphs(
 #             NODES_AS_SYMBOLS, 
 #             [
@@ -852,14 +893,14 @@ class Processor:
 #             ],
 #             inter_cls,
 #             neighbor_gene_tuples_undirected) 
-#         print(f"{4*' '}Finished creating gene-gene interaction graph.")
+#         self.logger.info(f"{4*' '}Finished creating gene-gene interaction graph.")
 #         # Showcase topology for some cell-line examples.
 #         for cl in gexpr.index[:5].tolist():
-#             print(f"{8*' '}Cell-line: {cl:8s}   Graph: {cl_graphs[cl]}")        
+#             self.logger.info(f"{8*' '}Cell-line: {cl:8s}   Graph: {cl_graphs[cl]}")        
         
 #         with open(self.processed_path + f'thresh_{self.combined_score_thresh}_gene_graphs.pkl', 'wb') as f:
 #             pickle.dump(cl_graphs, f, protocol=pickle.HIGHEST_PROTOCOL)  
-#         print(f"Successfully saved full gene-gene graphs in {self.processed_path + f'thresh_{self.combined_score_thresh}_gene_graphs.pkl'}.")
+#         self.logger.info(f"Successfully saved full gene-gene graphs in {self.processed_path + f'thresh_{self.combined_score_thresh}_gene_graphs.pkl'}.")
             
         # Feature subset with only the genes over the chosen threshold.
         # -------------------------------------------------------------
@@ -874,7 +915,7 @@ class Processor:
         mut2 = mut.loc[:, mut.columns.isin(['CELL_LINE_NAME'] + inter_genes_above.GENE_SYMBOL.values.tolist())]
         assert gexpr2.shape == cnvg2.shape == cnvp2.shape == mut2.shape, \
             "ERROR: The shapes of all feature dataframes are not equal." 
-        print(f"{4*' '}Each new feature dataset has shape: {gexpr2.shape}")
+        self.logger.info(f"{4*' '}Each new feature dataset has shape: {gexpr2.shape}")
         
 #         # These dataframe have been sparsed by intersecting genes after chosing 
 #         # only the genes with combined_score > 700.
@@ -893,7 +934,7 @@ class Processor:
             .intersection(set(cnvp2.CELL_LINE_NAME.unique()))\
             .intersection(set(mut2.CELL_LINE_NAME.unique()))
 
-        print(f"Since GDSC {self.gdsc[-1]} database was chosen the number of intersecting cell-lines is {len(list(inter_cls_gdsc))}")
+        self.logger.info(f"Since GDSC {self.gdsc[-1]} database was chosen the number of intersecting cell-lines is {len(list(inter_cls_gdsc))}")
         
         pd.DataFrame({'CELL_LINE_NAME': list(inter_cls_gdsc)})\
             .to_csv(self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_inter_cls.csv', 
@@ -905,8 +946,14 @@ class Processor:
         cnvgGDSC = cnvg2[cnvg2.CELL_LINE_NAME.isin(inter_cls_gdsc)]
         cnvpGDSC = cnvp2[cnvp2.CELL_LINE_NAME.isin(inter_cls_gdsc)]
         mutGDSC = mut2[mut2.CELL_LINE_NAME.isin(inter_cls_gdsc)] 
+        
+        # --- Apply scaling ---
+        scaler = StandardScaler()
+        gexprGDSC[gexprGDSC.columns[1:]] = scaler.fit_transform(gexprGDSC[gexprGDSC.columns[1:]])
+        cnvgGDSC[cnvgGDSC.columns[1:]] = scaler.fit_transform(cnvgGDSC[cnvgGDSC.columns[1:]])
+        cnvpGDSC[cnvpGDSC.columns[1:]] = scaler.fit_transform(cnvpGDSC[cnvpGDSC.columns[1:]])
 
-        # Sparsed by combined score > 700 and intersecting cell-lines for only GDSC2
+        # Sparsed by combined score > THRESH and intersecting cell-lines for only GDSC2
         gexprGDSC.to_pickle(self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_gexpr.pkl')
         cnvgGDSC.to_pickle(self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_cnvg.pkl')
         cnvpGDSC.to_pickle(self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_cnvp.pkl')
@@ -918,7 +965,7 @@ class Processor:
         cnvgGDSC.set_index('CELL_LINE_NAME', inplace=True)
         cnvpGDSC.set_index('CELL_LINE_NAME', inplace=True)
         mutGDSC.set_index('CELL_LINE_NAME', inplace=True)  
-        print(f"{4*' '}Creating gene-gene interaction graph for {self.gdsc}...")        
+        self.logger.info(f"{4*' '}Creating gene-gene interaction graph for {self.gdsc}...")        
         cl_graphs_GDSC = self._create_cell_line_gene_graphs(
             inter_genes_above.GENE_SYMBOL.values.tolist(), 
             [
@@ -930,14 +977,14 @@ class Processor:
             inter_cls_gdsc,
             neighbor_gene_tuples_undirected
         )         
-        print(f"{4*' '}Finished creating gene-gene interaction graph for {self.gdsc}.")
+        self.logger.info(f"{4*' '}Finished creating gene-gene interaction graph for {self.gdsc}.")
         # Showcase topology for some cell-line examples.
         for cl in gexprGDSC.index[:5].tolist():
-            print(f"{8*' '}Cell-line: {cl:8s}   Graph: {cl_graphs_GDSC[cl]}") 
+            self.logger.info(f"{8*' '}Cell-line: {cl:8s}   Graph: {cl_graphs_GDSC[cl]}") 
             
         with open(self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_gene_graphs.pkl', 'wb') as f:
             pickle.dump(cl_graphs_GDSC, f, protocol=pickle.HIGHEST_PROTOCOL) 
-        print(f"Successfully saved full gene-gene graphs for {self.gdsc} in {self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_gene_graphs.pkl'}.")            
+        self.logger.info(f"Successfully saved full gene-gene graphs for {self.gdsc} in {self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_gene_graphs.pkl'}.")            
         
         # As table.
         # ---------
@@ -947,7 +994,7 @@ class Processor:
         mutGDSC.reset_index(inplace=True)         
         merged = self._create_gene_feature_matrix([gexprGDSC, cnvgGDSC, cnvpGDSC, mutGDSC],
                                                   ['_gexpr', '_cnvg', '_cnvp', '_mut'])
-        print(f"{4*' '}Created gene feature matrices with shape : {merged.shape}")
+        self.logger.info(f"{4*' '}Created gene feature matrices with shape : {merged.shape}")
         
         merged = pd.concat([gexprGDSC.set_index('CELL_LINE_NAME'), 
                             cnvgGDSC.set_index('CELL_LINE_NAME'),
@@ -962,11 +1009,11 @@ class Processor:
                len([col for col in merged.columns if '_mut' in col]), \
             "ERROR: Number of gene columns per feature is not equal."
         merged.reset_index(inplace=True) 
-        print(f"{8*' '}Number of      genes: {len([col for col in merged.columns if '_gexpr' in col])}")  
-        print(f"{8*' '}Number of cell-lines: {len(merged.CELL_LINE_NAME.unique())}")        
+        self.logger.info(f"{8*' '}Number of      genes: {len([col for col in merged.columns if '_gexpr' in col])}")  
+        self.logger.info(f"{8*' '}Number of cell-lines: {len(merged.CELL_LINE_NAME.unique())}")        
         
         merged.to_pickle(self.gdsc_thresh_path + f"thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_gene_mat.pkl") 
-        print(f"Successfully saved full gene-gene matrix for {self.gdsc.upper()} in {self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_gene_mat.pkl'}.")                 
+        self.logger.info(f"Successfully saved full gene-gene matrix for {self.gdsc.upper()} in {self.gdsc_thresh_path + f'thresh_{self.gdsc.lower()}_{self.combined_score_thresh}_gene_mat.pkl'}.")                 
         
         
     # ---------------------------- #
@@ -1036,8 +1083,8 @@ class Processor:
         drmGDSC = drm[drm.DATASET==self.gdsc.upper()]
         drmGDSC = drmGDSC[drmGDSC.CELL_LINE_NAME.isin(cell_lines.CELL_LINE_NAME.values.tolist())]       
         uniq_drug_names = list(drmGDSC.DRUG_NAME.unique())
-        print(f"{4*' '}Number of unique cell-lines:", len(drmGDSC.CELL_LINE_NAME.unique()))
-        print(f"{4*' '}Number of unique DRUG_NAMEs:", len(uniq_drug_names))         
+        self.logger.info(f"{4*' '}Number of unique cell-lines:", len(drmGDSC.CELL_LINE_NAME.unique()))
+        self.logger.info(f"{4*' '}Number of unique DRUG_NAMEs:", len(uniq_drug_names))         
 
         smiles = pd.read_csv(self.raw_path + self.raw_smiles_file, index_col=0)
         
@@ -1052,9 +1099,9 @@ class Processor:
         drug_name_fps_full = {uniq_drug_name: fps[i] for i, uniq_drug_name in enumerate(uniq_drug_names)}
         drug_name_fps = {drug_name: fp for drug_name, fp in drug_name_fps_full.items() if fp is not None}
         non_drugs = list(set(drug_name_fps_full.keys()).difference(set(drug_name_fps.keys())))        
-        print(f"{4*' '}Number of drugs: {len(drug_name_fps_full.keys())}")        
-        print(f"{4*' '}Number of drugs with not None fingerprint: {len(drug_name_fps.keys())}")
-        print(f"{4*' '}Number of drugs which have a None fingerprint: {len(non_drugs)}")            
+        self.logger.info(f"{4*' '}Number of drugs: {len(drug_name_fps_full.keys())}")        
+        self.logger.info(f"{4*' '}Number of drugs with not None fingerprint: {len(drug_name_fps.keys())}")
+        self.logger.info(f"{4*' '}Number of drugs which have a None fingerprint: {len(non_drugs)}")            
     
 #         drmGDSC_v2 = drmGDSC_v2[~drmGDSC_v2.DRUG_NAME.isin(non_drugs)]
         drmGDSC_v2 = drmGDSC[~drmGDSC.DRUG_NAME.isin(non_drugs)]
@@ -1067,23 +1114,23 @@ class Processor:
             .sort_values(['DRUG_ID'], ascending=False)\
             .reset_index().rename(columns={'DRUG_ID': 'count'})
         non_uniqs = non_uniqs[non_uniqs['count'] > 1]
-        print(f"{4*' '}Number of DRUG_NAME's which have more then 1 DRUG_ID:", non_uniqs.shape[0])
+        self.logger.info(f"{4*' '}Number of DRUG_NAME's which have more then 1 DRUG_ID:", non_uniqs.shape[0])
         non_uniq_drug_names = non_uniqs.DRUG_NAME.tolist()
-        print(non_uniq_drug_names)
+        self.logger.info(non_uniq_drug_names)
 
         # Remove these drug names from the drug response matrix and the smiles matrix.
         drmGDSC_v3 = drmGDSC_v2[~drmGDSC_v2.DRUG_NAME.isin(non_uniq_drug_names)]
-        print(drmGDSC_v2.shape)
-        print(drmGDSC_v3.shape)
-        print(f"{4*' '}Number of unique cell-lines before:", len(drmGDSC_v2.CELL_LINE_NAME.unique()))
-        print(f"{4*' '}Number of unique cell-lines after:", len(drmGDSC_v3.CELL_LINE_NAME.unique()))
-        print(f"{4*' '}Number of unique drug names:", len(drmGDSC_v3.DRUG_NAME.unique()))
-        print(f"{4*' '}Number of unique drug id:", len(drmGDSC_v3.DRUG_ID.unique()))
+        self.logger.info(drmGDSC_v2.shape)
+        self.logger.info(drmGDSC_v3.shape)
+        self.logger.info(f"{4*' '}Number of unique cell-lines before:", len(drmGDSC_v2.CELL_LINE_NAME.unique()))
+        self.logger.info(f"{4*' '}Number of unique cell-lines after:", len(drmGDSC_v3.CELL_LINE_NAME.unique()))
+        self.logger.info(f"{4*' '}Number of unique drug names:", len(drmGDSC_v3.DRUG_NAME.unique()))
+        self.logger.info(f"{4*' '}Number of unique drug id:", len(drmGDSC_v3.DRUG_ID.unique()))
 
         drug_name_fps_v2 = drug_name_fps
         for drug_name in non_uniq_drug_names:
             drug_name_fps_v2.pop(drug_name, None)
-        print(f"{4*' '}Number of drug name keys:", len(drug_name_fps_v2.keys()))
+        self.logger.info(f"{4*' '}Number of drug name keys:", len(drug_name_fps_v2.keys()))
 
         assert len(drmGDSC_v3.DRUG_NAME.unique()) == len(drmGDSC_v3.DRUG_ID.unique()) == len(drug_name_fps_v2.keys()), \
             "ERROR: There is some mismatch in the DRUG_NAME's and DRUG_ID's between the drug response matrix and drug smiles dictionary."        
@@ -1110,11 +1157,11 @@ class Processor:
         with open(self.gdsc_path + f'{self.gdsc.lower()}_smiles_dict.pkl', 'wb') as f:
             pickle.dump(drug_id_fps_dict, f) # As dictionary.
         drug_id_fps_df.to_pickle(self.gdsc_path + f'{self.gdsc.lower()}_smiles_mat.pkl') # As matrix.
-        print(f"Successfully saved full SMILES matrix for {self.gdsc} in {self.gdsc_path + f'{self.gdsc.lower()}_smiles_mat.pkl'}.")  
+        self.logger.info(f"Successfully saved full SMILES matrix for {self.gdsc} in {self.gdsc_path + f'{self.gdsc.lower()}_smiles_mat.pkl'}.")  
         
         # Save the new drug response matrix with only DRUG_ID's which have a fingerprint.
         drmGDSC_v3.to_pickle(self.gdsc_path + f'{self.gdsc.lower()}_drm.pkl')    
-        print(f"Successfully saved new drug response matrix which has FP for each row for {self.gdsc} in {self.gdsc_path + f'{self.gdsc.lower()}_drm.pkl'}.")    
+        self.logger.info(f"Successfully saved new drug response matrix which has FP for each row for {self.gdsc} in {self.gdsc_path + f'{self.gdsc.lower()}_drm.pkl'}.")    
         
         # As graph.
         # ---------
@@ -1142,7 +1189,7 @@ class Processor:
         smiles2[['DRUG_NAME', 'DRUG_ID']].to_csv(
             self.gdsc_path + f'{self.gdsc.lower()}_drug_name_id_map.csv', 
             header=True, index=False)
-        print(f"Successfully saved {self.gdsc_path + f'{self.gdsc.lower()}_drug_name_id_map.csv'}.")       
+        self.logger.info(f"Successfully saved {self.gdsc_path + f'{self.gdsc.lower()}_drug_name_id_map.csv'}.")       
 
         # Create dictionary with DRUG_ID as key and smiles molecular graph as value.
         smiles_graphs = {}
@@ -1150,14 +1197,14 @@ class Processor:
             drug_name, drug_id, smiles = smiles2.iloc[i]
             smiles_graphs[drug_id] = from_smiles(smiles)
 
-        print(f"{4*' '}Number of keys/drugs : {len(smiles_graphs.keys())}")
+        self.logger.info(f"{4*' '}Number of keys/drugs : {len(smiles_graphs.keys())}")
         # Print some examples.
         for i in range(5):
-            print(f"{4*' '}drug_id: {smiles2.iloc[i].DRUG_ID:5.0f} | drug_name: {smiles2.iloc[i].DRUG_NAME:15s} | graph: {smiles_graphs[smiles2.iloc[i].DRUG_ID]}")        
+            self.logger.info(f"{4*' '}drug_id: {smiles2.iloc[i].DRUG_ID:5.0f} | drug_name: {smiles2.iloc[i].DRUG_NAME:15s} | graph: {smiles_graphs[smiles2.iloc[i].DRUG_ID]}")        
         
         with open(self.gdsc_path + f'{self.gdsc.lower()}_smiles_graphs.pkl', 'wb') as f:
             pickle.dump(smiles_graphs, f, protocol=pickle.HIGHEST_PROTOCOL)
-        print(f"Successfully saved SMILES graphs in {self.gdsc_path + f'{self.gdsc.lower()}_smiles_graphs.pkl'}.")       
+        self.logger.info(f"Successfully saved SMILES graphs in {self.gdsc_path + f'{self.gdsc.lower()}_smiles_graphs.pkl'}.")       
         
     
     # Create final datasets.
