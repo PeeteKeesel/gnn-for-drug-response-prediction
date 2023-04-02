@@ -1,5 +1,6 @@
 import logging
 import time
+import gc
 import torch
 import torch.nn as nn
 import numpy    as np
@@ -110,40 +111,6 @@ def create_gg_loaders(
     
     return train_loader, test_loader
     
-    
-def create_graph_tab_datasets(drm, cl_graphs, drug_mat, args):
-    logging.info(f"Full     shape: {drm.shape}")
-    train_set, test_val_set = train_test_split(drm, 
-                                               test_size=args.TEST_VAL_RATIO, 
-                                               random_state=args.RANDOM_SEED,
-                                               stratify=drm['CELL_LINE_NAME'])
-    test_set, val_set = train_test_split(test_val_set,
-                                         test_size=args.VAL_RATIO,
-                                         random_state=args.RANDOM_SEED,
-                                         stratify=test_val_set['CELL_LINE_NAME'])
-    logging.info(f"train    shape: {train_set.shape}")
-    logging.info(f"test_val shape: {test_val_set.shape}")
-    logging.info(f"test     shape: {test_set.shape}")
-    logging.info(f"val      shape: {val_set.shape}")
-
-    train_dataset = GraphGraphDataset(cl_graphs=cl_graphs, drugs=drug_mat, drug_response_matrix=train_set)
-    test_dataset = GraphGraphDataset(cl_graphs=cl_graphs, drugs=drug_mat, drug_response_matrix=test_set)
-    val_dataset = GraphGraphDataset(cl_graphs=cl_graphs, drugs=drug_mat, drug_response_matrix=val_set)
-
-    logging.info("train_dataset:")
-    train_dataset.print_dataset_summary()
-    logging.info("test_dataset:")
-    test_dataset.print_dataset_summary()
-    logging.info("val_dataset:")
-    val_dataset.print_dataset_summary()
-
-    # TODO: try out different `num_workers`.
-    train_loader = PyG_DataLoader(dataset=train_dataset, batch_size=args.BATCH_SIZE, shuffle=True, num_workers=args.NUM_WORKERS)
-    test_loader = PyG_DataLoader(dataset=test_dataset, batch_size=args.BATCH_SIZE, shuffle=True, num_workers=args.NUM_WORKERS)
-    val_loader = PyG_DataLoader(dataset=val_dataset, batch_size=args.BATCH_SIZE, shuffle=True, num_workers=args.NUM_WORKERS)
-
-    return train_loader, test_loader, val_loader    
-
 
 class BuildGraphGraphModel(Engine):
     def __init__(self, model, criterion, optimizer, num_epochs, 
@@ -154,22 +121,12 @@ class BuildGraphGraphModel(Engine):
         self.val_losses = []
         self.train_loader = train_loader
         self.test_loader = test_loader
-#         self.val_loader = val_loader
         self.num_epochs = num_epochs
         self.model = model
         self.criterion = criterion
         self.optimizer = optimizer
         self.early_stopping_threshold = early_stopping_threshold
         self.device = device
-        
-#         self.evaluator = Engine(partial(self.validate, loader=self.test_loader))
-        
-#         super(BuildGraphGraphModel, self).__init__(
-#             process_function=self.validate
-#         )        
-        
-#     def _score_function(self, engine):
-#         return -engine.state.metrics['mse']
 
     def train(self, loader): 
         train_epoch_losses, test_epoch_losses = [], []
@@ -182,13 +139,6 @@ class BuildGraphGraphModel(Engine):
         all_batch_losses = [] # TODO: this is just for monitoring
         n_batches = len(loader)
         
-#         # Early stopping.
-#         early_stopping = EarlyStopping(
-#             patience=self.early_stopping_threshold,
-#             score_function=self._score_function,
-#             trainer=self
-#         )
-#         self.evaluator.add_event_handler(Events.EPOCH_COMPLETED, early_stopping)
         early_stopping_counter = 0
         early_stopped_epoch = self.num_epochs
         best_loss = float('inf')
@@ -203,8 +153,6 @@ class BuildGraphGraphModel(Engine):
             for i, data in enumerate(tqdm(loader, desc='Iteration (train)')):
                 sleep(0.01)
                 cell, drug, ic50s = data
-#                 drug = torch.stack(drug, 0).transpose(1, 0) # Note that this is only neede when geometric 
-#                                                             # Dataloader is used and no collate.
                 cell, drug, ic50s = cell.to(self.device), drug.to(self.device), ic50s.to(self.device)
 
                 self.optimizer.zero_grad()
@@ -241,37 +189,53 @@ class BuildGraphGraphModel(Engine):
                                             y_pred.detach().cpu().numpy().flatten()).statistic)
             train_epoch_scc.append(spearmanr(y_true.detach().cpu().numpy().flatten(),
                                              y_pred.detach().cpu().numpy().flatten()).statistic)             
-                     
-            # Validate the model.
-#             if (epoch % 20 == 0) or (epoch in [1,2,3]) or (epoch == self.num_epochs):
-            mse, rmse, mae, r2, pcc, scc, _, _  = self.validate(self.test_loader)
-#             else:
-#                 mse, rmse, mae, r2, pcc, scc = -10.0, -10.0, -10.0, -10.0, -10.0, -10.0
-            test_epoch_losses.append(mse)
-            test_epoch_rmse.append(rmse)
-            test_epoch_mae.append(mae)
-            test_epoch_r2.append(r2)
-            test_epoch_pcc.append(pcc)
-            test_epoch_scc.append(scc)
             
             train_epoch_time.append(time.time() - tic)            
 
             logging.info(f"===Epoch {epoch:03.0f}===")
             logging.info(f"Train | MSE: {train_mse:2.5f} | RMSE: {train_epoch_rmse[-1]:2.5f} | MAE: {train_epoch_mae[-1]:2.5f} | R2: {train_epoch_r2[-1]:2.5f} | PCC: {train_epoch_pcc[-1]:2.5f} | SCC: {train_epoch_scc[-1]:2.5f}")
-            logging.info(f"Test  | MSE: {mse:2.5f} | RMSE: {test_epoch_rmse[-1]:2.5f} | MAE: {test_epoch_mae[-1]:2.5f} | R2: {test_epoch_r2[-1]:2.5f} | PCC: {test_epoch_pcc[-1]:2.5f} | SCC: {test_epoch_scc[-1]:2.5f}")
             
-            # Check early stopping criteria.
-            if mse < best_loss:
-                best_loss = mse
-                early_stopping_counter = 0 
-            else: 
-                early_stopping_counter += 1
+            test_epoch_losses.append(None)
+            test_epoch_rmse.append(None)
+            test_epoch_mae.append(None)
+            test_epoch_r2.append(None)
+            test_epoch_pcc.append(None)
+            test_epoch_scc.append(None)         
+            
+            if epoch % self.early_stopping_threshold == 0: 
+                # Validate the model.
+                mse, rmse, mae, r2, pcc, scc, _, _  = self.validate(self.test_loader)
+                test_epoch_losses.append(mse)
+                test_epoch_rmse.append(rmse)
+                test_epoch_mae.append(mae)
+                test_epoch_r2.append(r2)
+                test_epoch_pcc.append(pcc)
+                test_epoch_scc.append(scc) 
                 
-            if early_stopping_counter >= self.early_stopping_threshold:  
-                logging.info("EarlyStopping: Stop training!")
-                logging.info(f"{4*' '}Stopped at epoch {epoch}")
-                early_stopped_epoch = epoch
-                break
+                logging.info(f"Test  | MSE: {test_epoch_losses[-1]:2.5f} | RMSE: {test_epoch_rmse[-1]} | MAE: {test_epoch_mae[-1]} | R2: {test_epoch_r2[-1]} | PCC: {test_epoch_pcc[-1]} | SCC: {test_epoch_scc[-1]}")                
+            
+                # Check early stopping criteria.
+                if mse < best_loss:
+                    best_loss = mse
+                    early_stopping_counter = 0 
+                else: 
+                    early_stopping_counter += 1
+
+                if early_stopping_counter >= self.early_stopping_threshold:  
+                    logging.info("EarlyStopping: Stop training!")
+                    logging.info(f"{4*' '}Stopped at epoch {epoch}")
+                    early_stopped_epoch = epoch
+                    break
+                
+        # Validate the model.
+        mse, rmse, mae, r2, pcc, scc, _, _  = self.validate(self.test_loader)
+
+        test_epoch_losses.append(mse)
+        test_epoch_rmse.append(rmse)
+        test_epoch_mae.append(mae)
+        test_epoch_r2.append(r2)
+        test_epoch_pcc.append(pcc)
+        test_epoch_scc.append(scc)
             
         logging.info(f"===Epoch {epoch:03.0f}===")
         logging.info(f"Train | MSE: {train_epoch_losses[-1]:2.5f} | RMSE: {train_epoch_rmse[-1]} | MAE: {train_epoch_mae[-1]} | R2: {train_epoch_r2[-1]} | PCC: {train_epoch_pcc[-1]} | SCC: {train_epoch_scc[-1]}")
@@ -301,6 +265,9 @@ class BuildGraphGraphModel(Engine):
                 'scc': test_epoch_scc                
             }          
         }
+    
+        # Collect garbage.
+        gc.collect()
 
         return performance_stats           
 
@@ -503,10 +470,10 @@ class GraphGraph(torch.nn.Module):
                 elif conv_layers == 3:
                     self.cell_emb = Sequential('x, edge_index, batch', 
                         [
-                            (GATConv(in_channels=4, out_channels=128), 'x, edge_index -> x1'),
-                            nn.BatchNorm1d(128),
+                            (GATConv(in_channels=4, out_channels=256), 'x, edge_index -> x1'),
+                            nn.BatchNorm1d(256),
                             nn.ReLU(inplace=True),
-                            (GATConv(in_channels=128, out_channels=128), 'x1, edge_index -> x2'),
+                            (GATConv(in_channels=256, out_channels=128), 'x1, edge_index -> x2'),
                             nn.BatchNorm1d(128),
                             nn.ReLU(inplace=True),  
                             (GATConv(in_channels=128, out_channels=128), 'x2, edge_index -> x3'),

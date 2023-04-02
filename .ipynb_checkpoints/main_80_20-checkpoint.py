@@ -74,6 +74,8 @@ def parse_args():
                         help='path of the raw datasets')
     parser.add_argument('--processed_path', type=str, default='../data/processed/', 
                         help='path of the processed datasets')
+    parser.add_argument('--logging_path', type=str, default='',
+                        help='path for the logging results')
     parser.add_argument('--early_stopping_threshold', type=float, default=20,
                         help='early stopping threshold')
     
@@ -91,20 +93,20 @@ def parse_args():
 def log_args_summary(args):
     logging.info("ARGUMENTS SUMMARY")
     logging.info("=================")
-    logging.info(f"seed        : {args.seed}")
-    logging.info(f"batch_size  : {args.batch_size}")
-    logging.info(f"lr          : {args.lr}")
-    logging.info(f"num_epochs  : {args.num_epochs}") 
-    logging.info(f"num_workers : {args.num_workers}")
-    logging.info(f"dropout     : {args.dropout}")
-    logging.info(f"kfolds      : {args.kfolds}")
-    logging.info(f"conv_type   : {args.conv_type}")
-    logging.info(f"conv_layers : {args.conv_layers}")
-    logging.info(f"global_pooling : global_{args.global_pooling}_pooling")    
+    logging.info(f"seed                     : {args.seed}")
+    logging.info(f"batch_size               : {args.batch_size}")
+    logging.info(f"lr                       : {args.lr}")
+    logging.info(f"num_epochs               : {args.num_epochs}") 
+    logging.info(f"num_workers              : {args.num_workers}")
+    logging.info(f"dropout                  : {args.dropout}")
+    logging.info(f"kfolds                   : {args.kfolds}")
+    logging.info(f"conv_type                : {args.conv_type}")
+    logging.info(f"conv_layers              : {args.conv_layers}")
+    logging.info(f"global_pooling           : global_{args.global_pooling}_pooling")    
     logging.info(f"early_stopping_threshold : {args.early_stopping_threshold}")    
     logging.info(f"combined_score_thresh    : {args.combined_score_thresh}")
-    logging.info(f"gdsc        : {args.gdsc}")
-    logging.info(f"file_ending : {args.file_ending}")
+    logging.info(f"gdsc                     : {args.gdsc}")
+    logging.info(f"file_ending              : {args.file_ending}")
     
 
 def main():
@@ -123,6 +125,7 @@ def main():
     logging.basicConfig(
         level=logging.INFO, filemode="a+",
         filename=PERFORMANCES + \
+            args.logging_path + \
             f'logfile_model_{args.model.lower()}_{args.version}_{args.gdsc}_{args.combined_score_thresh}_{args.seed}_{args.file_ending}',
         format="%(asctime)-15s %(levelname)-8s %(message)s"
     )  
@@ -543,7 +546,7 @@ def main():
         'model_state_dict': build_model.model.state_dict(),
         'optimizer_state_dict': build_model.optimizer.state_dict(),
         'performances': performance_stats
-    }, PERFORMANCES + f'model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}_{args.seed}_{args.conv_type}_{args.file_ending}.pth')
+    }, PERFORMANCES + args.logging_path + f'model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}_{args.seed}_{args.conv_type}_{args.file_ending}.pth')
         
 
 

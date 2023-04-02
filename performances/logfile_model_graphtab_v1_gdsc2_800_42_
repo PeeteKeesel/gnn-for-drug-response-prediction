@@ -1,0 +1,126 @@
+2023-03-31 23:11:33,291 INFO     ========================================
+2023-03-31 23:11:33,291 INFO     Creating sparse datasets...             
+2023-03-31 23:11:33,291 INFO         Reading full datasets...
+2023-03-31 23:11:35,832 INFO             (242036, 9) took 2.540583372116089 seconds
+2023-03-31 23:14:54,103 INFO     ========================================
+2023-03-31 23:14:54,103 INFO     Creating sparse datasets...             
+2023-03-31 23:14:54,103 INFO         Reading full datasets...
+2023-03-31 23:15:02,088 INFO             (575197, 9) took 7.984466791152954 seconds
+2023-03-31 23:27:48,160 INFO     ========================================
+2023-03-31 23:27:48,160 INFO     Creating sparse datasets...             
+2023-03-31 23:27:48,160 INFO         Reading full datasets...
+2023-03-31 23:27:48,237 INFO             DRM  : (575197, 9) took 0.07696104049682617 seconds
+2023-03-31 23:35:16,783 INFO             GExpr: (575197, 917) took 448.54602551460266 seconds
+2023-03-31 23:52:56,497 INFO             CNVG : (575197, 947) took 1059.71386384964 seconds
+2023-04-01 00:11:39,477 INFO             CNVP :(575197, 975) took 1122.9797406196594 seconds
+2023-04-01 00:29:36,470 INFO             MUT  : (573952, 965) took 1076.9922242164612 seconds
+2023-04-01 00:29:36,470 INFO         Finished reading full datasets.
+2023-04-01 00:32:28,018 INFO     Gene Expression
+===============
+2023-04-01 00:32:30,541 INFO     Shape total: (511745, 861)
+2023-04-01 00:32:31,254 INFO     Shape GDSC1: (296473, 861)
+2023-04-01 00:32:31,778 INFO     Shape GDSC2: (215272, 861)
+2023-04-01 00:32:31,778 INFO     CNV Gistic
+==========
+2023-04-01 00:32:41,963 INFO     Shape total: (511745, 861)
+2023-04-01 00:32:45,437 INFO     Shape GDSC1: (296473, 861)
+2023-04-01 00:32:47,967 INFO     Shape GDSC2: (215272, 861)
+2023-04-01 00:32:47,967 INFO     CNV Picnic
+==========
+2023-04-01 00:32:58,043 INFO     Shape total: (511745, 861)
+2023-04-01 00:33:01,515 INFO     Shape GDSC1: (296473, 861)
+2023-04-01 00:33:04,046 INFO     Shape GDSC2: (215272, 861)
+2023-04-01 00:33:04,046 INFO     Mutation
+========
+2023-04-01 00:33:06,719 INFO     Shape total: (511745, 861)
+2023-04-01 00:33:07,521 INFO     Shape GDSC1: (296473, 861)
+2023-04-01 00:33:08,128 INFO     Shape GDSC2: (215272, 861)
+2023-04-01 00:33:31,369 INFO         gexpr3.shape: (862, 859)
+2023-04-01 00:33:44,419 INFO     Start reading ../data/raw/9606.protein.links.detailed.v11.5.txt.gz ...
+2023-04-01 00:34:22,091 INFO     Finished reading.
+2023-04-01 00:34:28,245 INFO     Start reading ../data/raw/9606.protein.info.v11.5.txt.gz ...
+2023-04-01 00:34:28,846 INFO     Finished reading.
+2023-04-01 00:34:28,871 INFO     There are 3 proteins with ID frequency > 2. They will be deleted.
+2023-04-01 00:34:48,612 INFO         combined_score threshold: 800
+2023-04-01 00:34:48,614 INFO         Choosing threshold 800 we have shape: (6080, 12)
+2023-04-01 00:34:48,614 INFO         Number of unique gene_symbol1s: 643
+2023-04-01 00:34:48,615 INFO         Number of unique gene_symbol2s: 643
+2023-04-01 00:34:48,619 INFO         Created ../data/processed/thresh_800_inter_genes.csv.
+2023-04-01 00:34:48,637 INFO         There will be 643 nodes in the graph.
+2023-04-01 00:34:48,637 INFO         There will be 643 indices in the graph.
+2023-04-01 00:34:53,269 INFO     SUCCESS: The given list of tuples is undirected!
+2023-04-01 00:34:53,753 INFO             Intersecting cell-lines: 862
+2023-04-01 00:34:53,753 INFO             Intersecting genes.    : 859
+2023-04-01 00:34:53,758 INFO         Each new feature dataset has shape: (862, 644)
+2023-04-01 00:34:53,821 INFO     Since GDSC 2 database was chosen the number of intersecting cell-lines is 856
+2023-04-01 00:34:54,795 INFO         Creating gene-gene interaction graph for gdsc2...
+2023-04-01 00:34:57,866 INFO         Finished creating gene-gene interaction graph for gdsc2.
+2023-04-01 00:34:57,867 INFO             Cell-line: 22RV1      Graph: Data(x=[643, 4], edge_index=[2, 6080])
+2023-04-01 00:34:57,867 INFO             Cell-line: 23132-87   Graph: Data(x=[643, 4], edge_index=[2, 6080])
+2023-04-01 00:34:57,867 INFO             Cell-line: 42-MG-BA   Graph: Data(x=[643, 4], edge_index=[2, 6080])
+2023-04-01 00:34:57,867 INFO             Cell-line: 451Lu      Graph: Data(x=[643, 4], edge_index=[2, 6080])
+2023-04-01 00:34:57,867 INFO             Cell-line: 5637       Graph: Data(x=[643, 4], edge_index=[2, 6080])
+2023-04-01 00:34:58,089 INFO     Successfully saved full gene-gene graphs for gdsc2 in ../data/processed/gdsc2/800/thresh_gdsc2_800_gene_graphs.pkl.
+2023-04-01 00:34:58,139 INFO         Created gene feature matrices with shape : (856, 2573)
+2023-04-01 00:34:58,150 INFO             Number of      genes: 643
+2023-04-01 00:34:58,151 INFO             Number of cell-lines: 856
+2023-04-01 00:34:58,161 INFO     Successfully saved full gene-gene matrix for GDSC2 in ../data/processed/gdsc2/800/thresh_gdsc2_800_gene_mat.pkl.
+2023-04-01 14:17:51,304 INFO     ========================================
+2023-04-01 14:17:51,379 INFO     Creating sparse datasets...             
+2023-04-01 14:17:51,379 INFO         Reading full datasets...
+2023-04-01 14:17:58,923 INFO             DRM  : (575197, 9) took 7.543822526931763 seconds
+2023-04-01 14:32:16,724 INFO             GExpr: (575197, 917) took 857.8004665374756 seconds
+2023-04-01 14:49:08,309 INFO             CNVG : (575197, 947) took 1011.5847957134247 seconds
+2023-04-01 15:06:21,771 INFO             CNVP :(575197, 975) took 1033.462641954422 seconds
+2023-04-01 15:21:32,793 INFO             MUT  : (573952, 965) took 911.0210704803467 seconds
+2023-04-01 15:21:32,793 INFO         Finished reading full datasets.
+2023-04-01 15:24:18,242 INFO     Gene Expression
+===============
+2023-04-01 15:24:20,793 INFO     Shape total: (511745, 861)
+2023-04-01 15:24:21,503 INFO     Shape GDSC1: (296473, 861)
+2023-04-01 15:24:22,026 INFO     Shape GDSC2: (215272, 861)
+2023-04-01 15:24:22,026 INFO     CNV Gistic
+==========
+2023-04-01 15:24:32,169 INFO     Shape total: (511745, 861)
+2023-04-01 15:24:35,631 INFO     Shape GDSC1: (296473, 861)
+2023-04-01 15:24:38,219 INFO     Shape GDSC2: (215272, 861)
+2023-04-01 15:24:38,219 INFO     CNV Picnic
+==========
+2023-04-01 15:24:48,323 INFO     Shape total: (511745, 861)
+2023-04-01 15:24:51,790 INFO     Shape GDSC1: (296473, 861)
+2023-04-01 15:24:54,310 INFO     Shape GDSC2: (215272, 861)
+2023-04-01 15:24:54,310 INFO     Mutation
+========
+2023-04-01 15:24:57,004 INFO     Shape total: (511745, 861)
+2023-04-01 15:24:57,804 INFO     Shape GDSC1: (296473, 861)
+2023-04-01 15:24:58,406 INFO     Shape GDSC2: (215272, 861)
+2023-04-01 15:25:21,142 INFO         gexpr3.shape: (862, 859)
+2023-04-01 15:25:34,457 INFO     Start reading ../data/raw/9606.protein.links.detailed.v11.5.txt.gz ...
+2023-04-01 15:26:08,940 INFO     Finished reading.
+2023-04-01 15:26:14,907 INFO     Start reading ../data/raw/9606.protein.info.v11.5.txt.gz ...
+2023-04-01 15:26:15,487 INFO     Finished reading.
+2023-04-01 15:26:15,512 INFO     There are 3 proteins with ID frequency > 2. They will be deleted.
+2023-04-01 15:26:35,008 INFO         combined_score threshold: 800
+2023-04-01 15:26:35,010 INFO         Choosing threshold 800 we have shape: (6080, 12)
+2023-04-01 15:26:35,010 INFO         Number of unique gene_symbol1s: 643
+2023-04-01 15:26:35,011 INFO         Number of unique gene_symbol2s: 643
+2023-04-01 15:26:35,014 INFO         Created ../data/processed/thresh_800_inter_genes.csv.
+2023-04-01 15:26:35,032 INFO         There will be 643 nodes in the graph.
+2023-04-01 15:26:35,032 INFO         There will be 643 indices in the graph.
+2023-04-01 15:26:39,572 INFO     SUCCESS: The given list of tuples is undirected!
+2023-04-01 15:26:40,039 INFO             Intersecting cell-lines: 862
+2023-04-01 15:26:40,039 INFO             Intersecting genes.    : 859
+2023-04-01 15:26:40,044 INFO         Each new feature dataset has shape: (862, 644)
+2023-04-01 15:26:40,103 INFO     Since GDSC 2 database was chosen the number of intersecting cell-lines is 856
+2023-04-01 15:26:41,365 INFO         Creating gene-gene interaction graph for gdsc2...
+2023-04-01 15:26:44,326 INFO         Finished creating gene-gene interaction graph for gdsc2.
+2023-04-01 15:26:44,327 INFO             Cell-line: 22RV1      Graph: Data(x=[643, 4], edge_index=[2, 6080])
+2023-04-01 15:26:44,327 INFO             Cell-line: 23132-87   Graph: Data(x=[643, 4], edge_index=[2, 6080])
+2023-04-01 15:26:44,327 INFO             Cell-line: 42-MG-BA   Graph: Data(x=[643, 4], edge_index=[2, 6080])
+2023-04-01 15:26:44,327 INFO             Cell-line: 451Lu      Graph: Data(x=[643, 4], edge_index=[2, 6080])
+2023-04-01 15:26:44,327 INFO             Cell-line: 5637       Graph: Data(x=[643, 4], edge_index=[2, 6080])
+2023-04-01 15:26:46,626 INFO     Successfully saved full gene-gene graphs for gdsc2 in ../data/processed/gdsc2/800/thresh_gdsc2_800_gene_graphs.pkl.
+2023-04-01 15:26:46,672 INFO         Created gene feature matrices with shape : (856, 2573)
+2023-04-01 15:26:46,684 INFO             Number of      genes: 643
+2023-04-01 15:26:46,685 INFO             Number of cell-lines: 856
+2023-04-01 15:26:46,957 INFO     Successfully saved full gene-gene matrix for GDSC2 in ../data/processed/gdsc2/800/thresh_gdsc2_800_gene_mat.pkl.

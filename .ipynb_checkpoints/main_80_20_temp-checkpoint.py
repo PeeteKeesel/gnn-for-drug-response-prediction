@@ -25,7 +25,7 @@ from ignite.handlers         import EarlyStopping
 from sklearn.model_selection import KFold, StratifiedKFold
 from sklearn.model_selection import train_test_split
 
-PERFORMANCES = 'performances/'
+PERFORMANCES = 'performances/combined_score_threshs/'
 
 
 def parse_args():

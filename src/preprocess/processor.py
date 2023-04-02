@@ -395,19 +395,19 @@ class Processor:
         self.logger.info(f"{4*' '}Reading full datasets...")
         tic = time.time()
         drm = pd.read_pickle(self.processed_path + 'drm_full.pkl')
-        self.logger.info(f"{8*' '}{drm.shape} took {time.time()-tic} seconds")
+        self.logger.info(f"{8*' '}DRM  : {drm.shape} took {time.time()-tic} seconds")
         tic = time.time()
         gexpr = pd.read_pickle(self.processed_path + 'gexpr_full.pkl')
-        self.logger.info(f"{8*' '}{gexpr.shape} took {time.time()-tic} seconds")
+        self.logger.info(f"{8*' '}GExpr: {gexpr.shape} took {time.time()-tic} seconds")
         tic = time.time()
         cnvg = pd.read_pickle(self.processed_path + 'cnvg_full.pkl')
-        self.logger.info(f"{8*' '}{cnvg.shape} took {time.time()-tic} seconds")
+        self.logger.info(f"{8*' '}CNVG : {cnvg.shape} took {time.time()-tic} seconds")
         tic = time.time()
         cnvp = pd.read_pickle(self.processed_path + 'cnvp_full.pkl')
-        self.logger.info(f"{8*' '}{cnvp.shape} took {time.time()-tic} seconds")
+        self.logger.info(f"{8*' '}CNVP :{cnvp.shape} took {time.time()-tic} seconds")
         tic = time.time()
         mut = pd.read_pickle(self.processed_path + 'mut_full.pkl') 
-        self.logger.info(f"{8*' '}{mut.shape} took {time.time()-tic} seconds")
+        self.logger.info(f"{8*' '}MUT  : {mut.shape} took {time.time()-tic} seconds")
         self.logger.info(f"{4*' '}Finished reading full datasets.")
         
         # We don't want any missing values for our features.
@@ -433,6 +433,12 @@ class Processor:
             .intersection(set(uniq_cl_cnvg))\
             .intersection(set(uniq_cl_cnvp))\
             .intersection(set(uniq_cl_mut))
+        
+        # --- GraphCDR ---
+#         self.logger.info(f"{4*' '}Number of intersecting cell-lines before GraphCDR:", len(INTER_CLS))
+#         GraphCDR_cls = pd.read_csv(self.raw_path + 'GraphCDR_cell_lines_annotations.txt', sep='\t')
+#         INTER_CLS = [cl for cl in INTER_CLS if cl in GraphCDR_cls.Name.unique().tolist()]
+#         self.logger.info(f"{4*' '}Number of intersecting cell-lines after  GraphCDR:", len(INTER_CLS))        
 
         # Genes.
         ignore = ['DATASET', 'CELL_LINE_NAME', 'DRUG_NAME', 'DRUG_ID', 

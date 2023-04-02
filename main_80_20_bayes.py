@@ -6,11 +6,16 @@ import torch.nn as nn
 import numpy    as np
 import pandas   as pd
 
+import skopt
+from skopt                         import gbrt_minimize
+from skopt.space                   import Real, Integer, Categorical
+from functools                     import partial
+
 from argparse                      import ArgumentParser
 from pathlib                       import Path
 from src.models.TabTab.tab_tab_early_stopping   import TabTabDataset, create_tt_loaders, BuildTabTabModel, TabTab
 from src.models.GraphTab.graph_tab_early_stopping import GraphTabDataset, create_gt_loaders, BuildGraphTabModel, GraphTab
-from src.models.GraphGraph.graph_graph_early_stopping import GraphGraphDataset, create_gg_loaders, BuildGraphGraphModel, GraphGraph
+from src.models.GraphGraph.graph_graph_early_stopping_bayes import GraphGraphDataset, create_gg_loaders, BuildGraphGraphModel, GraphGraph
 
 # from src.models.TabTab.tab_tab     import TabTabDataset, create_tab_tab_datasets, BuildTabTabModel, TabTab_v1
 # from src.models.TabTab.tab_tab_early_stopping   import TabTabDataset, create_tab_tab_datasets, BuildTabTabModel, TabTab
@@ -74,8 +79,6 @@ def parse_args():
                         help='path of the raw datasets')
     parser.add_argument('--processed_path', type=str, default='../data/processed/', 
                         help='path of the processed datasets')
-    parser.add_argument('--logging_path', type=str, default='',
-                        help='path for the logging results')
     parser.add_argument('--early_stopping_threshold', type=float, default=20,
                         help='early stopping threshold')
     
@@ -93,22 +96,107 @@ def parse_args():
 def log_args_summary(args):
     logging.info("ARGUMENTS SUMMARY")
     logging.info("=================")
-    logging.info(f"seed                     : {args.seed}")
-    logging.info(f"batch_size               : {args.batch_size}")
-    logging.info(f"lr                       : {args.lr}")
-    logging.info(f"num_epochs               : {args.num_epochs}") 
-    logging.info(f"num_workers              : {args.num_workers}")
-    logging.info(f"dropout                  : {args.dropout}")
-    logging.info(f"kfolds                   : {args.kfolds}")
-    logging.info(f"conv_type                : {args.conv_type}")
-    logging.info(f"conv_layers              : {args.conv_layers}")
-    logging.info(f"global_pooling           : global_{args.global_pooling}_pooling")    
+    logging.info(f"seed        : {args.seed}")
+    logging.info(f"batch_size  : {args.batch_size}")
+    logging.info(f"lr          : {args.lr}")
+    logging.info(f"num_epochs  : {args.num_epochs}") 
+    logging.info(f"num_workers : {args.num_workers}")
+    logging.info(f"dropout     : {args.dropout}")
+    logging.info(f"kfolds      : {args.kfolds}")
+    logging.info(f"conv_type   : {args.conv_type}")
+    logging.info(f"conv_layers : {args.conv_layers}")
+    logging.info(f"global_pooling : global_{args.global_pooling}_pooling")    
     logging.info(f"early_stopping_threshold : {args.early_stopping_threshold}")    
     logging.info(f"combined_score_thresh    : {args.combined_score_thresh}")
-    logging.info(f"gdsc                     : {args.gdsc}")
-    logging.info(f"file_ending              : {args.file_ending}")
+    logging.info(f"gdsc        : {args.gdsc}")
+    logging.info(f"file_ending : {args.file_ending}")
     
 
+def objective(params, args, device, datasets):
+    learning_rate, weight_decay, batch_size = params
+#     train_loader, test_loader = loaders
+    drm_train, drm_test, cl_graphs, drug_graphs = datasets
+    
+    logging.info("Hyperparameter setting")
+    logging.info("======================")
+    logging.info(f"{4*' '}learning_rate : {learning_rate}")
+    logging.info(f"{4*' '}weight_decay  : {weight_decay}")
+    logging.info(f"{4*' '}batch_size    : {batch_size}") 
+    
+    args.lr = learning_rate
+    args.batch_size = batch_size
+    args.weight_decay = weight_decay
+    
+    # Create data loaders.
+    train_loader, test_loader = create_gg_loaders(
+        drm_train,
+        drm_test,
+        cl_graphs,
+        drug_graphs,
+        args
+    )
+    
+    logging.info(f"{4*' '}Finished creating pytorch training datasets!")
+    logging.info(f"{4*' '}Number of batches per dataset:")
+    logging.info(f"{8*' '}train : {len(train_loader)}")      
+    logging.info(f"{8*' '}test  : {len(test_loader)}")    
+    
+    # Initialize model.
+    model = GraphGraph(
+        dropout=args.dropout,
+        conv_type=args.conv_type,
+        conv_layers=args.conv_layers,
+        global_pooling=args.global_pooling
+    )
+    
+    # Enable multi-GPU parallelization if feasible.
+    if torch.cuda.device_count() > 1:
+        model = nn.DataParallel(model).to(device)
+    else:
+        model =  model.to(device)    
+    
+    loss_func = nn.MSELoss()
+    optimizer = torch.optim.Adam(params=model.parameters(), 
+                                 lr=learning_rate,
+                                 weight_decay=weight_decay)
+    
+    # Build the model.
+    build_model = BuildGraphGraphModel(
+        model=model, 
+        criterion=loss_func, 
+        optimizer=optimizer,
+        num_epochs=args.num_epochs, 
+        train_loader=train_loader,
+        test_loader=test_loader,
+        early_stopping_threshold=args.early_stopping_threshold,            
+        device=device
+    )
+    logging.info(build_model.model)    
+    
+    logging.info(f"{4*' '}TRAINING the model")
+    performance_stats = build_model.train(
+        build_model.train_loader
+    )
+    print(performance_stats)
+    
+    with open('performances/scores.txt', 'a') as f:
+        f.write("Hyperparameter Setting\n")
+        f.write("----------------------\n")
+        f.write(f"{4*' '}learning_rate: {learning_rate}\n")
+        f.write(f"{4*' '}weight_decay : {weight_decay}\n")
+        f.write(f"{4*' '}batch_size   : {batch_size}\n")
+        f.write(f"{8*' '}MSE  : {performance_stats.get('test').get('mse')[-1].item()}\n")
+        f.write(f"{8*' '}RMSE : {performance_stats.get('test').get('rmse')[-1].item()}\n")
+        f.write(f"{8*' '}MAE  : {performance_stats.get('test').get('mae')[-1].item()}\n")
+        f.write(f"{8*' '}R2   : {performance_stats.get('test').get('r2')[-1].item()}\n")        
+        f.write(f"{8*' '}PCC  : {performance_stats.get('test').get('pcc')[-1].item()}\n")
+        f.write(f"{8*' '}SCC  : {performance_stats.get('test').get('scc')[-1].item()}\n")     
+    
+    print(f"objective() returning MSE {performance_stats.get('test').get('mse')[-1].item()}")
+    
+    return performance_stats.get('test').get('mse')[-1].item()
+    
+    
 def main():
     args = parse_args()
 
@@ -125,7 +213,6 @@ def main():
     logging.basicConfig(
         level=logging.INFO, filemode="a+",
         filename=PERFORMANCES + \
-            args.logging_path + \
             f'logfile_model_{args.model.lower()}_{args.version}_{args.gdsc}_{args.combined_score_thresh}_{args.seed}_{args.file_ending}',
         format="%(asctime)-15s %(levelname)-8s %(message)s"
     )  
@@ -474,6 +561,59 @@ def main():
             stratify=drm['CELL_LINE_NAME']
         )
         
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        logging.info(f"device: {device}")
+        
+        # Define hyperparameter space.
+        param_space = [
+            Real(name='learning_rate', low=0.0001, high=0.1, prior='log-uniform'),
+            Real(name='weight_decay', low=0.000000001, high=0.001, prior='log-uniform'),
+            Integer(name='batch_size', low=16, high=1024)
+        ]
+        logging.info("Parameter Space")
+        logging.info("===============")
+        logging.info(param_space)
+        
+        fixed_params = {
+            'args': args,
+            'device': device,
+            'datasets': [
+                drm_train,
+                drm_test,
+                cl_graphs,
+                drug_graphs
+            ]
+        }
+        
+        objective_gg_fixed = partial(objective, **fixed_params)
+        
+        # Run bayesian hyperparameter optimization.
+        bayes_res = gbrt_minimize(
+            objective_gg_fixed,
+            param_space,
+            n_calls=10,
+            random_state=args.seed,
+            n_jobs=args.num_workers
+        )
+        
+        optimal_params = bayes_res.x
+        
+        logging.info("\n\n\n\nResults of Bayesian Hyperparameter optimization")
+        logging.info("===============================================")
+        logging.info(f"{4*' '}Optimal hyperparameter values:")
+        for param, value in zip(bayes_res.space, optimal_params):
+            logging.info(f"{8*' '} {param.name:15s} optimal value: {value}")  
+            
+        
+        # --- Train a final model using the optimal hyperparameters ---
+        logging.info("Train final model using optimal hyperparameters")
+        logging.info("===============================================")
+        
+        learning_rate, weight_decay, batch_size = optimal_params
+        args.lr = learning_rate
+        args.weight_decay = weight_decay
+        args.batch_size = batch_size
+        
         # Create data loaders.
         train_loader, test_loader = create_gg_loaders(
             drm_train,
@@ -482,40 +622,31 @@ def main():
             drug_graphs,
             args
         )
-        
+
         logging.info(f"{4*' '}Finished creating pytorch training datasets!")
         logging.info(f"{4*' '}Number of batches per dataset:")
         logging.info(f"{8*' '}train : {len(train_loader)}")      
-        logging.info(f"{8*' '}test  : {len(test_loader)}")
-        
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        logging.info(f"device: {device}")
-        
+        logging.info(f"{8*' '}test  : {len(test_loader)}")    
+
         # Initialize model.
         model = GraphGraph(
             dropout=args.dropout,
             conv_type=args.conv_type,
             conv_layers=args.conv_layers,
             global_pooling=args.global_pooling
-        ) 
-        
-        logging.info(f"Number of GPUs: {torch.cuda.device_count()}")
-        logging.info(f"GPU Usage: {torch.cuda.max_memory_allocated(device=device)}") 
-        
+        )
+
         # Enable multi-GPU parallelization if feasible.
         if torch.cuda.device_count() > 1:
             model = nn.DataParallel(model).to(device)
         else:
-            model =  model.to(device)            
-        
-        # Define loss function and optimizer.
+            model =  model.to(device)    
+
         loss_func = nn.MSELoss()
-        optimizer = torch.optim.Adam(
-            params=model.parameters(), 
-            lr=args.lr,
-            weight_decay=args.weight_decay
-        )            
-        
+        optimizer = torch.optim.Adam(params=model.parameters(), 
+                                     lr=learning_rate,
+                                     weight_decay=weight_decay)
+
         # Build the model.
         build_model = BuildGraphGraphModel(
             model=model, 
@@ -527,10 +658,9 @@ def main():
             early_stopping_threshold=args.early_stopping_threshold,            
             device=device
         )
-        logging.info(build_model.model)
-        
-        # Train the model on the training fold and evaluate on the test fold.
-        logging.info("TRAINING the model")
+        logging.info(build_model.model)    
+
+        logging.info(f"{4*' '}TRAINING the model")
         performance_stats = build_model.train(
             build_model.train_loader
         )
@@ -546,7 +676,7 @@ def main():
         'model_state_dict': build_model.model.state_dict(),
         'optimizer_state_dict': build_model.optimizer.state_dict(),
         'performances': performance_stats
-    }, PERFORMANCES + args.logging_path + f'model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}_{args.seed}_{args.conv_type}_{args.file_ending}.pth')
+    }, PERFORMANCES + f'model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}_{args.seed}_{args.conv_type}_{args.file_ending}.pth')
         
 
 
