@@ -1,0 +1,105 @@
+2023-04-08 23:12:52,512 INFO     Finished reading drug response matrix: (137835, 9)
+2023-04-08 23:12:52,519 INFO     DRM Number of unique cell-lines: 856
+2023-04-08 23:12:52,722 INFO     Finished reading cell-line graphs: Data(x=[293, 4], edge_index=[2, 874])
+2023-04-08 23:12:52,723 INFO     Finished reading drug SMILES dict: 181
+2023-04-08 23:12:52,723 INFO     ARGUMENTS SUMMARY
+2023-04-08 23:12:52,723 INFO     =================
+2023-04-08 23:12:52,723 INFO     seed                     : 42
+2023-04-08 23:12:52,723 INFO     batch_size               : 128
+2023-04-08 23:12:52,723 INFO     lr                       : 0.0001
+2023-04-08 23:12:52,723 INFO     num_epochs               : 150
+2023-04-08 23:12:52,723 INFO     num_workers              : 8
+2023-04-08 23:12:52,723 INFO     dropout                  : 0.1
+2023-04-08 23:12:52,723 INFO     kfolds                   : 5
+2023-04-08 23:12:52,723 INFO     conv_type                : GATConv
+2023-04-08 23:12:52,723 INFO     conv_layers              : 2
+2023-04-08 23:12:52,723 INFO     global_pooling           : global_max_pooling
+2023-04-08 23:12:52,723 INFO     early_stopping_threshold : 20
+2023-04-08 23:12:52,723 INFO     combined_score_thresh    : 990
+2023-04-08 23:12:52,723 INFO     gdsc                     : gdsc2
+2023-04-08 23:12:52,723 INFO     file_ending              : Gat2Gin990Max150
+2023-04-08 23:12:52,724 INFO     Finished building GraphTabDataset!
+2023-04-08 23:12:52,724 INFO     GraphTabDataset Summary
+2023-04-08 23:12:52,724 INFO     =======================
+2023-04-08 23:12:52,724 INFO     # observations : 137835
+2023-04-08 23:12:52,806 INFO     # cell-lines   : 856
+2023-04-08 23:12:52,872 INFO     # drugs        : 181
+2023-04-08 23:12:52,872 INFO     # genes        : 293
+2023-04-08 23:12:53,019 INFO             train shape: (110268, 9)
+2023-04-08 23:12:53,019 INFO             test  shape: (27567, 9)
+2023-04-08 23:12:53,019 INFO             train_dataset:
+2023-04-08 23:12:53,019 INFO     GraphTabDataset Summary
+2023-04-08 23:12:53,019 INFO     =======================
+2023-04-08 23:12:53,019 INFO     # observations : 110268
+2023-04-08 23:12:53,083 INFO     # cell-lines   : 856
+2023-04-08 23:12:53,144 INFO     # drugs        : 181
+2023-04-08 23:12:53,144 INFO     # genes        : 293
+2023-04-08 23:12:53,144 INFO             test_dataset :
+2023-04-08 23:12:53,144 INFO     GraphTabDataset Summary
+2023-04-08 23:12:53,144 INFO     =======================
+2023-04-08 23:12:53,144 INFO     # observations : 27567
+2023-04-08 23:12:53,160 INFO     # cell-lines   : 856
+2023-04-08 23:12:53,174 INFO     # drugs        : 181
+2023-04-08 23:12:53,175 INFO     # genes        : 293
+2023-04-08 23:12:53,175 INFO         Finished creating pytorch training datasets!
+2023-04-08 23:12:53,175 INFO         Number of batches per dataset:
+2023-04-08 23:12:53,175 INFO             train : 862
+2023-04-08 23:12:53,175 INFO             test  : 216
+2023-04-08 23:12:53,175 INFO     device: cuda
+2023-04-08 23:12:53,225 INFO     Number of GPUs: 1
+2023-04-08 23:12:53,225 INFO     GPU Usage: 0
+2023-04-08 23:12:55,549 INFO     GraphTab(
+  (cell_emb): Sequential(
+    (0): GATConv(4, 128, heads=1)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU(inplace=True)
+    (3): GATConv(128, 128, heads=1)
+    (4): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (5): <function global_max_pool at 0x7f42db20cc10>
+    (6): Linear(in_features=128, out_features=128, bias=True)
+    (7): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Dropout(p=0.1, inplace=False)
+    (10): Linear(in_features=128, out_features=128, bias=True)
+    (11): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-04-08 23:12:55,550 INFO     TRAINING the model
+2023-04-08 23:13:46,483 INFO     ===Epoch 001===
+2023-04-08 23:13:46,483 INFO     Train | MSE: 6.20681 | RMSE: 2.49135 | MAE: 2.08523 | R2: 0.12572 | PCC: 0.77960 | SCC: 0.72947
+2023-04-08 23:13:46,483 INFO     Test  | MSE: 2.85422 | RMSE: 1.68944 | MAE: 1.33374 | R2: 0.59815 | PCC: 0.85809 | SCC: 0.83196
+2023-04-08 23:14:37,793 INFO     ===Epoch 002===
+2023-04-08 23:14:37,794 INFO     Train | MSE: 2.41733 | RMSE: 1.55478 | MAE: 1.20508 | R2: 0.65960 | PCC: 0.84012 | SCC: 0.80514
+2023-04-08 23:14:37,794 INFO     Test  | MSE: 1.69621 | RMSE: 1.30239 | MAE: 0.97275 | R2: 0.76119 | PCC: 0.87495 | SCC: 0.84988
+2023-04-08 23:15:29,911 INFO     ===Epoch 003===
+2023-04-08 23:15:29,912 INFO     Train | MSE: 1.88750 | RMSE: 1.37386 | MAE: 1.04484 | R2: 0.73422 | PCC: 0.85769 | SCC: 0.82526
+2023-04-08 23:15:29,912 INFO     Test  | MSE: 1.60589 | RMSE: 1.26724 | MAE: 0.93724 | R2: 0.77411 | PCC: 0.88014 | SCC: 0.85480
+2023-04-08 23:16:21,905 INFO     ===Epoch 004===
+2023-04-08 23:16:21,905 INFO     Train | MSE: 1.79906 | RMSE: 1.34129 | MAE: 1.01731 | R2: 0.74666 | PCC: 0.86440 | SCC: 0.83329
+2023-04-08 23:16:21,906 INFO     Test  | MSE: 1.53601 | RMSE: 1.23936 | MAE: 0.91472 | R2: 0.78364 | PCC: 0.88542 | SCC: 0.86129
+2023-04-08 23:17:13,910 INFO     ===Epoch 005===
+2023-04-08 23:17:13,910 INFO     Train | MSE: 1.73173 | RMSE: 1.31595 | MAE: 0.99825 | R2: 0.75611 | PCC: 0.86980 | SCC: 0.83874
+2023-04-08 23:17:13,911 INFO     Test  | MSE: 1.51791 | RMSE: 1.23203 | MAE: 0.90891 | R2: 0.78617 | PCC: 0.88785 | SCC: 0.86396
+2023-04-08 23:18:05,995 INFO     ===Epoch 006===
+2023-04-08 23:18:05,996 INFO     Train | MSE: 1.69085 | RMSE: 1.30033 | MAE: 0.98492 | R2: 0.76185 | PCC: 0.87303 | SCC: 0.84211
+2023-04-08 23:18:05,996 INFO     Test  | MSE: 1.49042 | RMSE: 1.22083 | MAE: 0.89337 | R2: 0.79061 | PCC: 0.89005 | SCC: 0.86568

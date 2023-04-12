@@ -226,15 +226,15 @@ class BuildGraphTabModel(Engine):
             y_true = torch.cat(y_true, dim=0)
             y_pred = torch.cat(y_pred, dim=0)
             train_mse = train_epoch_losses[-1]
-            train_epoch_rmse.append(torch.sqrt(train_mse))
+            train_epoch_rmse.append(torch.sqrt(train_mse).item())
             train_epoch_mae.append(mean_absolute_error(y_true.detach().cpu(), 
                                                        y_pred.detach().cpu()))
             train_epoch_r2.append(r2_score(y_true.detach().cpu(), 
                                            y_pred.detach().cpu()))
             train_epoch_pcc.append(pearsonr(y_true.detach().cpu().numpy().flatten(), 
-                                            y_pred.detach().cpu().numpy().flatten()))
+                                            y_pred.detach().cpu().numpy().flatten()).statistic)
             train_epoch_scc.append(spearmanr(y_true.detach().cpu().numpy().flatten(),
-                                             y_pred.detach().cpu().numpy().flatten()))             
+                                             y_pred.detach().cpu().numpy().flatten()).statistic)             
                      
             # Validate the model.
             mse, rmse, mae, r2, pcc, scc, _, _  = self.validate(self.test_loader)
@@ -246,10 +246,10 @@ class BuildGraphTabModel(Engine):
             test_epoch_scc.append(scc)
             
             train_epoch_time.append(time.time() - tic)            
-
+            
             logging.info(f"===Epoch {epoch:03.0f}===")
-            logging.info(f"Train | MSE: {train_mse:2.5f}")
-            logging.info(f"Test  | MSE: {mse:2.5f}")
+            logging.info(f"Train | MSE: {train_mse:2.5f} | RMSE: {train_epoch_rmse[-1]:2.5f} | MAE: {train_epoch_mae[-1]:2.5f} | R2: {train_epoch_r2[-1]:2.5f} | PCC: {train_epoch_pcc[-1]:2.5f} | SCC: {train_epoch_scc[-1]:2.5f}")
+            logging.info(f"Test  | MSE: {mse:2.5f} | RMSE: {test_epoch_rmse[-1]:2.5f} | MAE: {test_epoch_mae[-1]:2.5f} | R2: {test_epoch_r2[-1]:2.5f} | PCC: {test_epoch_pcc[-1]:2.5f} | SCC: {test_epoch_scc[-1]:2.5f}")
             
             # Check early stopping criteria.
             if mse < best_loss:
@@ -265,8 +265,9 @@ class BuildGraphTabModel(Engine):
                 break
             
 #         # Final model performance.
-#         mse_te, rmse_te, mae_te, r2_te, pcc_te, scc_te, _, _ = self.validate(self.test_loader)
-#         logging.info(f"Test       | MSE: {mse_te:2.5f}")            
+        logging.info(f"===Epoch {epoch:03.0f}===")
+        logging.info(f"Train | MSE: {train_epoch_losses[-1]:2.5f} | RMSE: {train_epoch_rmse[-1]} | MAE: {train_epoch_mae[-1]} | R2: {train_epoch_r2[-1]} | PCC: {train_epoch_pcc[-1]} | SCC: {train_epoch_scc[-1]}")
+        logging.info(f"Test  | MSE: {test_epoch_losses[-1]:2.5f} | RMSE: {test_epoch_rmse[-1]} | MAE: {test_epoch_mae[-1]} | R2: {test_epoch_r2[-1]} | PCC: {test_epoch_pcc[-1]} | SCC: {test_epoch_scc[-1]}")           
 
         performance_stats = {
             'train': {
@@ -402,82 +403,180 @@ References:
     - https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html#torch_geometric.nn.sequential.Sequential
 """
 class GraphTab(torch.nn.Module):
-    def __init__(self, dropout, conv_type='GCNConv', conv_layers=2):
+    def __init__(self, 
+                 dropout, 
+                 conv_type='GCNConv', 
+                 conv_layers=2, 
+                 global_pooling='max'):
         super(GraphTab, self).__init__()
 
         # Note: in_channels = number of features.
-        if conv_type == 'GCNConv':
-            if conv_layers == 2:
-                self.cell_emb = Sequential('x, edge_index, batch', 
-                    [
-                        (GCNConv(in_channels=4, out_channels=256), 'x, edge_index -> x1'),
-                        nn.ReLU(inplace=True),
-                        nn.Dropout(p=dropout),
-                        (GCNConv(in_channels=256, out_channels=128), 'x1, edge_index -> x2'),
-                        nn.ReLU(inplace=True),                
-                        (global_max_pool, 'x2, batch -> x3'), 
-                        nn.Linear(128, 128),
-                        nn.BatchNorm1d(128),
-                        nn.ReLU(),
-                        nn.Dropout(p=dropout),
-                        nn.Linear(128, 128),
-                        nn.ReLU()
-                    ]
-                )
-            elif conv_layers == 3:
-                self.cell_emb = Sequential('x, edge_index, batch', 
-                    [
-                        (GCNConv(in_channels=4, out_channels=512), 'x, edge_index -> x1'),
-                        nn.ReLU(inplace=True),
-                        (GCNConv(in_channels=512, out_channels=256), 'x1, edge_index -> x2'),
-                        nn.ReLU(inplace=True),  
-                        (GCNConv(in_channels=256, out_channels=128), 'x2, edge_index -> x3'),
-                        nn.ReLU(inplace=True),                        
-                        (global_max_pool, 'x3, batch -> x4'), 
-                        nn.Linear(128, 128),
-                        nn.BatchNorm1d(128),
-                        nn.ReLU(),
-                        nn.Dropout(p=dropout),
-                        nn.Linear(128, 128),
-                        nn.ReLU()
-                    ]
-                )                
-        elif conv_type == 'GATConv':
-            if conv_layers == 2:
-                self.cell_emb = Sequential('x, edge_index, batch', 
-                    [
-                        (GATConv(in_channels=4, out_channels=256), 'x, edge_index -> x1'),
-                        nn.ReLU(inplace=True),
-                        nn.Dropout(p=dropout),
-                        (GATConv(in_channels=256, out_channels=128), 'x1, edge_index -> x2'),
-                        nn.ReLU(inplace=True),                
-                        (global_max_pool, 'x2, batch -> x3'), 
-                        nn.Linear(128, 128),
-                        nn.BatchNorm1d(128),
-                        nn.ReLU(),
-                        nn.Dropout(p=dropout),
-                        nn.Linear(128, 128),
-                        nn.ReLU()
-                    ]
-                )
-            elif conv_layers == 3:
-                self.cell_emb = Sequential('x, edge_index, batch', 
-                    [
-                        (GATConv(in_channels=4, out_channels=512), 'x, edge_index -> x1'),
-                        nn.ReLU(inplace=True),
-                        (GATConv(in_channels=512, out_channels=256), 'x1, edge_index -> x2'),
-                        nn.ReLU(inplace=True),  
-                        (GATConv(in_channels=256, out_channels=128), 'x2, edge_index -> x3'),
-                        nn.ReLU(inplace=True),                
-                        (global_max_pool, 'x3, batch -> x4'), 
-                        nn.Linear(128, 128),
-                        nn.BatchNorm1d(128),
-                        nn.ReLU(),
-                        nn.Dropout(p=dropout),
-                        nn.Linear(128, 128),
-                        nn.ReLU()
-                    ]
-                )
+        if global_pooling == 'max':
+            if conv_type == 'GCNConv':
+                if conv_layers == 2:
+                    self.cell_emb = Sequential('x, edge_index, batch', 
+                        [
+                            (GCNConv(in_channels=4, out_channels=128), 'x, edge_index -> x1'),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(inplace=True),
+    #                         nn.Dropout(p=dropout),
+                            (GCNConv(in_channels=128, out_channels=128), 'x1, edge_index -> x2'),
+                            nn.BatchNorm1d(128),                        
+    #                         nn.ReLU(inplace=True),                
+                            (global_max_pool, 'x2, batch -> x3'), 
+                            nn.Linear(128, 128),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(),
+                            nn.Dropout(p=dropout),
+                            nn.Linear(128, 128),
+                            nn.ReLU()
+                        ]
+                    )
+                elif conv_layers == 3:
+                    self.cell_emb = Sequential('x, edge_index, batch', 
+                        [
+                            (GCNConv(in_channels=4, out_channels=128), 'x, edge_index -> x1'),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(inplace=True),
+                            (GCNConv(in_channels=128, out_channels=128), 'x1, edge_index -> x2'),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(inplace=True), 
+                            (GCNConv(in_channels=128, out_channels=128), 'x2, edge_index -> x3'),
+                            nn.BatchNorm1d(128),                        
+    #                         nn.ReLU(inplace=True),                        
+                            (global_max_pool, 'x3, batch -> x4'), 
+                            nn.Linear(128, 128),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(),
+                            nn.Dropout(p=dropout),
+                            nn.Linear(128, 128),
+                            nn.ReLU()
+                        ]
+                    )                
+            elif conv_type == 'GATConv':
+                if conv_layers == 2:
+                    self.cell_emb = Sequential('x, edge_index, batch', 
+                        [
+                            (GATConv(in_channels=4, out_channels=128), 'x, edge_index -> x1'),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(inplace=True),
+    #                         nn.Dropout(p=dropout),
+                            (GATConv(in_channels=128, out_channels=128), 'x1, edge_index -> x2'),
+                            nn.BatchNorm1d(128),                        
+    #                         nn.ReLU(inplace=True),                
+                            (global_max_pool, 'x2, batch -> x3'), 
+                            nn.Linear(128, 128),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(),
+                            nn.Dropout(p=dropout),
+                            nn.Linear(128, 128),
+                            nn.ReLU()
+                        ]
+                    )
+                elif conv_layers == 3:
+                    self.cell_emb = Sequential('x, edge_index, batch', 
+                        [
+                            (GATConv(in_channels=4, out_channels=128), 'x, edge_index -> x1'),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(inplace=True),
+                            (GATConv(in_channels=128, out_channels=128), 'x1, edge_index -> x2'),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(inplace=True),
+                            (GATConv(in_channels=128, out_channels=128), 'x2, edge_index -> x3'),
+                            nn.BatchNorm1d(128),                        
+    #                         nn.ReLU(inplace=True),                
+                            (global_max_pool, 'x3, batch -> x4'), 
+                            nn.Linear(128, 128),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(),
+                            nn.Dropout(p=dropout),
+                            nn.Linear(128, 128),
+                            nn.ReLU()
+                        ]
+                    )
+        elif global_pooling == 'mean':
+            if conv_type == 'GCNConv':
+                if conv_layers == 2:
+                    self.cell_emb = Sequential('x, edge_index, batch', 
+                        [
+                            (GCNConv(in_channels=4, out_channels=128), 'x, edge_index -> x1'),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(inplace=True),
+    #                         nn.Dropout(p=dropout),
+                            (GCNConv(in_channels=128, out_channels=128), 'x1, edge_index -> x2'),
+                            nn.BatchNorm1d(128),                        
+    #                         nn.ReLU(inplace=True),                
+                            (global_mean_pool, 'x2, batch -> x3'), 
+                            nn.Linear(128, 128),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(),
+                            nn.Dropout(p=dropout),
+                            nn.Linear(128, 128),
+                            nn.ReLU()
+                        ]
+                    )
+                elif conv_layers == 3:
+                    self.cell_emb = Sequential('x, edge_index, batch', 
+                        [
+                            (GCNConv(in_channels=4, out_channels=128), 'x, edge_index -> x1'),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(inplace=True),
+                            (GCNConv(in_channels=128, out_channels=128), 'x1, edge_index -> x2'),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(inplace=True), 
+                            (GCNConv(in_channels=128, out_channels=128), 'x2, edge_index -> x3'),
+                            nn.BatchNorm1d(128),                        
+    #                         nn.ReLU(inplace=True),                        
+                            (global_mean_pool, 'x3, batch -> x4'), 
+                            nn.Linear(128, 128),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(),
+                            nn.Dropout(p=dropout),
+                            nn.Linear(128, 128),
+                            nn.ReLU()
+                        ]
+                    )                
+            elif conv_type == 'GATConv':
+                if conv_layers == 2:
+                    self.cell_emb = Sequential('x, edge_index, batch', 
+                        [
+                            (GATConv(in_channels=4, out_channels=128), 'x, edge_index -> x1'),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(inplace=True),
+    #                         nn.Dropout(p=dropout),
+                            (GATConv(in_channels=128, out_channels=128), 'x1, edge_index -> x2'),
+                            nn.BatchNorm1d(128),                        
+    #                         nn.ReLU(inplace=True),                
+                            (global_mean_pool, 'x2, batch -> x3'), 
+                            nn.Linear(128, 128),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(),
+                            nn.Dropout(p=dropout),
+                            nn.Linear(128, 128),
+                            nn.ReLU()
+                        ]
+                    )
+                elif conv_layers == 3:
+                    self.cell_emb = Sequential('x, edge_index, batch', 
+                        [
+                            (GATConv(in_channels=4, out_channels=128), 'x, edge_index -> x1'),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(inplace=True),
+                            (GATConv(in_channels=128, out_channels=128), 'x1, edge_index -> x2'),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(inplace=True),
+                            (GATConv(in_channels=128, out_channels=128), 'x2, edge_index -> x3'),
+                            nn.BatchNorm1d(128),                        
+    #                         nn.ReLU(inplace=True),                
+                            (global_mean_pool, 'x3, batch -> x4'), 
+                            nn.Linear(128, 128),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(),
+                            nn.Dropout(p=dropout),
+                            nn.Linear(128, 128),
+                            nn.ReLU()
+                        ]
+                    )                    
         else:
             raise ValueError(
                 f"Input conv_type `{conv_type}` has not been implemented! Choose out of [`GCNConv`, `GATConv`]"
@@ -504,14 +603,6 @@ class GraphTab(torch.nn.Module):
             nn.Dropout(p=dropout),
             nn.Linear(64, 1)
         )
-
-#     def forward(self, cell, drug):
-#         drug_emb = self.drug_emb(drug)
-#         cell_emb = self.cell_emb(cell.x.float(), cell.edge_index, cell.batch)
-#         concat = torch.cat([cell_emb, drug_emb], -1)
-#         y_pred = self.fcn(concat)
-#         y_pred = y_pred.reshape(y_pred.shape[0])
-#         return y_pred   
     
     def forward(self, cell_x, cell_edge_index, cell_batch, drug):
         drug_emb = self.drug_emb(drug)

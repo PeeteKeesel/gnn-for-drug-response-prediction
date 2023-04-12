@@ -1,0 +1,123 @@
+2023-04-07 17:33:37,600 INFO     ========================================
+2023-04-07 17:33:37,601 INFO     Creating sparse datasets...             
+2023-04-07 17:33:37,601 INFO         Reading full datasets...
+2023-04-07 17:33:37,681 INFO             DRM  : (575197, 9) took 0.0800178050994873 seconds
+2023-04-07 17:33:39,995 INFO             GExpr: (575197, 917) took 2.313704252243042 seconds
+2023-04-07 17:34:14,386 INFO             CNVG : (575197, 947) took 34.39090347290039 seconds
+2023-04-07 17:34:51,152 INFO             CNVP :(575197, 975) took 36.76548671722412 seconds
+2023-04-07 17:34:53,555 INFO             MUT  : (573952, 965) took 2.403214454650879 seconds
+2023-04-07 17:34:53,555 INFO         Finished reading full datasets.
+2023-04-07 17:37:47,613 INFO     Gene Expression
+===============
+2023-04-07 17:37:50,124 INFO     Shape total: (511745, 861)
+2023-04-07 17:37:50,835 INFO     Shape GDSC1: (296473, 861)
+2023-04-07 17:37:51,357 INFO     Shape GDSC2: (215272, 861)
+2023-04-07 17:37:51,357 INFO     CNV Gistic
+==========
+2023-04-07 17:38:01,737 INFO     Shape total: (511745, 861)
+2023-04-07 17:38:05,246 INFO     Shape GDSC1: (296473, 861)
+2023-04-07 17:38:07,804 INFO     Shape GDSC2: (215272, 861)
+2023-04-07 17:38:07,804 INFO     CNV Picnic
+==========
+2023-04-07 17:38:18,038 INFO     Shape total: (511745, 861)
+2023-04-07 17:38:21,547 INFO     Shape GDSC1: (296473, 861)
+2023-04-07 17:38:24,098 INFO     Shape GDSC2: (215272, 861)
+2023-04-07 17:38:24,098 INFO     Mutation
+========
+2023-04-07 17:38:26,764 INFO     Shape total: (511745, 861)
+2023-04-07 17:38:27,563 INFO     Shape GDSC1: (296473, 861)
+2023-04-07 17:38:28,173 INFO     Shape GDSC2: (215272, 861)
+2023-04-07 17:38:51,905 INFO         gexpr3.shape: (862, 859)
+2023-04-07 17:39:05,609 INFO     Start reading ../data/raw/9606.protein.links.detailed.v11.5.txt.gz ...
+2023-04-07 17:39:17,858 INFO     Finished reading.
+2023-04-07 17:39:24,164 INFO     Start reading ../data/raw/9606.protein.info.v11.5.txt.gz ...
+2023-04-07 17:39:24,261 INFO     Finished reading.
+2023-04-07 17:39:24,286 INFO     There are 3 proteins with ID frequency > 2. They will be deleted.
+2023-04-07 17:39:44,384 INFO         combined_score threshold: 950
+2023-04-07 17:39:44,386 INFO         Choosing threshold 950 we have shape: (2380, 12)
+2023-04-07 17:39:44,386 INFO         Number of unique gene_symbol1s: 458
+2023-04-07 17:39:44,386 INFO         Number of unique gene_symbol2s: 458
+2023-04-07 17:39:44,390 INFO         Created ../data/processed/thresh_950_inter_genes.csv.
+2023-04-07 17:39:44,402 INFO         There will be 458 nodes in the graph.
+2023-04-07 17:39:44,402 INFO         There will be 458 indices in the graph.
+2023-04-07 17:39:46,080 INFO     SUCCESS: The given list of tuples is undirected!
+2023-04-07 17:39:46,458 INFO             Intersecting cell-lines: 862
+2023-04-07 17:39:46,458 INFO             Intersecting genes.    : 859
+2023-04-07 17:39:46,463 INFO         Each new feature dataset has shape: (862, 459)
+2023-04-07 17:39:46,527 INFO     Since GDSC 2 database was chosen the number of intersecting cell-lines is 856
+2023-04-07 17:39:47,157 INFO         Creating gene-gene interaction graph for gdsc2...
+2023-04-07 17:39:49,875 INFO         Finished creating gene-gene interaction graph for gdsc2.
+2023-04-07 17:39:49,875 INFO             Cell-line: 22RV1      Graph: Data(x=[458, 4], edge_index=[2, 2380])
+2023-04-07 17:39:49,876 INFO             Cell-line: 23132-87   Graph: Data(x=[458, 4], edge_index=[2, 2380])
+2023-04-07 17:39:49,876 INFO             Cell-line: 42-MG-BA   Graph: Data(x=[458, 4], edge_index=[2, 2380])
+2023-04-07 17:39:49,876 INFO             Cell-line: 451Lu      Graph: Data(x=[458, 4], edge_index=[2, 2380])
+2023-04-07 17:39:49,876 INFO             Cell-line: 5637       Graph: Data(x=[458, 4], edge_index=[2, 2380])
+2023-04-07 17:39:50,087 INFO     Successfully saved full gene-gene graphs for gdsc2 in ../data/processed/gdsc2/950/thresh_gdsc2_950_gene_graphs.pkl.
+2023-04-07 17:39:50,133 INFO         Created gene feature matrices with shape : (856, 1833)
+2023-04-07 17:39:50,143 INFO             Number of      genes: 458
+2023-04-07 17:39:50,143 INFO             Number of cell-lines: 856
+2023-04-07 17:39:50,160 INFO     Successfully saved full gene-gene matrix for GDSC2 in ../data/processed/gdsc2/950/thresh_gdsc2_950_gene_mat.pkl.
+2023-04-07 17:39:51,212 INFO         Number of drugs: 286
+2023-04-07 17:39:51,212 INFO         Number of drugs with not None fingerprint: 187
+2023-04-07 17:39:51,213 INFO         Number of drugs which have a None fingerprint: 99
+2023-04-07 17:39:51,258 INFO     ['Docetaxel', 'GSK343', 'Acetalax', 'Ulixertinib', 'Uprosertib', 'Selumetinib']
+2023-04-07 17:39:51,270 INFO     (146508, 9)
+2023-04-07 17:39:51,270 INFO     (137835, 9)
+2023-04-07 17:39:52,277 INFO     Successfully saved full SMILES matrix for gdsc2 in ../data/processed/gdsc2/gdsc2_smiles_mat.pkl.
+2023-04-07 17:39:52,309 INFO     Successfully saved new drug response matrix which has FP for each row for gdsc2 in ../data/processed/gdsc2/gdsc2_drm.pkl.
+2023-04-07 17:39:52,350 INFO     Successfully saved ../data/processed/gdsc2/gdsc2_drug_name_id_map.csv.
+2023-04-07 17:39:52,645 INFO         Number of keys/drugs : 181
+2023-04-07 17:39:52,645 INFO         drug_id:  1003 | drug_name: Camptothecin    | graph: Data(x=[26, 9], edge_index=[2, 60], edge_attr=[60, 3], smiles='CC[C@@]1(c2cc3c4c(cc5ccccc5n4)Cn3c(=O)c2COC1=O)O')
+2023-04-07 17:39:52,646 INFO         drug_id:  1004 | drug_name: Vinblastine     | graph: Data(x=[59, 9], edge_index=[2, 134], edge_attr=[134, 3], smiles='CC[C@@]1(C[C@@H]2C[C@](c3cc4c(cc3OC)N(C)[C@@H]3[C@@]54CCN4CC=C[C@](CC)([C@@H]54)[C@H]([C@@]3(C(=O)OC)O)OC(=O)C)(c3c(CCN(C2)C1)c1ccccc1[nH]3)C(=O)OC)O')
+2023-04-07 17:39:52,646 INFO         drug_id:  1006 | drug_name: Cytarabine      | graph: Data(x=[17, 9], edge_index=[2, 36], edge_attr=[36, 3], smiles='c1cn([C@H]2[C@H]([C@@H]([C@@H](CO)O2)O)O)c(nc1=N)O')
+2023-04-07 17:39:52,646 INFO         drug_id:  1008 | drug_name: Methotrexate    | graph: Data(x=[33, 9], edge_index=[2, 70], edge_attr=[70, 3], smiles='CN(Cc1cnc2c(c(N)[nH]c(=N)n2)n1)c1ccc(cc1)C(=O)N[C@@H](CCC(=O)O)C(=O)O')
+2023-04-07 17:39:52,647 INFO         drug_id:  1009 | drug_name: Tretinoin       | graph: Data(x=[22, 9], edge_index=[2, 44], edge_attr=[44, 3], smiles='C/C(=C\C=C\C(=C\C(=O)O)\C)/C=C/C1=C(C)CCCC1(C)C')
+2023-04-07 17:39:52,677 INFO     Successfully saved SMILES graphs in ../data/processed/gdsc2/gdsc2_smiles_graphs.pkl.
+2023-04-07 17:39:52,705 INFO     Finished reading drug response matrix: (137835, 9)
+2023-04-07 17:39:52,710 INFO     DRM Number of unique cell-lines: 856
+2023-04-07 17:39:52,854 INFO     Finished reading cell-line graphs: Data(x=[458, 4], edge_index=[2, 2380])
+2023-04-07 17:39:52,855 INFO     Finished reading drug SMILES dict: 181
+2023-04-07 17:39:52,855 INFO     ARGUMENTS SUMMARY
+2023-04-07 17:39:52,855 INFO     =================
+2023-04-07 17:39:52,855 INFO     seed                     : 42
+2023-04-07 17:39:52,855 INFO     batch_size               : 1000
+2023-04-07 17:39:52,855 INFO     lr                       : 0.0001
+2023-04-07 17:39:52,855 INFO     num_epochs               : 5
+2023-04-07 17:39:52,855 INFO     num_workers              : 4
+2023-04-07 17:39:52,855 INFO     dropout                  : 0.1
+2023-04-07 17:39:52,855 INFO     kfolds                   : 5
+2023-04-07 17:39:52,855 INFO     conv_type                : 
+2023-04-07 17:39:52,855 INFO     conv_layers              : 2
+2023-04-07 17:39:52,855 INFO     global_pooling           : global_max_pooling
+2023-04-07 17:39:52,855 INFO     early_stopping_threshold : 20
+2023-04-07 17:39:52,855 INFO     combined_score_thresh    : 950
+2023-04-07 17:39:52,855 INFO     gdsc                     : gdsc2
+2023-04-07 17:39:52,855 INFO     file_ending              : 
+2023-04-07 17:39:52,856 INFO     Finished building GraphTabDataset!
+2023-04-07 17:39:52,856 INFO     GraphTabDataset Summary
+2023-04-07 17:39:52,856 INFO     =======================
+2023-04-07 17:39:52,856 INFO     # observations : 137835
+2023-04-07 17:39:52,938 INFO     # cell-lines   : 856
+2023-04-07 17:39:53,004 INFO     # drugs        : 181
+2023-04-07 17:39:53,004 INFO     # genes        : 458
+2023-04-07 17:39:53,143 INFO             train shape: (110268, 9)
+2023-04-07 17:39:53,143 INFO             test  shape: (27567, 9)
+2023-04-07 17:39:53,144 INFO             train_dataset:
+2023-04-07 17:39:53,144 INFO     GraphTabDataset Summary
+2023-04-07 17:39:53,144 INFO     =======================
+2023-04-07 17:39:53,144 INFO     # observations : 110268
+2023-04-07 17:39:53,208 INFO     # cell-lines   : 856
+2023-04-07 17:39:53,270 INFO     # drugs        : 181
+2023-04-07 17:39:53,270 INFO     # genes        : 458
+2023-04-07 17:39:53,270 INFO             test_dataset :
+2023-04-07 17:39:53,270 INFO     GraphTabDataset Summary
+2023-04-07 17:39:53,270 INFO     =======================
+2023-04-07 17:39:53,270 INFO     # observations : 27567
+2023-04-07 17:39:53,286 INFO     # cell-lines   : 856
+2023-04-07 17:39:53,300 INFO     # drugs        : 181
+2023-04-07 17:39:53,301 INFO     # genes        : 458
+2023-04-07 17:39:53,301 INFO         Finished creating pytorch training datasets!
+2023-04-07 17:39:53,301 INFO         Number of batches per dataset:
+2023-04-07 17:39:53,301 INFO             train : 111
+2023-04-07 17:39:53,301 INFO             test  : 28
+2023-04-07 17:39:53,301 INFO     device: cuda

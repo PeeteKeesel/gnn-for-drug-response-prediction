@@ -1,0 +1,986 @@
+2023-04-10 12:13:49,744 INFO     Finished reading drug response matrix: (137835, 9)
+2023-04-10 12:13:49,751 INFO     DRM Number of unique cell-lines: 856
+2023-04-10 12:13:49,755 INFO     Finished reading cell-line gene matrix: (856, 1173)
+2023-04-10 12:13:49,756 INFO     Finished reading drug SMILES matrix: (181, 257)
+2023-04-10 12:13:49,756 INFO     ARGUMENTS SUMMARY
+2023-04-10 12:13:49,756 INFO     =================
+2023-04-10 12:13:49,756 INFO     seed                     : 42
+2023-04-10 12:13:49,756 INFO     batch_size               : 128
+2023-04-10 12:13:49,756 INFO     lr                       : 0.0001
+2023-04-10 12:13:49,756 INFO     num_epochs               : 150
+2023-04-10 12:13:49,756 INFO     num_workers              : 8
+2023-04-10 12:13:49,756 INFO     dropout                  : 0.1
+2023-04-10 12:13:49,756 INFO     kfolds                   : 5
+2023-04-10 12:13:49,756 INFO     conv_type                : 
+2023-04-10 12:13:49,756 INFO     conv_layers              : 2
+2023-04-10 12:13:49,756 INFO     global_pooling           : global_max_pooling
+2023-04-10 12:13:49,756 INFO     early_stopping_threshold : 20
+2023-04-10 12:13:49,756 INFO     combined_score_thresh    : 990
+2023-04-10 12:13:49,756 INFO     gdsc                     : gdsc2
+2023-04-10 12:13:49,756 INFO     file_ending              : TabTab
+2023-04-10 12:13:49,758 INFO     Finished building TabTabDataset!
+2023-04-10 12:13:49,758 INFO     TabTabDataset Summary
+2023-04-10 12:13:49,758 INFO     =====================
+2023-04-10 12:13:49,758 INFO     # observations : 137835
+2023-04-10 12:13:49,840 INFO     # cell-lines   : 856
+2023-04-10 12:13:49,906 INFO     # drugs        : 181
+2023-04-10 12:13:49,906 INFO     # genes        : 293
+2023-04-10 12:13:50,054 INFO             train shape: (110268, 9)
+2023-04-10 12:13:50,054 INFO             test  shape: (27567, 9)
+2023-04-10 12:13:50,055 INFO             train_dataset:
+2023-04-10 12:13:50,055 INFO     TabTabDataset Summary
+2023-04-10 12:13:50,055 INFO     =====================
+2023-04-10 12:13:50,055 INFO     # observations : 110268
+2023-04-10 12:13:50,119 INFO     # cell-lines   : 856
+2023-04-10 12:13:50,180 INFO     # drugs        : 181
+2023-04-10 12:13:50,180 INFO     # genes        : 293
+2023-04-10 12:13:50,180 INFO             test_dataset :
+2023-04-10 12:13:50,180 INFO     TabTabDataset Summary
+2023-04-10 12:13:50,180 INFO     =====================
+2023-04-10 12:13:50,180 INFO     # observations : 27567
+2023-04-10 12:13:50,196 INFO     # cell-lines   : 856
+2023-04-10 12:13:50,210 INFO     # drugs        : 181
+2023-04-10 12:13:50,211 INFO     # genes        : 293
+2023-04-10 12:13:50,211 INFO         Finished creating pytorch training datasets!
+2023-04-10 12:13:50,211 INFO         Number of batches per dataset:
+2023-04-10 12:13:50,211 INFO             train : 862
+2023-04-10 12:13:50,211 INFO             test  : 216
+2023-04-10 12:13:50,211 INFO     device: cuda
+2023-04-10 12:13:50,235 INFO     Number of GPUs: 1
+2023-04-10 12:13:50,235 INFO     GPU Usage: 0
+2023-04-10 12:13:52,621 INFO     TabTab(
+  (cell_emb): Sequential(
+    (0): Linear(in_features=1172, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=128, out_features=128, bias=True)
+    (9): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (10): ReLU()
+  )
+  (drug_emb): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=128, bias=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-04-10 12:13:52,621 INFO     TRAINING the model
+2023-04-10 12:14:08,440 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:14:14,633 INFO     Epoch[1] Complete. Time taken: 00:00:05.851
+2023-04-10 12:14:14,636 INFO     Engine run complete. Time taken: 00:00:06.195
+2023-04-10 12:14:14,750 INFO     ===Epoch 001===
+2023-04-10 12:14:14,750 INFO     Train | MSE: 5.87102 | RMSE: 2.42302 | MAE: 2.03886 | R2: 0.17312 | PCC: 0.79973 | SCC: 0.75515
+2023-04-10 12:14:14,750 INFO     Test  | MSE: 2.53089 | RMSE: 1.59088 | MAE: 1.27328 | R2: 0.64342 | PCC: 0.87961 | SCC: 0.85669
+2023-04-10 12:14:30,553 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:14:37,450 INFO     Epoch[1] Complete. Time taken: 00:00:06.548
+2023-04-10 12:14:37,452 INFO     Engine run complete. Time taken: 00:00:06.898
+2023-04-10 12:14:37,570 INFO     ===Epoch 002===
+2023-04-10 12:14:37,571 INFO     Train | MSE: 2.13700 | RMSE: 1.46185 | MAE: 1.13732 | R2: 0.69904 | PCC: 0.86000 | SCC: 0.82727
+2023-04-10 12:14:37,571 INFO     Test  | MSE: 1.51687 | RMSE: 1.23161 | MAE: 0.91187 | R2: 0.78664 | PCC: 0.88819 | SCC: 0.86413
+2023-04-10 12:14:58,447 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:15:04,840 INFO     Epoch[1] Complete. Time taken: 00:00:06.034
+2023-04-10 12:15:04,842 INFO     Engine run complete. Time taken: 00:00:06.394
+2023-04-10 12:15:04,950 INFO     ===Epoch 003===
+2023-04-10 12:15:04,950 INFO     Train | MSE: 1.67952 | RMSE: 1.29596 | MAE: 0.98456 | R2: 0.76349 | PCC: 0.87450 | SCC: 0.84304
+2023-04-10 12:15:04,950 INFO     Test  | MSE: 1.43884 | RMSE: 1.19952 | MAE: 0.88387 | R2: 0.79746 | PCC: 0.89371 | SCC: 0.86925
+2023-04-10 12:15:20,671 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:15:26,279 INFO     Epoch[1] Complete. Time taken: 00:00:05.246
+2023-04-10 12:15:26,281 INFO     Engine run complete. Time taken: 00:00:05.609
+2023-04-10 12:15:26,385 INFO     ===Epoch 004===
+2023-04-10 12:15:26,385 INFO     Train | MSE: 1.60331 | RMSE: 1.26622 | MAE: 0.96265 | R2: 0.77421 | PCC: 0.88018 | SCC: 0.84890
+2023-04-10 12:15:26,385 INFO     Test  | MSE: 1.40792 | RMSE: 1.18656 | MAE: 0.87845 | R2: 0.80157 | PCC: 0.89545 | SCC: 0.87137
+2023-04-10 12:15:42,019 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:15:47,698 INFO     Epoch[1] Complete. Time taken: 00:00:05.323
+2023-04-10 12:15:47,700 INFO     Engine run complete. Time taken: 00:00:05.680
+2023-04-10 12:15:47,818 INFO     ===Epoch 005===
+2023-04-10 12:15:47,818 INFO     Train | MSE: 1.54939 | RMSE: 1.24474 | MAE: 0.94539 | R2: 0.78179 | PCC: 0.88436 | SCC: 0.85375
+2023-04-10 12:15:47,818 INFO     Test  | MSE: 1.35941 | RMSE: 1.16594 | MAE: 0.86170 | R2: 0.80870 | PCC: 0.89936 | SCC: 0.87486
+2023-04-10 12:16:03,373 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:16:09,923 INFO     Epoch[1] Complete. Time taken: 00:00:06.184
+2023-04-10 12:16:09,924 INFO     Engine run complete. Time taken: 00:00:06.551
+2023-04-10 12:16:10,037 INFO     ===Epoch 006===
+2023-04-10 12:16:10,037 INFO     Train | MSE: 1.50380 | RMSE: 1.22629 | MAE: 0.93242 | R2: 0.78821 | PCC: 0.88796 | SCC: 0.85719
+2023-04-10 12:16:10,037 INFO     Test  | MSE: 1.34431 | RMSE: 1.15944 | MAE: 0.85549 | R2: 0.81079 | PCC: 0.90057 | SCC: 0.87652
+2023-04-10 12:16:25,640 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:16:31,733 INFO     Epoch[1] Complete. Time taken: 00:00:05.722
+2023-04-10 12:16:31,734 INFO     Engine run complete. Time taken: 00:00:06.094
+2023-04-10 12:16:31,853 INFO     ===Epoch 007===
+2023-04-10 12:16:31,853 INFO     Train | MSE: 1.47565 | RMSE: 1.21476 | MAE: 0.92168 | R2: 0.79215 | PCC: 0.89014 | SCC: 0.85992
+2023-04-10 12:16:31,853 INFO     Test  | MSE: 1.32447 | RMSE: 1.15086 | MAE: 0.84763 | R2: 0.81356 | PCC: 0.90288 | SCC: 0.87854
+2023-04-10 12:16:47,668 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:16:55,152 INFO     Epoch[1] Complete. Time taken: 00:00:07.110
+2023-04-10 12:16:55,153 INFO     Engine run complete. Time taken: 00:00:07.485
+2023-04-10 12:16:55,270 INFO     ===Epoch 008===
+2023-04-10 12:16:55,270 INFO     Train | MSE: 1.45788 | RMSE: 1.20743 | MAE: 0.91842 | R2: 0.79470 | PCC: 0.89157 | SCC: 0.86122
+2023-04-10 12:16:55,270 INFO     Test  | MSE: 1.29516 | RMSE: 1.13805 | MAE: 0.84045 | R2: 0.81774 | PCC: 0.90485 | SCC: 0.88120
+2023-04-10 12:17:11,015 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:17:16,944 INFO     Epoch[1] Complete. Time taken: 00:00:05.558
+2023-04-10 12:17:16,946 INFO     Engine run complete. Time taken: 00:00:05.930
+2023-04-10 12:17:17,058 INFO     ===Epoch 009===
+2023-04-10 12:17:17,058 INFO     Train | MSE: 1.42057 | RMSE: 1.19188 | MAE: 0.90777 | R2: 0.80002 | PCC: 0.89454 | SCC: 0.86417
+2023-04-10 12:17:17,058 INFO     Test  | MSE: 1.26588 | RMSE: 1.12511 | MAE: 0.83145 | R2: 0.82174 | PCC: 0.90652 | SCC: 0.88345
+2023-04-10 12:17:32,695 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:17:39,202 INFO     Epoch[1] Complete. Time taken: 00:00:06.128
+2023-04-10 12:17:39,203 INFO     Engine run complete. Time taken: 00:00:06.507
+2023-04-10 12:17:39,329 INFO     ===Epoch 010===
+2023-04-10 12:17:39,329 INFO     Train | MSE: 1.38766 | RMSE: 1.17799 | MAE: 0.89697 | R2: 0.80456 | PCC: 0.89705 | SCC: 0.86667
+2023-04-10 12:17:39,329 INFO     Test  | MSE: 1.23621 | RMSE: 1.11185 | MAE: 0.82766 | R2: 0.82596 | PCC: 0.90916 | SCC: 0.88571
+2023-04-10 12:17:59,809 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:18:06,036 INFO     Epoch[1] Complete. Time taken: 00:00:05.846
+2023-04-10 12:18:06,038 INFO     Engine run complete. Time taken: 00:00:06.229
+2023-04-10 12:18:06,151 INFO     ===Epoch 011===
+2023-04-10 12:18:06,151 INFO     Train | MSE: 1.36580 | RMSE: 1.16868 | MAE: 0.89097 | R2: 0.80772 | PCC: 0.89882 | SCC: 0.86847
+2023-04-10 12:18:06,151 INFO     Test  | MSE: 1.22055 | RMSE: 1.10478 | MAE: 0.81985 | R2: 0.82820 | PCC: 0.91097 | SCC: 0.88734
+2023-04-10 12:18:21,841 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:18:28,359 INFO     Epoch[1] Complete. Time taken: 00:00:06.137
+2023-04-10 12:18:28,361 INFO     Engine run complete. Time taken: 00:00:06.519
+2023-04-10 12:18:28,464 INFO     ===Epoch 012===
+2023-04-10 12:18:28,465 INFO     Train | MSE: 1.34336 | RMSE: 1.15903 | MAE: 0.88355 | R2: 0.81086 | PCC: 0.90053 | SCC: 0.87024
+2023-04-10 12:18:28,465 INFO     Test  | MSE: 1.20061 | RMSE: 1.09572 | MAE: 0.81120 | R2: 0.83102 | PCC: 0.91194 | SCC: 0.88882
+2023-04-10 12:18:43,993 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:18:49,955 INFO     Epoch[1] Complete. Time taken: 00:00:05.580
+2023-04-10 12:18:49,957 INFO     Engine run complete. Time taken: 00:00:05.963
+2023-04-10 12:18:50,075 INFO     ===Epoch 013===
+2023-04-10 12:18:50,075 INFO     Train | MSE: 1.32590 | RMSE: 1.15148 | MAE: 0.87778 | R2: 0.81332 | PCC: 0.90190 | SCC: 0.87221
+2023-04-10 12:18:50,075 INFO     Test  | MSE: 1.19911 | RMSE: 1.09504 | MAE: 0.80996 | R2: 0.83164 | PCC: 0.91249 | SCC: 0.88994
+2023-04-10 12:19:05,752 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:19:12,052 INFO     Epoch[1] Complete. Time taken: 00:00:05.914
+2023-04-10 12:19:12,054 INFO     Engine run complete. Time taken: 00:00:06.301
+2023-04-10 12:19:12,178 INFO     ===Epoch 014===
+2023-04-10 12:19:12,178 INFO     Train | MSE: 1.31013 | RMSE: 1.14461 | MAE: 0.87217 | R2: 0.81551 | PCC: 0.90312 | SCC: 0.87307
+2023-04-10 12:19:12,178 INFO     Test  | MSE: 1.18145 | RMSE: 1.08695 | MAE: 0.80878 | R2: 0.83373 | PCC: 0.91364 | SCC: 0.88992
+2023-04-10 12:19:27,731 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:19:33,890 INFO     Epoch[1] Complete. Time taken: 00:00:05.759
+2023-04-10 12:19:33,892 INFO     Engine run complete. Time taken: 00:00:06.160
+2023-04-10 12:19:34,023 INFO     ===Epoch 015===
+2023-04-10 12:19:34,023 INFO     Train | MSE: 1.30156 | RMSE: 1.14086 | MAE: 0.87092 | R2: 0.81666 | PCC: 0.90375 | SCC: 0.87390
+2023-04-10 12:19:34,023 INFO     Test  | MSE: 1.16507 | RMSE: 1.07939 | MAE: 0.80395 | R2: 0.83611 | PCC: 0.91449 | SCC: 0.89114
+2023-04-10 12:19:50,041 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:19:56,624 INFO     Epoch[1] Complete. Time taken: 00:00:06.182
+2023-04-10 12:19:56,626 INFO     Engine run complete. Time taken: 00:00:06.585
+2023-04-10 12:19:56,744 INFO     ===Epoch 016===
+2023-04-10 12:19:56,744 INFO     Train | MSE: 1.28619 | RMSE: 1.13410 | MAE: 0.86591 | R2: 0.81886 | PCC: 0.90496 | SCC: 0.87508
+2023-04-10 12:19:56,744 INFO     Test  | MSE: 1.15339 | RMSE: 1.07396 | MAE: 0.79710 | R2: 0.83759 | PCC: 0.91555 | SCC: 0.89233
+2023-04-10 12:20:12,483 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:20:18,020 INFO     Epoch[1] Complete. Time taken: 00:00:05.129
+2023-04-10 12:20:18,023 INFO     Engine run complete. Time taken: 00:00:05.539
+2023-04-10 12:20:18,153 INFO     ===Epoch 017===
+2023-04-10 12:20:18,153 INFO     Train | MSE: 1.27207 | RMSE: 1.12786 | MAE: 0.86000 | R2: 0.82084 | PCC: 0.90604 | SCC: 0.87637
+2023-04-10 12:20:18,153 INFO     Test  | MSE: 1.14893 | RMSE: 1.07188 | MAE: 0.79711 | R2: 0.83828 | PCC: 0.91588 | SCC: 0.89274
+2023-04-10 12:20:34,016 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:20:40,959 INFO     Epoch[1] Complete. Time taken: 00:00:06.546
+2023-04-10 12:20:40,962 INFO     Engine run complete. Time taken: 00:00:06.945
+2023-04-10 12:20:41,087 INFO     ===Epoch 018===
+2023-04-10 12:20:41,087 INFO     Train | MSE: 1.26712 | RMSE: 1.12566 | MAE: 0.85847 | R2: 0.82155 | PCC: 0.90644 | SCC: 0.87703
+2023-04-10 12:20:41,087 INFO     Test  | MSE: 1.15410 | RMSE: 1.07429 | MAE: 0.79481 | R2: 0.83740 | PCC: 0.91570 | SCC: 0.89182
+2023-04-10 12:21:01,098 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:21:08,932 INFO     Epoch[1] Complete. Time taken: 00:00:07.421
+2023-04-10 12:21:08,934 INFO     Engine run complete. Time taken: 00:00:07.835
+2023-04-10 12:21:09,058 INFO     ===Epoch 019===
+2023-04-10 12:21:09,058 INFO     Train | MSE: 1.24886 | RMSE: 1.11752 | MAE: 0.85307 | R2: 0.82415 | PCC: 0.90789 | SCC: 0.87822
+2023-04-10 12:21:09,058 INFO     Test  | MSE: 1.12329 | RMSE: 1.05986 | MAE: 0.78675 | R2: 0.84191 | PCC: 0.91785 | SCC: 0.89410
+2023-04-10 12:21:24,635 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:21:31,697 INFO     Epoch[1] Complete. Time taken: 00:00:06.654
+2023-04-10 12:21:31,698 INFO     Engine run complete. Time taken: 00:00:07.063
+2023-04-10 12:21:31,828 INFO     ===Epoch 020===
+2023-04-10 12:21:31,828 INFO     Train | MSE: 1.23660 | RMSE: 1.11202 | MAE: 0.84844 | R2: 0.82590 | PCC: 0.90884 | SCC: 0.87944
+2023-04-10 12:21:31,828 INFO     Test  | MSE: 1.10787 | RMSE: 1.05256 | MAE: 0.78332 | R2: 0.84400 | PCC: 0.91882 | SCC: 0.89483
+2023-04-10 12:21:47,701 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:21:54,236 INFO     Epoch[1] Complete. Time taken: 00:00:06.115
+2023-04-10 12:21:54,237 INFO     Engine run complete. Time taken: 00:00:06.536
+2023-04-10 12:21:54,382 INFO     ===Epoch 021===
+2023-04-10 12:21:54,382 INFO     Train | MSE: 1.24000 | RMSE: 1.11355 | MAE: 0.85011 | R2: 0.82539 | PCC: 0.90855 | SCC: 0.87905
+2023-04-10 12:21:54,382 INFO     Test  | MSE: 1.11538 | RMSE: 1.05612 | MAE: 0.78285 | R2: 0.84285 | PCC: 0.91825 | SCC: 0.89448
+2023-04-10 12:22:10,418 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:22:17,098 INFO     Epoch[1] Complete. Time taken: 00:00:06.264
+2023-04-10 12:22:17,100 INFO     Engine run complete. Time taken: 00:00:06.681
+2023-04-10 12:22:17,226 INFO     ===Epoch 022===
+2023-04-10 12:22:17,226 INFO     Train | MSE: 1.21569 | RMSE: 1.10258 | MAE: 0.84248 | R2: 0.82879 | PCC: 0.91041 | SCC: 0.88083
+2023-04-10 12:22:17,226 INFO     Test  | MSE: 1.11404 | RMSE: 1.05548 | MAE: 0.78377 | R2: 0.84291 | PCC: 0.91819 | SCC: 0.89572
+2023-04-10 12:22:33,116 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:22:40,312 INFO     Epoch[1] Complete. Time taken: 00:00:06.777
+2023-04-10 12:22:40,313 INFO     Engine run complete. Time taken: 00:00:07.197
+2023-04-10 12:22:40,446 INFO     ===Epoch 023===
+2023-04-10 12:22:40,446 INFO     Train | MSE: 1.21205 | RMSE: 1.10093 | MAE: 0.83945 | R2: 0.82930 | PCC: 0.91070 | SCC: 0.88129
+2023-04-10 12:22:40,446 INFO     Test  | MSE: 1.08698 | RMSE: 1.04258 | MAE: 0.77590 | R2: 0.84696 | PCC: 0.92039 | SCC: 0.89713
+2023-04-10 12:22:56,133 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:23:01,736 INFO     Epoch[1] Complete. Time taken: 00:00:05.166
+2023-04-10 12:23:01,738 INFO     Engine run complete. Time taken: 00:00:05.605
+2023-04-10 12:23:01,854 INFO     ===Epoch 024===
+2023-04-10 12:23:01,854 INFO     Train | MSE: 1.20842 | RMSE: 1.09928 | MAE: 0.83910 | R2: 0.82982 | PCC: 0.91098 | SCC: 0.88155
+2023-04-10 12:23:01,855 INFO     Test  | MSE: 1.08362 | RMSE: 1.04097 | MAE: 0.77345 | R2: 0.84745 | PCC: 0.92062 | SCC: 0.89680
+2023-04-10 12:23:17,532 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:23:24,397 INFO     Epoch[1] Complete. Time taken: 00:00:06.436
+2023-04-10 12:23:24,399 INFO     Engine run complete. Time taken: 00:00:06.867
+2023-04-10 12:23:24,522 INFO     ===Epoch 025===
+2023-04-10 12:23:24,522 INFO     Train | MSE: 1.19443 | RMSE: 1.09290 | MAE: 0.83444 | R2: 0.83186 | PCC: 0.91210 | SCC: 0.88264
+2023-04-10 12:23:24,522 INFO     Test  | MSE: 1.07534 | RMSE: 1.03699 | MAE: 0.77187 | R2: 0.84852 | PCC: 0.92131 | SCC: 0.89779
+2023-04-10 12:23:40,348 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:23:47,015 INFO     Epoch[1] Complete. Time taken: 00:00:06.230
+2023-04-10 12:23:47,018 INFO     Engine run complete. Time taken: 00:00:06.669
+2023-04-10 12:23:47,153 INFO     ===Epoch 026===
+2023-04-10 12:23:47,153 INFO     Train | MSE: 1.18947 | RMSE: 1.09063 | MAE: 0.83166 | R2: 0.83259 | PCC: 0.91249 | SCC: 0.88357
+2023-04-10 12:23:47,153 INFO     Test  | MSE: 1.09701 | RMSE: 1.04738 | MAE: 0.77998 | R2: 0.84562 | PCC: 0.92053 | SCC: 0.89644
+2023-04-10 12:24:04,988 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:24:11,352 INFO     Epoch[1] Complete. Time taken: 00:00:05.918
+2023-04-10 12:24:11,354 INFO     Engine run complete. Time taken: 00:00:06.365
+2023-04-10 12:24:11,485 INFO     ===Epoch 027===
+2023-04-10 12:24:11,486 INFO     Train | MSE: 1.17304 | RMSE: 1.08307 | MAE: 0.82813 | R2: 0.83482 | PCC: 0.91372 | SCC: 0.88446
+2023-04-10 12:24:11,486 INFO     Test  | MSE: 1.07159 | RMSE: 1.03518 | MAE: 0.77023 | R2: 0.84914 | PCC: 0.92152 | SCC: 0.89793
+2023-04-10 12:24:27,200 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:24:33,936 INFO     Epoch[1] Complete. Time taken: 00:00:06.292
+2023-04-10 12:24:33,938 INFO     Engine run complete. Time taken: 00:00:06.737
+2023-04-10 12:24:34,064 INFO     ===Epoch 028===
+2023-04-10 12:24:34,065 INFO     Train | MSE: 1.16957 | RMSE: 1.08147 | MAE: 0.82577 | R2: 0.83530 | PCC: 0.91397 | SCC: 0.88505
+2023-04-10 12:24:34,065 INFO     Test  | MSE: 1.07077 | RMSE: 1.03478 | MAE: 0.76835 | R2: 0.84918 | PCC: 0.92179 | SCC: 0.89788
+2023-04-10 12:24:50,161 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:24:56,627 INFO     Epoch[1] Complete. Time taken: 00:00:06.026
+2023-04-10 12:24:56,629 INFO     Engine run complete. Time taken: 00:00:06.467
+2023-04-10 12:24:56,752 INFO     ===Epoch 029===
+2023-04-10 12:24:56,752 INFO     Train | MSE: 1.16505 | RMSE: 1.07937 | MAE: 0.82431 | R2: 0.83598 | PCC: 0.91434 | SCC: 0.88583
+2023-04-10 12:24:56,752 INFO     Test  | MSE: 1.06542 | RMSE: 1.03219 | MAE: 0.76787 | R2: 0.84989 | PCC: 0.92196 | SCC: 0.89844
+2023-04-10 12:25:12,493 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:25:18,199 INFO     Epoch[1] Complete. Time taken: 00:00:05.259
+2023-04-10 12:25:18,200 INFO     Engine run complete. Time taken: 00:00:05.707
+2023-04-10 12:25:18,342 INFO     ===Epoch 030===
+2023-04-10 12:25:18,343 INFO     Train | MSE: 1.16243 | RMSE: 1.07816 | MAE: 0.82369 | R2: 0.83634 | PCC: 0.91455 | SCC: 0.88550
+2023-04-10 12:25:18,343 INFO     Test  | MSE: 1.06011 | RMSE: 1.02962 | MAE: 0.76661 | R2: 0.85065 | PCC: 0.92231 | SCC: 0.89830
+2023-04-10 12:25:34,137 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:25:40,178 INFO     Epoch[1] Complete. Time taken: 00:00:05.587
+2023-04-10 12:25:40,180 INFO     Engine run complete. Time taken: 00:00:06.042
+2023-04-10 12:25:40,318 INFO     ===Epoch 031===
+2023-04-10 12:25:40,318 INFO     Train | MSE: 1.15215 | RMSE: 1.07338 | MAE: 0.82028 | R2: 0.83775 | PCC: 0.91531 | SCC: 0.88714
+2023-04-10 12:25:40,318 INFO     Test  | MSE: 1.06418 | RMSE: 1.03159 | MAE: 0.76253 | R2: 0.85010 | PCC: 0.92269 | SCC: 0.89970
+2023-04-10 12:25:56,194 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:26:02,832 INFO     Epoch[1] Complete. Time taken: 00:00:06.171
+2023-04-10 12:26:02,833 INFO     Engine run complete. Time taken: 00:00:06.639
+2023-04-10 12:26:02,967 INFO     ===Epoch 032===
+2023-04-10 12:26:02,967 INFO     Train | MSE: 1.14166 | RMSE: 1.06848 | MAE: 0.81694 | R2: 0.83922 | PCC: 0.91611 | SCC: 0.88761
+2023-04-10 12:26:02,967 INFO     Test  | MSE: 1.06148 | RMSE: 1.03028 | MAE: 0.76719 | R2: 0.85066 | PCC: 0.92313 | SCC: 0.89997
+2023-04-10 12:26:19,286 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:26:25,797 INFO     Epoch[1] Complete. Time taken: 00:00:06.056
+2023-04-10 12:26:25,799 INFO     Engine run complete. Time taken: 00:00:06.513
+2023-04-10 12:26:25,942 INFO     ===Epoch 033===
+2023-04-10 12:26:25,942 INFO     Train | MSE: 1.14004 | RMSE: 1.06773 | MAE: 0.81686 | R2: 0.83944 | PCC: 0.91623 | SCC: 0.88748
+2023-04-10 12:26:25,943 INFO     Test  | MSE: 1.04953 | RMSE: 1.02447 | MAE: 0.76159 | R2: 0.85218 | PCC: 0.92315 | SCC: 0.90046
+2023-04-10 12:26:41,812 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:26:47,306 INFO     Epoch[1] Complete. Time taken: 00:00:05.032
+2023-04-10 12:26:47,307 INFO     Engine run complete. Time taken: 00:00:05.495
+2023-04-10 12:26:47,440 INFO     ===Epoch 034===
+2023-04-10 12:26:47,441 INFO     Train | MSE: 1.12767 | RMSE: 1.06192 | MAE: 0.81218 | R2: 0.84119 | PCC: 0.91719 | SCC: 0.88873
+2023-04-10 12:26:47,441 INFO     Test  | MSE: 1.04853 | RMSE: 1.02398 | MAE: 0.76386 | R2: 0.85280 | PCC: 0.92450 | SCC: 0.90218
+2023-04-10 12:27:04,223 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:27:09,734 INFO     Epoch[1] Complete. Time taken: 00:00:05.048
+2023-04-10 12:27:09,737 INFO     Engine run complete. Time taken: 00:00:05.513
+2023-04-10 12:27:09,873 INFO     ===Epoch 035===
+2023-04-10 12:27:09,873 INFO     Train | MSE: 1.11432 | RMSE: 1.05561 | MAE: 0.80750 | R2: 0.84308 | PCC: 0.91822 | SCC: 0.89009
+2023-04-10 12:27:09,873 INFO     Test  | MSE: 1.03588 | RMSE: 1.01778 | MAE: 0.75511 | R2: 0.85420 | PCC: 0.92435 | SCC: 0.90145
+2023-04-10 12:27:25,795 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:27:31,145 INFO     Epoch[1] Complete. Time taken: 00:00:04.874
+2023-04-10 12:27:31,147 INFO     Engine run complete. Time taken: 00:00:05.351
+2023-04-10 12:27:31,285 INFO     ===Epoch 036===
+2023-04-10 12:27:31,285 INFO     Train | MSE: 1.12511 | RMSE: 1.06071 | MAE: 0.81152 | R2: 0.84157 | PCC: 0.91739 | SCC: 0.88914
+2023-04-10 12:27:31,285 INFO     Test  | MSE: 1.02883 | RMSE: 1.01431 | MAE: 0.75379 | R2: 0.85496 | PCC: 0.92498 | SCC: 0.90212
+2023-04-10 12:27:47,171 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:27:54,671 INFO     Epoch[1] Complete. Time taken: 00:00:07.034
+2023-04-10 12:27:54,673 INFO     Engine run complete. Time taken: 00:00:07.501
+2023-04-10 12:27:54,809 INFO     ===Epoch 037===
+2023-04-10 12:27:54,809 INFO     Train | MSE: 1.11635 | RMSE: 1.05658 | MAE: 0.80810 | R2: 0.84277 | PCC: 0.91805 | SCC: 0.88985
+2023-04-10 12:27:54,809 INFO     Test  | MSE: 1.03184 | RMSE: 1.01580 | MAE: 0.75385 | R2: 0.85535 | PCC: 0.92493 | SCC: 0.90138
+2023-04-10 12:28:10,485 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:28:17,731 INFO     Epoch[1] Complete. Time taken: 00:00:06.776
+2023-04-10 12:28:17,733 INFO     Engine run complete. Time taken: 00:00:07.248
+2023-04-10 12:28:17,880 INFO     ===Epoch 038===
+2023-04-10 12:28:17,881 INFO     Train | MSE: 1.10241 | RMSE: 1.04996 | MAE: 0.80364 | R2: 0.84475 | PCC: 0.91912 | SCC: 0.89126
+2023-04-10 12:28:17,881 INFO     Test  | MSE: 1.02420 | RMSE: 1.01203 | MAE: 0.75057 | R2: 0.85578 | PCC: 0.92517 | SCC: 0.90191
+2023-04-10 12:28:33,684 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:28:40,298 INFO     Epoch[1] Complete. Time taken: 00:00:06.131
+2023-04-10 12:28:40,300 INFO     Engine run complete. Time taken: 00:00:06.616
+2023-04-10 12:28:40,433 INFO     ===Epoch 039===
+2023-04-10 12:28:40,433 INFO     Train | MSE: 1.10357 | RMSE: 1.05051 | MAE: 0.80406 | R2: 0.84465 | PCC: 0.91906 | SCC: 0.89108
+2023-04-10 12:28:40,433 INFO     Test  | MSE: 1.02927 | RMSE: 1.01453 | MAE: 0.74862 | R2: 0.85511 | PCC: 0.92483 | SCC: 0.90252
+2023-04-10 12:28:56,654 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:29:02,967 INFO     Epoch[1] Complete. Time taken: 00:00:05.834
+2023-04-10 12:29:02,969 INFO     Engine run complete. Time taken: 00:00:06.315
+2023-04-10 12:29:03,102 INFO     ===Epoch 040===
+2023-04-10 12:29:03,102 INFO     Train | MSE: 1.09798 | RMSE: 1.04784 | MAE: 0.80327 | R2: 0.84541 | PCC: 0.91948 | SCC: 0.89129
+2023-04-10 12:29:03,102 INFO     Test  | MSE: 1.02172 | RMSE: 1.01080 | MAE: 0.75156 | R2: 0.85622 | PCC: 0.92587 | SCC: 0.90330
+2023-04-10 12:29:18,952 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:29:24,535 INFO     Epoch[1] Complete. Time taken: 00:00:05.100
+2023-04-10 12:29:24,536 INFO     Engine run complete. Time taken: 00:00:05.584
+2023-04-10 12:29:24,686 INFO     ===Epoch 041===
+2023-04-10 12:29:24,687 INFO     Train | MSE: 1.09311 | RMSE: 1.04552 | MAE: 0.80030 | R2: 0.84606 | PCC: 0.91983 | SCC: 0.89176
+2023-04-10 12:29:24,687 INFO     Test  | MSE: 1.01343 | RMSE: 1.00669 | MAE: 0.74704 | R2: 0.85756 | PCC: 0.92605 | SCC: 0.90305
+2023-04-10 12:29:40,845 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:29:47,465 INFO     Epoch[1] Complete. Time taken: 00:00:06.128
+2023-04-10 12:29:47,466 INFO     Engine run complete. Time taken: 00:00:06.621
+2023-04-10 12:29:47,606 INFO     ===Epoch 042===
+2023-04-10 12:29:47,606 INFO     Train | MSE: 1.08097 | RMSE: 1.03970 | MAE: 0.79610 | R2: 0.84777 | PCC: 0.92076 | SCC: 0.89273
+2023-04-10 12:29:47,606 INFO     Test  | MSE: 1.02580 | RMSE: 1.01282 | MAE: 0.75236 | R2: 0.85568 | PCC: 0.92652 | SCC: 0.90419
+2023-04-10 12:30:05,031 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:30:13,050 INFO     Epoch[1] Complete. Time taken: 00:00:07.522
+2023-04-10 12:30:13,052 INFO     Engine run complete. Time taken: 00:00:08.020
+2023-04-10 12:30:13,191 INFO     ===Epoch 043===
+2023-04-10 12:30:13,191 INFO     Train | MSE: 1.08380 | RMSE: 1.04106 | MAE: 0.79789 | R2: 0.84737 | PCC: 0.92054 | SCC: 0.89243
+2023-04-10 12:30:13,192 INFO     Test  | MSE: 1.01517 | RMSE: 1.00755 | MAE: 0.74614 | R2: 0.85704 | PCC: 0.92602 | SCC: 0.90323
+2023-04-10 12:30:28,865 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:30:36,983 INFO     Epoch[1] Complete. Time taken: 00:00:07.628
+2023-04-10 12:30:36,984 INFO     Engine run complete. Time taken: 00:00:08.119
+2023-04-10 12:30:37,129 INFO     ===Epoch 044===
+2023-04-10 12:30:37,130 INFO     Train | MSE: 1.07324 | RMSE: 1.03598 | MAE: 0.79407 | R2: 0.84886 | PCC: 0.92137 | SCC: 0.89358
+2023-04-10 12:30:37,130 INFO     Test  | MSE: 1.00267 | RMSE: 1.00133 | MAE: 0.74392 | R2: 0.85869 | PCC: 0.92675 | SCC: 0.90427
+2023-04-10 12:30:52,789 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:31:00,450 INFO     Epoch[1] Complete. Time taken: 00:00:07.156
+2023-04-10 12:31:00,451 INFO     Engine run complete. Time taken: 00:00:07.662
+2023-04-10 12:31:00,596 INFO     ===Epoch 045===
+2023-04-10 12:31:00,597 INFO     Train | MSE: 1.07423 | RMSE: 1.03645 | MAE: 0.79317 | R2: 0.84872 | PCC: 0.92127 | SCC: 0.89369
+2023-04-10 12:31:00,597 INFO     Test  | MSE: 0.99539 | RMSE: 0.99769 | MAE: 0.74018 | R2: 0.85989 | PCC: 0.92735 | SCC: 0.90511
+2023-04-10 12:31:16,413 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:31:23,219 INFO     Epoch[1] Complete. Time taken: 00:00:06.295
+2023-04-10 12:31:23,220 INFO     Engine run complete. Time taken: 00:00:06.806
+2023-04-10 12:31:23,364 INFO     ===Epoch 046===
+2023-04-10 12:31:23,364 INFO     Train | MSE: 1.06480 | RMSE: 1.03189 | MAE: 0.79122 | R2: 0.85007 | PCC: 0.92201 | SCC: 0.89436
+2023-04-10 12:31:23,365 INFO     Test  | MSE: 1.00669 | RMSE: 1.00334 | MAE: 0.74661 | R2: 0.85861 | PCC: 0.92744 | SCC: 0.90524
+2023-04-10 12:31:39,148 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:31:46,726 INFO     Epoch[1] Complete. Time taken: 00:00:07.058
+2023-04-10 12:31:46,727 INFO     Engine run complete. Time taken: 00:00:07.579
+2023-04-10 12:31:46,867 INFO     ===Epoch 047===
+2023-04-10 12:31:46,868 INFO     Train | MSE: 1.06420 | RMSE: 1.03160 | MAE: 0.78958 | R2: 0.85014 | PCC: 0.92205 | SCC: 0.89424
+2023-04-10 12:31:46,868 INFO     Test  | MSE: 0.99611 | RMSE: 0.99805 | MAE: 0.73905 | R2: 0.85999 | PCC: 0.92754 | SCC: 0.90498
+2023-04-10 12:32:03,223 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:32:10,232 INFO     Epoch[1] Complete. Time taken: 00:00:06.500
+2023-04-10 12:32:10,234 INFO     Engine run complete. Time taken: 00:00:07.010
+2023-04-10 12:32:10,377 INFO     ===Epoch 048===
+2023-04-10 12:32:10,378 INFO     Train | MSE: 1.05194 | RMSE: 1.02564 | MAE: 0.78531 | R2: 0.85190 | PCC: 0.92300 | SCC: 0.89520
+2023-04-10 12:32:10,378 INFO     Test  | MSE: 0.99371 | RMSE: 0.99685 | MAE: 0.73837 | R2: 0.86026 | PCC: 0.92763 | SCC: 0.90574
+2023-04-10 12:32:26,180 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:32:31,539 INFO     Epoch[1] Complete. Time taken: 00:00:04.835
+2023-04-10 12:32:31,541 INFO     Engine run complete. Time taken: 00:00:05.361
+2023-04-10 12:32:31,697 INFO     ===Epoch 049===
+2023-04-10 12:32:31,698 INFO     Train | MSE: 1.05268 | RMSE: 1.02600 | MAE: 0.78722 | R2: 0.85174 | PCC: 0.92291 | SCC: 0.89558
+2023-04-10 12:32:31,698 INFO     Test  | MSE: 0.99311 | RMSE: 0.99655 | MAE: 0.73808 | R2: 0.86070 | PCC: 0.92792 | SCC: 0.90525
+2023-04-10 12:32:53,777 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:32:59,948 INFO     Epoch[1] Complete. Time taken: 00:00:05.643
+2023-04-10 12:32:59,950 INFO     Engine run complete. Time taken: 00:00:06.172
+2023-04-10 12:33:00,101 INFO     ===Epoch 050===
+2023-04-10 12:33:00,101 INFO     Train | MSE: 1.04678 | RMSE: 1.02312 | MAE: 0.78437 | R2: 0.85259 | PCC: 0.92337 | SCC: 0.89588
+2023-04-10 12:33:00,101 INFO     Test  | MSE: 0.97881 | RMSE: 0.98935 | MAE: 0.73486 | R2: 0.86224 | PCC: 0.92865 | SCC: 0.90643
+2023-04-10 12:33:16,348 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:33:22,344 INFO     Epoch[1] Complete. Time taken: 00:00:05.473
+2023-04-10 12:33:22,346 INFO     Engine run complete. Time taken: 00:00:05.997
+2023-04-10 12:33:22,509 INFO     ===Epoch 051===
+2023-04-10 12:33:22,509 INFO     Train | MSE: 1.04756 | RMSE: 1.02350 | MAE: 0.78307 | R2: 0.85249 | PCC: 0.92332 | SCC: 0.89573
+2023-04-10 12:33:22,509 INFO     Test  | MSE: 0.98824 | RMSE: 0.99410 | MAE: 0.73752 | R2: 0.86083 | PCC: 0.92788 | SCC: 0.90577
+2023-04-10 12:33:38,348 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:33:43,841 INFO     Epoch[1] Complete. Time taken: 00:00:04.972
+2023-04-10 12:33:43,843 INFO     Engine run complete. Time taken: 00:00:05.495
+2023-04-10 12:33:43,984 INFO     ===Epoch 052===
+2023-04-10 12:33:43,984 INFO     Train | MSE: 1.03306 | RMSE: 1.01640 | MAE: 0.77916 | R2: 0.85451 | PCC: 0.92441 | SCC: 0.89675
+2023-04-10 12:33:43,984 INFO     Test  | MSE: 1.00375 | RMSE: 1.00187 | MAE: 0.74474 | R2: 0.85884 | PCC: 0.92736 | SCC: 0.90494
+2023-04-10 12:33:59,916 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:34:05,748 INFO     Epoch[1] Complete. Time taken: 00:00:05.305
+2023-04-10 12:34:05,750 INFO     Engine run complete. Time taken: 00:00:05.834
+2023-04-10 12:34:05,894 INFO     ===Epoch 053===
+2023-04-10 12:34:05,894 INFO     Train | MSE: 1.03947 | RMSE: 1.01954 | MAE: 0.78276 | R2: 0.85364 | PCC: 0.92394 | SCC: 0.89639
+2023-04-10 12:34:05,894 INFO     Test  | MSE: 0.98366 | RMSE: 0.99180 | MAE: 0.73531 | R2: 0.86149 | PCC: 0.92825 | SCC: 0.90623
+2023-04-10 12:34:22,065 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:34:28,729 INFO     Epoch[1] Complete. Time taken: 00:00:06.123
+2023-04-10 12:34:28,731 INFO     Engine run complete. Time taken: 00:00:06.665
+2023-04-10 12:34:28,897 INFO     ===Epoch 054===
+2023-04-10 12:34:28,897 INFO     Train | MSE: 1.02652 | RMSE: 1.01317 | MAE: 0.77648 | R2: 0.85546 | PCC: 0.92492 | SCC: 0.89773
+2023-04-10 12:34:28,897 INFO     Test  | MSE: 0.98355 | RMSE: 0.99174 | MAE: 0.73612 | R2: 0.86161 | PCC: 0.92844 | SCC: 0.90632
+2023-04-10 12:34:44,783 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:34:52,791 INFO     Epoch[1] Complete. Time taken: 00:00:07.471
+2023-04-10 12:34:52,793 INFO     Engine run complete. Time taken: 00:00:08.009
+2023-04-10 12:34:52,964 INFO     ===Epoch 055===
+2023-04-10 12:34:52,964 INFO     Train | MSE: 1.03256 | RMSE: 1.01615 | MAE: 0.77959 | R2: 0.85460 | PCC: 0.92447 | SCC: 0.89699
+2023-04-10 12:34:52,964 INFO     Test  | MSE: 0.97593 | RMSE: 0.98789 | MAE: 0.73370 | R2: 0.86266 | PCC: 0.92907 | SCC: 0.90698
+2023-04-10 12:35:08,780 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:35:15,837 INFO     Epoch[1] Complete. Time taken: 00:00:06.519
+2023-04-10 12:35:15,839 INFO     Engine run complete. Time taken: 00:00:07.059
+2023-04-10 12:35:15,985 INFO     ===Epoch 056===
+2023-04-10 12:35:15,985 INFO     Train | MSE: 1.02624 | RMSE: 1.01304 | MAE: 0.77656 | R2: 0.85552 | PCC: 0.92495 | SCC: 0.89754
+2023-04-10 12:35:15,985 INFO     Test  | MSE: 0.97326 | RMSE: 0.98654 | MAE: 0.73101 | R2: 0.86328 | PCC: 0.92917 | SCC: 0.90719
+2023-04-10 12:35:32,003 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:35:40,183 INFO     Epoch[1] Complete. Time taken: 00:00:07.636
+2023-04-10 12:35:40,185 INFO     Engine run complete. Time taken: 00:00:08.181
+2023-04-10 12:35:40,368 INFO     ===Epoch 057===
+2023-04-10 12:35:40,368 INFO     Train | MSE: 1.02727 | RMSE: 1.01355 | MAE: 0.77586 | R2: 0.85534 | PCC: 0.92486 | SCC: 0.89778
+2023-04-10 12:35:40,368 INFO     Test  | MSE: 0.97724 | RMSE: 0.98856 | MAE: 0.73388 | R2: 0.86238 | PCC: 0.92874 | SCC: 0.90677
+2023-04-10 12:36:01,032 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:36:07,542 INFO     Epoch[1] Complete. Time taken: 00:00:05.957
+2023-04-10 12:36:07,544 INFO     Engine run complete. Time taken: 00:00:06.511
+2023-04-10 12:36:07,701 INFO     ===Epoch 058===
+2023-04-10 12:36:07,701 INFO     Train | MSE: 1.01459 | RMSE: 1.00727 | MAE: 0.77381 | R2: 0.85716 | PCC: 0.92584 | SCC: 0.89897
+2023-04-10 12:36:07,701 INFO     Test  | MSE: 0.97418 | RMSE: 0.98701 | MAE: 0.73350 | R2: 0.86273 | PCC: 0.92904 | SCC: 0.90700
+2023-04-10 12:36:23,516 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:36:30,603 INFO     Epoch[1] Complete. Time taken: 00:00:06.545
+2023-04-10 12:36:30,604 INFO     Engine run complete. Time taken: 00:00:07.087
+2023-04-10 12:36:30,759 INFO     ===Epoch 059===
+2023-04-10 12:36:30,760 INFO     Train | MSE: 1.01707 | RMSE: 1.00850 | MAE: 0.77389 | R2: 0.85676 | PCC: 0.92563 | SCC: 0.89886
+2023-04-10 12:36:30,760 INFO     Test  | MSE: 0.96201 | RMSE: 0.98082 | MAE: 0.72947 | R2: 0.86450 | PCC: 0.92992 | SCC: 0.90827
+2023-04-10 12:36:46,548 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:36:54,246 INFO     Epoch[1] Complete. Time taken: 00:00:07.147
+2023-04-10 12:36:54,248 INFO     Engine run complete. Time taken: 00:00:07.700
+2023-04-10 12:36:54,395 INFO     ===Epoch 060===
+2023-04-10 12:36:54,395 INFO     Train | MSE: 1.01756 | RMSE: 1.00874 | MAE: 0.77443 | R2: 0.85668 | PCC: 0.92558 | SCC: 0.89827
+2023-04-10 12:36:54,395 INFO     Test  | MSE: 0.97331 | RMSE: 0.98656 | MAE: 0.73250 | R2: 0.86295 | PCC: 0.92946 | SCC: 0.90825
+2023-04-10 12:37:10,340 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:37:17,277 INFO     Epoch[1] Complete. Time taken: 00:00:06.384
+2023-04-10 12:37:17,278 INFO     Engine run complete. Time taken: 00:00:06.938
+2023-04-10 12:37:17,433 INFO     ===Epoch 061===
+2023-04-10 12:37:17,434 INFO     Train | MSE: 1.01026 | RMSE: 1.00512 | MAE: 0.77219 | R2: 0.85773 | PCC: 0.92615 | SCC: 0.89941
+2023-04-10 12:37:17,434 INFO     Test  | MSE: 0.96717 | RMSE: 0.98345 | MAE: 0.72806 | R2: 0.86392 | PCC: 0.92952 | SCC: 0.90748
+2023-04-10 12:37:33,180 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:37:39,557 INFO     Epoch[1] Complete. Time taken: 00:00:05.826
+2023-04-10 12:37:39,560 INFO     Engine run complete. Time taken: 00:00:06.379
+2023-04-10 12:37:39,701 INFO     ===Epoch 062===
+2023-04-10 12:37:39,702 INFO     Train | MSE: 1.01555 | RMSE: 1.00775 | MAE: 0.77408 | R2: 0.85697 | PCC: 0.92573 | SCC: 0.89849
+2023-04-10 12:37:39,702 INFO     Test  | MSE: 0.96401 | RMSE: 0.98184 | MAE: 0.72968 | R2: 0.86445 | PCC: 0.92983 | SCC: 0.90775
+2023-04-10 12:37:55,900 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:38:01,816 INFO     Epoch[1] Complete. Time taken: 00:00:05.346
+2023-04-10 12:38:01,818 INFO     Engine run complete. Time taken: 00:00:05.918
+2023-04-10 12:38:01,969 INFO     ===Epoch 063===
+2023-04-10 12:38:01,969 INFO     Train | MSE: 1.00490 | RMSE: 1.00245 | MAE: 0.76959 | R2: 0.85845 | PCC: 0.92653 | SCC: 0.89961
+2023-04-10 12:38:01,969 INFO     Test  | MSE: 0.96424 | RMSE: 0.98196 | MAE: 0.72782 | R2: 0.86427 | PCC: 0.92973 | SCC: 0.90764
+2023-04-10 12:38:18,117 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:38:24,138 INFO     Epoch[1] Complete. Time taken: 00:00:05.457
+2023-04-10 12:38:24,140 INFO     Engine run complete. Time taken: 00:00:06.022
+2023-04-10 12:38:24,281 INFO     ===Epoch 064===
+2023-04-10 12:38:24,281 INFO     Train | MSE: 1.00490 | RMSE: 1.00245 | MAE: 0.76992 | R2: 0.85848 | PCC: 0.92655 | SCC: 0.89949
+2023-04-10 12:38:24,281 INFO     Test  | MSE: 0.96752 | RMSE: 0.98362 | MAE: 0.73293 | R2: 0.86404 | PCC: 0.92981 | SCC: 0.90759
+2023-04-10 12:38:40,144 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:38:46,677 INFO     Epoch[1] Complete. Time taken: 00:00:05.959
+2023-04-10 12:38:46,680 INFO     Engine run complete. Time taken: 00:00:06.535
+2023-04-10 12:38:46,826 INFO     ===Epoch 065===
+2023-04-10 12:38:46,827 INFO     Train | MSE: 0.99912 | RMSE: 0.99956 | MAE: 0.76911 | R2: 0.85936 | PCC: 0.92703 | SCC: 0.89973
+2023-04-10 12:38:46,827 INFO     Test  | MSE: 0.95404 | RMSE: 0.97675 | MAE: 0.72780 | R2: 0.86561 | PCC: 0.93053 | SCC: 0.90873
+2023-04-10 12:39:04,867 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:39:10,287 INFO     Epoch[1] Complete. Time taken: 00:00:04.842
+2023-04-10 12:39:10,290 INFO     Engine run complete. Time taken: 00:00:05.422
+2023-04-10 12:39:10,436 INFO     ===Epoch 066===
+2023-04-10 12:39:10,436 INFO     Train | MSE: 0.99555 | RMSE: 0.99777 | MAE: 0.76610 | R2: 0.85983 | PCC: 0.92728 | SCC: 0.90062
+2023-04-10 12:39:10,436 INFO     Test  | MSE: 0.96037 | RMSE: 0.97999 | MAE: 0.72652 | R2: 0.86471 | PCC: 0.92996 | SCC: 0.90853
+2023-04-10 12:39:26,223 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:39:32,563 INFO     Epoch[1] Complete. Time taken: 00:00:05.764
+2023-04-10 12:39:32,565 INFO     Engine run complete. Time taken: 00:00:06.342
+2023-04-10 12:39:32,711 INFO     ===Epoch 067===
+2023-04-10 12:39:32,712 INFO     Train | MSE: 1.00005 | RMSE: 1.00003 | MAE: 0.76838 | R2: 0.85915 | PCC: 0.92691 | SCC: 0.89972
+2023-04-10 12:39:32,712 INFO     Test  | MSE: 0.95621 | RMSE: 0.97786 | MAE: 0.72625 | R2: 0.86545 | PCC: 0.93061 | SCC: 0.90867
+2023-04-10 12:39:48,538 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:39:54,935 INFO     Epoch[1] Complete. Time taken: 00:00:05.797
+2023-04-10 12:39:54,936 INFO     Engine run complete. Time taken: 00:00:06.398
+2023-04-10 12:39:55,096 INFO     ===Epoch 068===
+2023-04-10 12:39:55,096 INFO     Train | MSE: 0.99335 | RMSE: 0.99667 | MAE: 0.76607 | R2: 0.86013 | PCC: 0.92744 | SCC: 0.90062
+2023-04-10 12:39:55,096 INFO     Test  | MSE: 0.94645 | RMSE: 0.97286 | MAE: 0.72056 | R2: 0.86674 | PCC: 0.93114 | SCC: 0.90919
+2023-04-10 12:40:10,981 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:40:18,172 INFO     Epoch[1] Complete. Time taken: 00:00:06.605
+2023-04-10 12:40:18,173 INFO     Engine run complete. Time taken: 00:00:07.192
+2023-04-10 12:40:18,326 INFO     ===Epoch 069===
+2023-04-10 12:40:18,326 INFO     Train | MSE: 0.99082 | RMSE: 0.99540 | MAE: 0.76439 | R2: 0.86047 | PCC: 0.92762 | SCC: 0.90128
+2023-04-10 12:40:18,326 INFO     Test  | MSE: 0.95264 | RMSE: 0.97603 | MAE: 0.72523 | R2: 0.86595 | PCC: 0.93074 | SCC: 0.90925
+2023-04-10 12:40:34,254 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:40:40,459 INFO     Epoch[1] Complete. Time taken: 00:00:05.602
+2023-04-10 12:40:40,461 INFO     Engine run complete. Time taken: 00:00:06.206
+2023-04-10 12:40:40,617 INFO     ===Epoch 070===
+2023-04-10 12:40:40,617 INFO     Train | MSE: 0.99267 | RMSE: 0.99633 | MAE: 0.76495 | R2: 0.86023 | PCC: 0.92750 | SCC: 0.90061
+2023-04-10 12:40:40,617 INFO     Test  | MSE: 0.95682 | RMSE: 0.97817 | MAE: 0.72309 | R2: 0.86544 | PCC: 0.93035 | SCC: 0.90889
+2023-04-10 12:40:56,598 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:41:03,738 INFO     Epoch[1] Complete. Time taken: 00:00:06.544
+2023-04-10 12:41:03,740 INFO     Engine run complete. Time taken: 00:00:07.141
+2023-04-10 12:41:03,910 INFO     ===Epoch 071===
+2023-04-10 12:41:03,910 INFO     Train | MSE: 0.97936 | RMSE: 0.98962 | MAE: 0.76115 | R2: 0.86208 | PCC: 0.92849 | SCC: 0.90144
+2023-04-10 12:41:03,910 INFO     Test  | MSE: 0.95039 | RMSE: 0.97488 | MAE: 0.72287 | R2: 0.86606 | PCC: 0.93084 | SCC: 0.90977
+2023-04-10 12:41:19,773 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:41:27,071 INFO     Epoch[1] Complete. Time taken: 00:00:06.697
+2023-04-10 12:41:27,073 INFO     Engine run complete. Time taken: 00:00:07.298
+2023-04-10 12:41:27,251 INFO     ===Epoch 072===
+2023-04-10 12:41:27,251 INFO     Train | MSE: 0.98310 | RMSE: 0.99151 | MAE: 0.76277 | R2: 0.86158 | PCC: 0.92822 | SCC: 0.90139
+2023-04-10 12:41:27,251 INFO     Test  | MSE: 0.94683 | RMSE: 0.97305 | MAE: 0.72232 | R2: 0.86677 | PCC: 0.93120 | SCC: 0.90959
+2023-04-10 12:41:52,545 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:42:01,908 INFO     Epoch[1] Complete. Time taken: 00:00:08.695
+2023-04-10 12:42:01,909 INFO     Engine run complete. Time taken: 00:00:09.363
+2023-04-10 12:42:02,080 INFO     ===Epoch 073===
+2023-04-10 12:42:02,080 INFO     Train | MSE: 0.97614 | RMSE: 0.98800 | MAE: 0.75988 | R2: 0.86253 | PCC: 0.92874 | SCC: 0.90226
+2023-04-10 12:42:02,080 INFO     Test  | MSE: 0.94358 | RMSE: 0.97138 | MAE: 0.72023 | R2: 0.86757 | PCC: 0.93157 | SCC: 0.90963
+2023-04-10 12:42:18,767 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:42:24,614 INFO     Epoch[1] Complete. Time taken: 00:00:05.252
+2023-04-10 12:42:24,615 INFO     Engine run complete. Time taken: 00:00:05.847
+2023-04-10 12:42:24,784 INFO     ===Epoch 074===
+2023-04-10 12:42:24,784 INFO     Train | MSE: 0.97675 | RMSE: 0.98831 | MAE: 0.75859 | R2: 0.86244 | PCC: 0.92868 | SCC: 0.90207
+2023-04-10 12:42:24,784 INFO     Test  | MSE: 0.94345 | RMSE: 0.97131 | MAE: 0.72064 | R2: 0.86727 | PCC: 0.93128 | SCC: 0.90934
+2023-04-10 12:42:41,031 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:42:47,625 INFO     Epoch[1] Complete. Time taken: 00:00:05.982
+2023-04-10 12:42:47,627 INFO     Engine run complete. Time taken: 00:00:06.596
+2023-04-10 12:42:47,780 INFO     ===Epoch 075===
+2023-04-10 12:42:47,781 INFO     Train | MSE: 0.97594 | RMSE: 0.98789 | MAE: 0.75960 | R2: 0.86256 | PCC: 0.92875 | SCC: 0.90242
+2023-04-10 12:42:47,781 INFO     Test  | MSE: 0.94610 | RMSE: 0.97267 | MAE: 0.72473 | R2: 0.86675 | PCC: 0.93139 | SCC: 0.90964
+2023-04-10 12:43:04,926 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:43:14,757 INFO     Epoch[1] Complete. Time taken: 00:00:09.165
+2023-04-10 12:43:14,758 INFO     Engine run complete. Time taken: 00:00:09.832
+2023-04-10 12:43:14,902 INFO     ===Epoch 076===
+2023-04-10 12:43:14,903 INFO     Train | MSE: 0.97106 | RMSE: 0.98543 | MAE: 0.75887 | R2: 0.86321 | PCC: 0.92910 | SCC: 0.90244
+2023-04-10 12:43:14,903 INFO     Test  | MSE: 0.94512 | RMSE: 0.97217 | MAE: 0.72257 | R2: 0.86696 | PCC: 0.93115 | SCC: 0.90871
+2023-04-10 12:43:32,634 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:43:42,144 INFO     Epoch[1] Complete. Time taken: 00:00:08.776
+2023-04-10 12:43:42,146 INFO     Engine run complete. Time taken: 00:00:09.511
+2023-04-10 12:43:42,300 INFO     ===Epoch 077===
+2023-04-10 12:43:42,300 INFO     Train | MSE: 0.96713 | RMSE: 0.98343 | MAE: 0.75531 | R2: 0.86378 | PCC: 0.92940 | SCC: 0.90293
+2023-04-10 12:43:42,300 INFO     Test  | MSE: 0.93993 | RMSE: 0.96950 | MAE: 0.71934 | R2: 0.86764 | PCC: 0.93172 | SCC: 0.90982
+2023-04-10 12:43:58,415 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:44:05,182 INFO     Epoch[1] Complete. Time taken: 00:00:06.141
+2023-04-10 12:44:05,185 INFO     Engine run complete. Time taken: 00:00:06.769
+2023-04-10 12:44:05,343 INFO     ===Epoch 078===
+2023-04-10 12:44:05,343 INFO     Train | MSE: 0.97221 | RMSE: 0.98601 | MAE: 0.75704 | R2: 0.86312 | PCC: 0.92905 | SCC: 0.90249
+2023-04-10 12:44:05,343 INFO     Test  | MSE: 0.93821 | RMSE: 0.96861 | MAE: 0.72004 | R2: 0.86782 | PCC: 0.93176 | SCC: 0.90966
+2023-04-10 12:44:21,324 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:44:29,241 INFO     Epoch[1] Complete. Time taken: 00:00:07.286
+2023-04-10 12:44:29,244 INFO     Engine run complete. Time taken: 00:00:07.919
+2023-04-10 12:44:29,394 INFO     ===Epoch 079===
+2023-04-10 12:44:29,394 INFO     Train | MSE: 0.95875 | RMSE: 0.97916 | MAE: 0.75185 | R2: 0.86499 | PCC: 0.93005 | SCC: 0.90399
+2023-04-10 12:44:29,394 INFO     Test  | MSE: 0.93440 | RMSE: 0.96664 | MAE: 0.71918 | R2: 0.86859 | PCC: 0.93212 | SCC: 0.91040
+2023-04-10 12:44:51,955 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:44:58,075 INFO     Epoch[1] Complete. Time taken: 00:00:05.497
+2023-04-10 12:44:58,078 INFO     Engine run complete. Time taken: 00:00:06.122
+2023-04-10 12:44:58,240 INFO     ===Epoch 080===
+2023-04-10 12:44:58,240 INFO     Train | MSE: 0.95895 | RMSE: 0.97926 | MAE: 0.75314 | R2: 0.86494 | PCC: 0.93003 | SCC: 0.90383
+2023-04-10 12:44:58,240 INFO     Test  | MSE: 0.94601 | RMSE: 0.97263 | MAE: 0.72605 | R2: 0.86680 | PCC: 0.93155 | SCC: 0.91017
+2023-04-10 12:45:14,484 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:45:20,095 INFO     Epoch[1] Complete. Time taken: 00:00:04.983
+2023-04-10 12:45:20,098 INFO     Engine run complete. Time taken: 00:00:05.613
+2023-04-10 12:45:20,249 INFO     ===Epoch 081===
+2023-04-10 12:45:20,250 INFO     Train | MSE: 0.96140 | RMSE: 0.98051 | MAE: 0.75442 | R2: 0.86461 | PCC: 0.92985 | SCC: 0.90359
+2023-04-10 12:45:20,250 INFO     Test  | MSE: 0.94391 | RMSE: 0.97155 | MAE: 0.72197 | R2: 0.86714 | PCC: 0.93133 | SCC: 0.91029
+2023-04-10 12:45:36,211 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:45:42,823 INFO     Epoch[1] Complete. Time taken: 00:00:05.964
+2023-04-10 12:45:42,825 INFO     Engine run complete. Time taken: 00:00:06.614
+2023-04-10 12:45:43,007 INFO     ===Epoch 082===
+2023-04-10 12:45:43,008 INFO     Train | MSE: 0.95676 | RMSE: 0.97814 | MAE: 0.75354 | R2: 0.86524 | PCC: 0.93019 | SCC: 0.90367
+2023-04-10 12:45:43,008 INFO     Test  | MSE: 0.93413 | RMSE: 0.96650 | MAE: 0.72006 | R2: 0.86850 | PCC: 0.93215 | SCC: 0.91034
+2023-04-10 12:45:59,081 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:46:05,320 INFO     Epoch[1] Complete. Time taken: 00:00:05.600
+2023-04-10 12:46:05,322 INFO     Engine run complete. Time taken: 00:00:06.240
+2023-04-10 12:46:05,486 INFO     ===Epoch 083===
+2023-04-10 12:46:05,487 INFO     Train | MSE: 0.95357 | RMSE: 0.97651 | MAE: 0.75145 | R2: 0.86568 | PCC: 0.93043 | SCC: 0.90388
+2023-04-10 12:46:05,487 INFO     Test  | MSE: 0.93175 | RMSE: 0.96527 | MAE: 0.71462 | R2: 0.86884 | PCC: 0.93253 | SCC: 0.91085
+2023-04-10 12:46:21,380 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:46:27,362 INFO     Epoch[1] Complete. Time taken: 00:00:05.339
+2023-04-10 12:46:27,364 INFO     Engine run complete. Time taken: 00:00:05.983
+2023-04-10 12:46:27,528 INFO     ===Epoch 084===
+2023-04-10 12:46:27,528 INFO     Train | MSE: 0.95224 | RMSE: 0.97583 | MAE: 0.75037 | R2: 0.86592 | PCC: 0.93056 | SCC: 0.90424
+2023-04-10 12:46:27,528 INFO     Test  | MSE: 0.92720 | RMSE: 0.96291 | MAE: 0.71638 | R2: 0.86942 | PCC: 0.93259 | SCC: 0.91108
+2023-04-10 12:46:43,926 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:46:51,399 INFO     Epoch[1] Complete. Time taken: 00:00:06.841
+2023-04-10 12:46:51,401 INFO     Engine run complete. Time taken: 00:00:07.474
+2023-04-10 12:46:51,573 INFO     ===Epoch 085===
+2023-04-10 12:46:51,573 INFO     Train | MSE: 0.95079 | RMSE: 0.97509 | MAE: 0.75038 | R2: 0.86612 | PCC: 0.93066 | SCC: 0.90420
+2023-04-10 12:46:51,573 INFO     Test  | MSE: 0.93029 | RMSE: 0.96452 | MAE: 0.71486 | R2: 0.86903 | PCC: 0.93225 | SCC: 0.91060
+2023-04-10 12:47:07,568 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:47:14,902 INFO     Epoch[1] Complete. Time taken: 00:00:06.691
+2023-04-10 12:47:14,904 INFO     Engine run complete. Time taken: 00:00:07.335
+2023-04-10 12:47:15,066 INFO     ===Epoch 086===
+2023-04-10 12:47:15,066 INFO     Train | MSE: 0.94818 | RMSE: 0.97375 | MAE: 0.74976 | R2: 0.86646 | PCC: 0.93084 | SCC: 0.90453
+2023-04-10 12:47:15,066 INFO     Test  | MSE: 0.92559 | RMSE: 0.96208 | MAE: 0.71369 | R2: 0.86971 | PCC: 0.93259 | SCC: 0.91136
+2023-04-10 12:47:31,152 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:47:37,009 INFO     Epoch[1] Complete. Time taken: 00:00:05.200
+2023-04-10 12:47:37,011 INFO     Engine run complete. Time taken: 00:00:05.858
+2023-04-10 12:47:37,168 INFO     ===Epoch 087===
+2023-04-10 12:47:37,169 INFO     Train | MSE: 0.94457 | RMSE: 0.97189 | MAE: 0.74645 | R2: 0.86699 | PCC: 0.93113 | SCC: 0.90532
+2023-04-10 12:47:37,169 INFO     Test  | MSE: 0.92694 | RMSE: 0.96278 | MAE: 0.71649 | R2: 0.86945 | PCC: 0.93252 | SCC: 0.91081
+2023-04-10 12:47:58,741 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:48:05,871 INFO     Epoch[1] Complete. Time taken: 00:00:06.481
+2023-04-10 12:48:05,872 INFO     Engine run complete. Time taken: 00:00:07.131
+2023-04-10 12:48:06,025 INFO     ===Epoch 088===
+2023-04-10 12:48:06,025 INFO     Train | MSE: 0.94596 | RMSE: 0.97260 | MAE: 0.74885 | R2: 0.86678 | PCC: 0.93102 | SCC: 0.90488
+2023-04-10 12:48:06,026 INFO     Test  | MSE: 0.92783 | RMSE: 0.96324 | MAE: 0.71397 | R2: 0.86930 | PCC: 0.93242 | SCC: 0.91102
+2023-04-10 12:48:22,103 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:48:28,483 INFO     Epoch[1] Complete. Time taken: 00:00:05.722
+2023-04-10 12:48:28,485 INFO     Engine run complete. Time taken: 00:00:06.381
+2023-04-10 12:48:28,659 INFO     ===Epoch 089===
+2023-04-10 12:48:28,660 INFO     Train | MSE: 0.94061 | RMSE: 0.96985 | MAE: 0.74646 | R2: 0.86757 | PCC: 0.93144 | SCC: 0.90539
+2023-04-10 12:48:28,660 INFO     Test  | MSE: 0.92274 | RMSE: 0.96059 | MAE: 0.71131 | R2: 0.87007 | PCC: 0.93297 | SCC: 0.91130
+2023-04-10 12:48:45,294 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:48:51,984 INFO     Epoch[1] Complete. Time taken: 00:00:06.030
+2023-04-10 12:48:51,986 INFO     Engine run complete. Time taken: 00:00:06.692
+2023-04-10 12:48:52,146 INFO     ===Epoch 090===
+2023-04-10 12:48:52,147 INFO     Train | MSE: 0.94461 | RMSE: 0.97191 | MAE: 0.74864 | R2: 0.86698 | PCC: 0.93112 | SCC: 0.90473
+2023-04-10 12:48:52,147 INFO     Test  | MSE: 0.92355 | RMSE: 0.96102 | MAE: 0.71323 | R2: 0.87014 | PCC: 0.93308 | SCC: 0.91160
+2023-04-10 12:49:08,682 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:49:15,741 INFO     Epoch[1] Complete. Time taken: 00:00:06.394
+2023-04-10 12:49:15,744 INFO     Engine run complete. Time taken: 00:00:07.061
+2023-04-10 12:49:15,914 INFO     ===Epoch 091===
+2023-04-10 12:49:15,915 INFO     Train | MSE: 0.94234 | RMSE: 0.97074 | MAE: 0.74698 | R2: 0.86729 | PCC: 0.93129 | SCC: 0.90509
+2023-04-10 12:49:15,915 INFO     Test  | MSE: 0.92270 | RMSE: 0.96057 | MAE: 0.71374 | R2: 0.87003 | PCC: 0.93285 | SCC: 0.91162
+2023-04-10 12:49:31,913 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:49:39,280 INFO     Epoch[1] Complete. Time taken: 00:00:06.699
+2023-04-10 12:49:39,283 INFO     Engine run complete. Time taken: 00:00:07.369
+2023-04-10 12:49:39,460 INFO     ===Epoch 092===
+2023-04-10 12:49:39,460 INFO     Train | MSE: 0.94070 | RMSE: 0.96990 | MAE: 0.74752 | R2: 0.86751 | PCC: 0.93141 | SCC: 0.90506
+2023-04-10 12:49:39,460 INFO     Test  | MSE: 0.92350 | RMSE: 0.96099 | MAE: 0.71485 | R2: 0.87007 | PCC: 0.93304 | SCC: 0.91135
+2023-04-10 12:49:55,382 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:50:02,204 INFO     Epoch[1] Complete. Time taken: 00:00:06.154
+2023-04-10 12:50:02,206 INFO     Engine run complete. Time taken: 00:00:06.823
+2023-04-10 12:50:02,366 INFO     ===Epoch 093===
+2023-04-10 12:50:02,366 INFO     Train | MSE: 0.93619 | RMSE: 0.96757 | MAE: 0.74500 | R2: 0.86819 | PCC: 0.93178 | SCC: 0.90570
+2023-04-10 12:50:02,367 INFO     Test  | MSE: 0.92020 | RMSE: 0.95927 | MAE: 0.71152 | R2: 0.87047 | PCC: 0.93304 | SCC: 0.91220
+2023-04-10 12:50:18,678 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:50:24,652 INFO     Epoch[1] Complete. Time taken: 00:00:05.303
+2023-04-10 12:50:24,654 INFO     Engine run complete. Time taken: 00:00:05.975
+2023-04-10 12:50:24,816 INFO     ===Epoch 094===
+2023-04-10 12:50:24,816 INFO     Train | MSE: 0.93994 | RMSE: 0.96951 | MAE: 0.74731 | R2: 0.86763 | PCC: 0.93147 | SCC: 0.90548
+2023-04-10 12:50:24,816 INFO     Test  | MSE: 0.92276 | RMSE: 0.96061 | MAE: 0.71000 | R2: 0.87004 | PCC: 0.93288 | SCC: 0.91176
+2023-04-10 12:50:40,919 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:50:48,518 INFO     Epoch[1] Complete. Time taken: 00:00:06.921
+2023-04-10 12:50:48,520 INFO     Engine run complete. Time taken: 00:00:07.600
+2023-04-10 12:50:48,699 INFO     ===Epoch 095===
+2023-04-10 12:50:48,699 INFO     Train | MSE: 0.92708 | RMSE: 0.96285 | MAE: 0.74055 | R2: 0.86949 | PCC: 0.93246 | SCC: 0.90649
+2023-04-10 12:50:48,699 INFO     Test  | MSE: 0.92084 | RMSE: 0.95960 | MAE: 0.71348 | R2: 0.87038 | PCC: 0.93300 | SCC: 0.91161
+2023-04-10 12:51:05,753 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:51:13,469 INFO     Epoch[1] Complete. Time taken: 00:00:07.024
+2023-04-10 12:51:13,472 INFO     Engine run complete. Time taken: 00:00:07.718
+2023-04-10 12:51:13,627 INFO     ===Epoch 096===
+2023-04-10 12:51:13,627 INFO     Train | MSE: 0.92979 | RMSE: 0.96425 | MAE: 0.74251 | R2: 0.86909 | PCC: 0.93226 | SCC: 0.90637
+2023-04-10 12:51:13,627 INFO     Test  | MSE: 0.91844 | RMSE: 0.95835 | MAE: 0.70929 | R2: 0.87065 | PCC: 0.93326 | SCC: 0.91225
+2023-04-10 12:51:29,707 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:51:37,396 INFO     Epoch[1] Complete. Time taken: 00:00:07.005
+2023-04-10 12:51:37,399 INFO     Engine run complete. Time taken: 00:00:07.691
+2023-04-10 12:51:37,574 INFO     ===Epoch 097===
+2023-04-10 12:51:37,574 INFO     Train | MSE: 0.93760 | RMSE: 0.96830 | MAE: 0.74675 | R2: 0.86796 | PCC: 0.93164 | SCC: 0.90493
+2023-04-10 12:51:37,574 INFO     Test  | MSE: 0.92320 | RMSE: 0.96083 | MAE: 0.71064 | R2: 0.87011 | PCC: 0.93281 | SCC: 0.91220
+2023-04-10 12:51:53,682 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:51:59,939 INFO     Epoch[1] Complete. Time taken: 00:00:05.566
+2023-04-10 12:51:59,942 INFO     Engine run complete. Time taken: 00:00:06.259
+2023-04-10 12:52:00,121 INFO     ===Epoch 098===
+2023-04-10 12:52:00,121 INFO     Train | MSE: 0.93445 | RMSE: 0.96667 | MAE: 0.74487 | R2: 0.86839 | PCC: 0.93188 | SCC: 0.90572
+2023-04-10 12:52:00,121 INFO     Test  | MSE: 0.91925 | RMSE: 0.95877 | MAE: 0.70970 | R2: 0.87075 | PCC: 0.93316 | SCC: 0.91245
+2023-04-10 12:52:16,078 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:52:23,417 INFO     Epoch[1] Complete. Time taken: 00:00:06.642
+2023-04-10 12:52:23,418 INFO     Engine run complete. Time taken: 00:00:07.338
+2023-04-10 12:52:23,579 INFO     ===Epoch 099===
+2023-04-10 12:52:23,580 INFO     Train | MSE: 0.92291 | RMSE: 0.96068 | MAE: 0.73943 | R2: 0.87001 | PCC: 0.93275 | SCC: 0.90691
+2023-04-10 12:52:23,580 INFO     Test  | MSE: 0.91141 | RMSE: 0.95468 | MAE: 0.70945 | R2: 0.87163 | PCC: 0.93363 | SCC: 0.91221
+2023-04-10 12:52:39,727 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:52:46,096 INFO     Epoch[1] Complete. Time taken: 00:00:05.675
+2023-04-10 12:52:46,098 INFO     Engine run complete. Time taken: 00:00:06.370
+2023-04-10 12:52:46,256 INFO     ===Epoch 100===
+2023-04-10 12:52:46,256 INFO     Train | MSE: 0.93314 | RMSE: 0.96599 | MAE: 0.74442 | R2: 0.86859 | PCC: 0.93198 | SCC: 0.90654
+2023-04-10 12:52:46,256 INFO     Test  | MSE: 0.91002 | RMSE: 0.95395 | MAE: 0.70689 | R2: 0.87186 | PCC: 0.93383 | SCC: 0.91260
+2023-04-10 12:53:02,342 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:53:09,231 INFO     Epoch[1] Complete. Time taken: 00:00:06.190
+2023-04-10 12:53:09,232 INFO     Engine run complete. Time taken: 00:00:06.889
+2023-04-10 12:53:09,393 INFO     ===Epoch 101===
+2023-04-10 12:53:09,393 INFO     Train | MSE: 0.92976 | RMSE: 0.96424 | MAE: 0.74326 | R2: 0.86909 | PCC: 0.93225 | SCC: 0.90605
+2023-04-10 12:53:09,393 INFO     Test  | MSE: 0.91109 | RMSE: 0.95451 | MAE: 0.70848 | R2: 0.87171 | PCC: 0.93368 | SCC: 0.91231
+2023-04-10 12:53:25,377 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:53:33,190 INFO     Epoch[1] Complete. Time taken: 00:00:07.117
+2023-04-10 12:53:33,192 INFO     Engine run complete. Time taken: 00:00:07.814
+2023-04-10 12:53:33,360 INFO     ===Epoch 102===
+2023-04-10 12:53:33,360 INFO     Train | MSE: 0.92048 | RMSE: 0.95941 | MAE: 0.73943 | R2: 0.87040 | PCC: 0.93296 | SCC: 0.90731
+2023-04-10 12:53:33,360 INFO     Test  | MSE: 0.90390 | RMSE: 0.95074 | MAE: 0.70596 | R2: 0.87269 | PCC: 0.93420 | SCC: 0.91318
+2023-04-10 12:53:55,639 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:54:03,378 INFO     Epoch[1] Complete. Time taken: 00:00:07.031
+2023-04-10 12:54:03,380 INFO     Engine run complete. Time taken: 00:00:07.740
+2023-04-10 12:54:03,562 INFO     ===Epoch 103===
+2023-04-10 12:54:03,562 INFO     Train | MSE: 0.92075 | RMSE: 0.95956 | MAE: 0.73938 | R2: 0.87034 | PCC: 0.93293 | SCC: 0.90723
+2023-04-10 12:54:03,562 INFO     Test  | MSE: 0.92416 | RMSE: 0.96133 | MAE: 0.71495 | R2: 0.87005 | PCC: 0.93348 | SCC: 0.91244
+2023-04-10 12:54:19,874 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:54:27,711 INFO     Epoch[1] Complete. Time taken: 00:00:07.125
+2023-04-10 12:54:27,713 INFO     Engine run complete. Time taken: 00:00:07.838
+2023-04-10 12:54:27,883 INFO     ===Epoch 104===
+2023-04-10 12:54:27,884 INFO     Train | MSE: 0.91698 | RMSE: 0.95759 | MAE: 0.73870 | R2: 0.87090 | PCC: 0.93322 | SCC: 0.90748
+2023-04-10 12:54:27,884 INFO     Test  | MSE: 0.91007 | RMSE: 0.95398 | MAE: 0.70781 | R2: 0.87208 | PCC: 0.93391 | SCC: 0.91293
+2023-04-10 12:54:44,566 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:54:51,781 INFO     Epoch[1] Complete. Time taken: 00:00:06.499
+2023-04-10 12:54:51,783 INFO     Engine run complete. Time taken: 00:00:07.216
+2023-04-10 12:54:51,957 INFO     ===Epoch 105===
+2023-04-10 12:54:51,957 INFO     Train | MSE: 0.91922 | RMSE: 0.95876 | MAE: 0.73834 | R2: 0.87055 | PCC: 0.93304 | SCC: 0.90736
+2023-04-10 12:54:51,957 INFO     Test  | MSE: 0.91142 | RMSE: 0.95468 | MAE: 0.71181 | R2: 0.87163 | PCC: 0.93422 | SCC: 0.91280
+2023-04-10 12:55:08,453 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:55:15,192 INFO     Epoch[1] Complete. Time taken: 00:00:06.018
+2023-04-10 12:55:15,194 INFO     Engine run complete. Time taken: 00:00:06.741
+2023-04-10 12:55:15,370 INFO     ===Epoch 106===
+2023-04-10 12:55:15,370 INFO     Train | MSE: 0.91549 | RMSE: 0.95681 | MAE: 0.73737 | R2: 0.87111 | PCC: 0.93334 | SCC: 0.90757
+2023-04-10 12:55:15,370 INFO     Test  | MSE: 0.91192 | RMSE: 0.95495 | MAE: 0.71058 | R2: 0.87168 | PCC: 0.93393 | SCC: 0.91254
+2023-04-10 12:55:31,415 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:55:37,618 INFO     Epoch[1] Complete. Time taken: 00:00:05.478
+2023-04-10 12:55:37,620 INFO     Engine run complete. Time taken: 00:00:06.205
+2023-04-10 12:55:37,795 INFO     ===Epoch 107===
+2023-04-10 12:55:37,795 INFO     Train | MSE: 0.91134 | RMSE: 0.95464 | MAE: 0.73609 | R2: 0.87167 | PCC: 0.93364 | SCC: 0.90803
+2023-04-10 12:55:37,795 INFO     Test  | MSE: 0.91524 | RMSE: 0.95668 | MAE: 0.70779 | R2: 0.87116 | PCC: 0.93350 | SCC: 0.91279
+2023-04-10 12:55:53,972 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:56:00,706 INFO     Epoch[1] Complete. Time taken: 00:00:06.014
+2023-04-10 12:56:00,709 INFO     Engine run complete. Time taken: 00:00:06.736
+2023-04-10 12:56:00,874 INFO     ===Epoch 108===
+2023-04-10 12:56:00,874 INFO     Train | MSE: 0.90735 | RMSE: 0.95255 | MAE: 0.73525 | R2: 0.87223 | PCC: 0.93394 | SCC: 0.90782
+2023-04-10 12:56:00,874 INFO     Test  | MSE: 0.90801 | RMSE: 0.95289 | MAE: 0.70527 | R2: 0.87217 | PCC: 0.93393 | SCC: 0.91270
+2023-04-10 12:56:16,869 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:56:24,446 INFO     Epoch[1] Complete. Time taken: 00:00:06.853
+2023-04-10 12:56:24,449 INFO     Engine run complete. Time taken: 00:00:07.579
+2023-04-10 12:56:24,637 INFO     ===Epoch 109===
+2023-04-10 12:56:24,637 INFO     Train | MSE: 0.90662 | RMSE: 0.95217 | MAE: 0.73487 | R2: 0.87234 | PCC: 0.93399 | SCC: 0.90821
+2023-04-10 12:56:24,637 INFO     Test  | MSE: 0.90311 | RMSE: 0.95032 | MAE: 0.70595 | R2: 0.87271 | PCC: 0.93421 | SCC: 0.91298
+2023-04-10 12:56:40,630 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:56:47,342 INFO     Epoch[1] Complete. Time taken: 00:00:05.981
+2023-04-10 12:56:47,344 INFO     Engine run complete. Time taken: 00:00:06.714
+2023-04-10 12:56:47,521 INFO     ===Epoch 110===
+2023-04-10 12:56:47,522 INFO     Train | MSE: 0.90607 | RMSE: 0.95188 | MAE: 0.73374 | R2: 0.87240 | PCC: 0.93403 | SCC: 0.90840
+2023-04-10 12:56:47,522 INFO     Test  | MSE: 0.90395 | RMSE: 0.95076 | MAE: 0.70579 | R2: 0.87296 | PCC: 0.93439 | SCC: 0.91341
+2023-04-10 12:57:04,911 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:57:12,293 INFO     Epoch[1] Complete. Time taken: 00:00:06.644
+2023-04-10 12:57:12,296 INFO     Engine run complete. Time taken: 00:00:07.384
+2023-04-10 12:57:12,458 INFO     ===Epoch 111===
+2023-04-10 12:57:12,458 INFO     Train | MSE: 0.91451 | RMSE: 0.95630 | MAE: 0.73751 | R2: 0.87122 | PCC: 0.93339 | SCC: 0.90764
+2023-04-10 12:57:12,458 INFO     Test  | MSE: 0.90682 | RMSE: 0.95227 | MAE: 0.70680 | R2: 0.87223 | PCC: 0.93395 | SCC: 0.91306
+2023-04-10 12:57:28,551 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:57:34,154 INFO     Epoch[1] Complete. Time taken: 00:00:04.869
+2023-04-10 12:57:34,156 INFO     Engine run complete. Time taken: 00:00:05.605
+2023-04-10 12:57:34,330 INFO     ===Epoch 112===
+2023-04-10 12:57:34,331 INFO     Train | MSE: 0.89851 | RMSE: 0.94790 | MAE: 0.73122 | R2: 0.87349 | PCC: 0.93461 | SCC: 0.90843
+2023-04-10 12:57:34,331 INFO     Test  | MSE: 0.90586 | RMSE: 0.95177 | MAE: 0.70549 | R2: 0.87264 | PCC: 0.93459 | SCC: 0.91370
+2023-04-10 12:57:50,394 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:57:56,444 INFO     Epoch[1] Complete. Time taken: 00:00:05.314
+2023-04-10 12:57:56,446 INFO     Engine run complete. Time taken: 00:00:06.052
+2023-04-10 12:57:56,634 INFO     ===Epoch 113===
+2023-04-10 12:57:56,634 INFO     Train | MSE: 0.90678 | RMSE: 0.95225 | MAE: 0.73443 | R2: 0.87228 | PCC: 0.93397 | SCC: 0.90863
+2023-04-10 12:57:56,634 INFO     Test  | MSE: 0.90887 | RMSE: 0.95335 | MAE: 0.70832 | R2: 0.87193 | PCC: 0.93383 | SCC: 0.91339
+2023-04-10 12:58:12,622 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:58:19,060 INFO     Epoch[1] Complete. Time taken: 00:00:05.695
+2023-04-10 12:58:19,062 INFO     Engine run complete. Time taken: 00:00:06.439
+2023-04-10 12:58:19,260 INFO     ===Epoch 114===
+2023-04-10 12:58:19,260 INFO     Train | MSE: 0.90272 | RMSE: 0.95011 | MAE: 0.73346 | R2: 0.87289 | PCC: 0.93429 | SCC: 0.90880
+2023-04-10 12:58:19,260 INFO     Test  | MSE: 0.90826 | RMSE: 0.95303 | MAE: 0.70822 | R2: 0.87214 | PCC: 0.93403 | SCC: 0.91338
+2023-04-10 12:58:35,431 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:58:42,359 INFO     Epoch[1] Complete. Time taken: 00:00:06.172
+2023-04-10 12:58:42,361 INFO     Engine run complete. Time taken: 00:00:06.929
+2023-04-10 12:58:42,559 INFO     ===Epoch 115===
+2023-04-10 12:58:42,559 INFO     Train | MSE: 0.90744 | RMSE: 0.95260 | MAE: 0.73552 | R2: 0.87221 | PCC: 0.93393 | SCC: 0.90842
+2023-04-10 12:58:42,559 INFO     Test  | MSE: 0.90504 | RMSE: 0.95133 | MAE: 0.70353 | R2: 0.87245 | PCC: 0.93423 | SCC: 0.91335
+2023-04-10 12:58:58,609 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:59:05,994 INFO     Epoch[1] Complete. Time taken: 00:00:06.637
+2023-04-10 12:59:05,996 INFO     Engine run complete. Time taken: 00:00:07.386
+2023-04-10 12:59:06,188 INFO     ===Epoch 116===
+2023-04-10 12:59:06,188 INFO     Train | MSE: 0.89427 | RMSE: 0.94566 | MAE: 0.72926 | R2: 0.87409 | PCC: 0.93493 | SCC: 0.90971
+2023-04-10 12:59:06,188 INFO     Test  | MSE: 0.90094 | RMSE: 0.94918 | MAE: 0.70170 | R2: 0.87365 | PCC: 0.93477 | SCC: 0.91347
+2023-04-10 12:59:22,648 INFO     Engine run starting with max_epochs=1.
+2023-04-10 12:59:29,859 INFO     Epoch[1] Complete. Time taken: 00:00:06.457
+2023-04-10 12:59:29,860 INFO     Engine run complete. Time taken: 00:00:07.212
+2023-04-10 12:59:30,062 INFO     ===Epoch 117===
+2023-04-10 12:59:30,062 INFO     Train | MSE: 0.90236 | RMSE: 0.94993 | MAE: 0.73311 | R2: 0.87298 | PCC: 0.93433 | SCC: 0.90868
+2023-04-10 12:59:30,062 INFO     Test  | MSE: 0.89869 | RMSE: 0.94799 | MAE: 0.70101 | R2: 0.87359 | PCC: 0.93481 | SCC: 0.91402
+2023-04-10 12:59:52,389 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:00:00,321 INFO     Epoch[1] Complete. Time taken: 00:00:07.168
+2023-04-10 13:00:00,322 INFO     Engine run complete. Time taken: 00:00:07.933
+2023-04-10 13:00:00,527 INFO     ===Epoch 118===
+2023-04-10 13:00:00,528 INFO     Train | MSE: 0.89814 | RMSE: 0.94770 | MAE: 0.73134 | R2: 0.87356 | PCC: 0.93465 | SCC: 0.90948
+2023-04-10 13:00:00,528 INFO     Test  | MSE: 0.90161 | RMSE: 0.94953 | MAE: 0.70249 | R2: 0.87318 | PCC: 0.93448 | SCC: 0.91355
+2023-04-10 13:00:16,752 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:00:23,041 INFO     Epoch[1] Complete. Time taken: 00:00:05.535
+2023-04-10 13:00:23,043 INFO     Engine run complete. Time taken: 00:00:06.290
+2023-04-10 13:00:23,237 INFO     ===Epoch 119===
+2023-04-10 13:00:23,237 INFO     Train | MSE: 0.89916 | RMSE: 0.94824 | MAE: 0.73197 | R2: 0.87338 | PCC: 0.93455 | SCC: 0.90915
+2023-04-10 13:00:23,237 INFO     Test  | MSE: 0.91410 | RMSE: 0.95609 | MAE: 0.71174 | R2: 0.87122 | PCC: 0.93442 | SCC: 0.91352
+2023-04-10 13:00:39,266 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:00:46,662 INFO     Epoch[1] Complete. Time taken: 00:00:06.633
+2023-04-10 13:00:46,663 INFO     Engine run complete. Time taken: 00:00:07.397
+2023-04-10 13:00:46,858 INFO     ===Epoch 120===
+2023-04-10 13:00:46,859 INFO     Train | MSE: 0.89505 | RMSE: 0.94607 | MAE: 0.73101 | R2: 0.87399 | PCC: 0.93488 | SCC: 0.90897
+2023-04-10 13:00:46,859 INFO     Test  | MSE: 0.89976 | RMSE: 0.94856 | MAE: 0.70130 | R2: 0.87329 | PCC: 0.93459 | SCC: 0.91414
+2023-04-10 13:01:02,957 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:01:09,325 INFO     Epoch[1] Complete. Time taken: 00:00:05.602
+2023-04-10 13:01:09,326 INFO     Engine run complete. Time taken: 00:00:06.369
+2023-04-10 13:01:09,522 INFO     ===Epoch 121===
+2023-04-10 13:01:09,522 INFO     Train | MSE: 0.89292 | RMSE: 0.94494 | MAE: 0.72919 | R2: 0.87427 | PCC: 0.93503 | SCC: 0.90980
+2023-04-10 13:01:09,522 INFO     Test  | MSE: 0.90332 | RMSE: 0.95043 | MAE: 0.70167 | R2: 0.87288 | PCC: 0.93435 | SCC: 0.91355
+2023-04-10 13:01:25,867 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:01:34,212 INFO     Epoch[1] Complete. Time taken: 00:00:07.568
+2023-04-10 13:01:34,214 INFO     Engine run complete. Time taken: 00:00:08.346
+2023-04-10 13:01:34,394 INFO     ===Epoch 122===
+2023-04-10 13:01:34,394 INFO     Train | MSE: 0.89742 | RMSE: 0.94732 | MAE: 0.73047 | R2: 0.87365 | PCC: 0.93469 | SCC: 0.90919
+2023-04-10 13:01:34,394 INFO     Test  | MSE: 0.90750 | RMSE: 0.95263 | MAE: 0.70998 | R2: 0.87225 | PCC: 0.93484 | SCC: 0.91391
+2023-04-10 13:01:51,040 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:01:57,492 INFO     Epoch[1] Complete. Time taken: 00:00:05.673
+2023-04-10 13:01:57,494 INFO     Engine run complete. Time taken: 00:00:06.454
+2023-04-10 13:01:57,678 INFO     ===Epoch 123===
+2023-04-10 13:01:57,679 INFO     Train | MSE: 0.89071 | RMSE: 0.94378 | MAE: 0.72897 | R2: 0.87456 | PCC: 0.93518 | SCC: 0.91002
+2023-04-10 13:01:57,679 INFO     Test  | MSE: 0.89947 | RMSE: 0.94840 | MAE: 0.70077 | R2: 0.87344 | PCC: 0.93461 | SCC: 0.91376
+2023-04-10 13:02:13,909 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:02:20,682 INFO     Epoch[1] Complete. Time taken: 00:00:05.986
+2023-04-10 13:02:20,685 INFO     Engine run complete. Time taken: 00:00:06.775
+2023-04-10 13:02:20,874 INFO     ===Epoch 124===
+2023-04-10 13:02:20,874 INFO     Train | MSE: 0.89241 | RMSE: 0.94468 | MAE: 0.72948 | R2: 0.87434 | PCC: 0.93507 | SCC: 0.90986
+2023-04-10 13:02:20,874 INFO     Test  | MSE: 0.89781 | RMSE: 0.94753 | MAE: 0.70357 | R2: 0.87367 | PCC: 0.93503 | SCC: 0.91424
+2023-04-10 13:02:37,023 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:02:42,955 INFO     Epoch[1] Complete. Time taken: 00:00:05.146
+2023-04-10 13:02:42,958 INFO     Engine run complete. Time taken: 00:00:05.934
+2023-04-10 13:02:43,149 INFO     ===Epoch 125===
+2023-04-10 13:02:43,149 INFO     Train | MSE: 0.88614 | RMSE: 0.94135 | MAE: 0.72604 | R2: 0.87521 | PCC: 0.93553 | SCC: 0.91057
+2023-04-10 13:02:43,149 INFO     Test  | MSE: 0.89933 | RMSE: 0.94833 | MAE: 0.70668 | R2: 0.87349 | PCC: 0.93494 | SCC: 0.91408
+2023-04-10 13:03:02,957 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:03:09,015 INFO     Epoch[1] Complete. Time taken: 00:00:05.263
+2023-04-10 13:03:09,017 INFO     Engine run complete. Time taken: 00:00:06.059
+2023-04-10 13:03:09,185 INFO     ===Epoch 126===
+2023-04-10 13:03:09,186 INFO     Train | MSE: 0.88653 | RMSE: 0.94156 | MAE: 0.72642 | R2: 0.87514 | PCC: 0.93549 | SCC: 0.91031
+2023-04-10 13:03:09,186 INFO     Test  | MSE: 0.90259 | RMSE: 0.95005 | MAE: 0.70360 | R2: 0.87297 | PCC: 0.93524 | SCC: 0.91460
+2023-04-10 13:03:26,465 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:03:35,112 INFO     Epoch[1] Complete. Time taken: 00:00:07.729
+2023-04-10 13:03:35,114 INFO     Engine run complete. Time taken: 00:00:08.649
+2023-04-10 13:03:35,311 INFO     ===Epoch 127===
+2023-04-10 13:03:35,312 INFO     Train | MSE: 0.89209 | RMSE: 0.94450 | MAE: 0.72853 | R2: 0.87439 | PCC: 0.93509 | SCC: 0.91000
+2023-04-10 13:03:35,312 INFO     Test  | MSE: 0.89333 | RMSE: 0.94516 | MAE: 0.70168 | R2: 0.87419 | PCC: 0.93503 | SCC: 0.91451
+2023-04-10 13:03:53,632 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:04:03,685 INFO     Epoch[1] Complete. Time taken: 00:00:09.112
+2023-04-10 13:04:03,686 INFO     Engine run complete. Time taken: 00:00:10.054
+2023-04-10 13:04:03,929 INFO     ===Epoch 128===
+2023-04-10 13:04:03,930 INFO     Train | MSE: 0.88911 | RMSE: 0.94293 | MAE: 0.72866 | R2: 0.87480 | PCC: 0.93531 | SCC: 0.91021
+2023-04-10 13:04:03,930 INFO     Test  | MSE: 0.89202 | RMSE: 0.94447 | MAE: 0.70081 | R2: 0.87480 | PCC: 0.93545 | SCC: 0.91489
+2023-04-10 13:04:21,337 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:04:28,403 INFO     Epoch[1] Complete. Time taken: 00:00:06.263
+2023-04-10 13:04:28,406 INFO     Engine run complete. Time taken: 00:00:07.068
+2023-04-10 13:04:28,582 INFO     ===Epoch 129===
+2023-04-10 13:04:28,582 INFO     Train | MSE: 0.88616 | RMSE: 0.94136 | MAE: 0.72676 | R2: 0.87523 | PCC: 0.93554 | SCC: 0.91047
+2023-04-10 13:04:28,582 INFO     Test  | MSE: 0.90967 | RMSE: 0.95377 | MAE: 0.70960 | R2: 0.87174 | PCC: 0.93510 | SCC: 0.91463
+2023-04-10 13:04:44,966 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:04:51,539 INFO     Epoch[1] Complete. Time taken: 00:00:05.778
+2023-04-10 13:04:51,541 INFO     Engine run complete. Time taken: 00:00:06.574
+2023-04-10 13:04:51,753 INFO     ===Epoch 130===
+2023-04-10 13:04:51,753 INFO     Train | MSE: 0.88269 | RMSE: 0.93952 | MAE: 0.72471 | R2: 0.87571 | PCC: 0.93579 | SCC: 0.91045
+2023-04-10 13:04:51,753 INFO     Test  | MSE: 0.89161 | RMSE: 0.94425 | MAE: 0.69837 | R2: 0.87443 | PCC: 0.93511 | SCC: 0.91463
+2023-04-10 13:05:08,455 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:05:15,639 INFO     Epoch[1] Complete. Time taken: 00:00:06.377
+2023-04-10 13:05:15,641 INFO     Engine run complete. Time taken: 00:00:07.185
+2023-04-10 13:05:15,825 INFO     ===Epoch 131===
+2023-04-10 13:05:15,825 INFO     Train | MSE: 0.87626 | RMSE: 0.93609 | MAE: 0.72265 | R2: 0.87662 | PCC: 0.93628 | SCC: 0.91130
+2023-04-10 13:05:15,825 INFO     Test  | MSE: 0.89148 | RMSE: 0.94418 | MAE: 0.70043 | R2: 0.87446 | PCC: 0.93531 | SCC: 0.91466
+2023-04-10 13:05:32,043 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:05:39,376 INFO     Epoch[1] Complete. Time taken: 00:00:06.519
+2023-04-10 13:05:39,377 INFO     Engine run complete. Time taken: 00:00:07.334
+2023-04-10 13:05:39,583 INFO     ===Epoch 132===
+2023-04-10 13:05:39,583 INFO     Train | MSE: 0.88172 | RMSE: 0.93900 | MAE: 0.72602 | R2: 0.87583 | PCC: 0.93586 | SCC: 0.91084
+2023-04-10 13:05:39,583 INFO     Test  | MSE: 0.89751 | RMSE: 0.94737 | MAE: 0.70387 | R2: 0.87354 | PCC: 0.93483 | SCC: 0.91414
+2023-04-10 13:06:00,592 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:06:08,572 INFO     Epoch[1] Complete. Time taken: 00:00:07.154
+2023-04-10 13:06:08,574 INFO     Engine run complete. Time taken: 00:00:07.982
+2023-04-10 13:06:08,783 INFO     ===Epoch 133===
+2023-04-10 13:06:08,783 INFO     Train | MSE: 0.87866 | RMSE: 0.93737 | MAE: 0.72248 | R2: 0.87629 | PCC: 0.93610 | SCC: 0.91109
+2023-04-10 13:06:08,783 INFO     Test  | MSE: 0.88875 | RMSE: 0.94273 | MAE: 0.69950 | R2: 0.87510 | PCC: 0.93548 | SCC: 0.91474
+2023-04-10 13:06:25,263 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:06:31,919 INFO     Epoch[1] Complete. Time taken: 00:00:05.850
+2023-04-10 13:06:31,920 INFO     Engine run complete. Time taken: 00:00:06.657
+2023-04-10 13:06:32,127 INFO     ===Epoch 134===
+2023-04-10 13:06:32,127 INFO     Train | MSE: 0.87772 | RMSE: 0.93687 | MAE: 0.72321 | R2: 0.87641 | PCC: 0.93617 | SCC: 0.91096
+2023-04-10 13:06:32,128 INFO     Test  | MSE: 0.88557 | RMSE: 0.94104 | MAE: 0.69834 | R2: 0.87526 | PCC: 0.93563 | SCC: 0.91507
+2023-04-10 13:06:48,421 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:06:56,383 INFO     Epoch[1] Complete. Time taken: 00:00:07.146
+2023-04-10 13:06:56,384 INFO     Engine run complete. Time taken: 00:00:07.963
+2023-04-10 13:06:56,592 INFO     ===Epoch 135===
+2023-04-10 13:06:56,592 INFO     Train | MSE: 0.88071 | RMSE: 0.93846 | MAE: 0.72528 | R2: 0.87600 | PCC: 0.93595 | SCC: 0.91071
+2023-04-10 13:06:56,592 INFO     Test  | MSE: 0.88437 | RMSE: 0.94041 | MAE: 0.69625 | R2: 0.87537 | PCC: 0.93567 | SCC: 0.91564
+2023-04-10 13:07:12,813 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:07:21,148 INFO     Epoch[1] Complete. Time taken: 00:00:07.518
+2023-04-10 13:07:21,150 INFO     Engine run complete. Time taken: 00:00:08.336
+2023-04-10 13:07:21,354 INFO     ===Epoch 136===
+2023-04-10 13:07:21,354 INFO     Train | MSE: 0.87919 | RMSE: 0.93765 | MAE: 0.72350 | R2: 0.87621 | PCC: 0.93607 | SCC: 0.91101
+2023-04-10 13:07:21,354 INFO     Test  | MSE: 0.88986 | RMSE: 0.94332 | MAE: 0.70119 | R2: 0.87470 | PCC: 0.93551 | SCC: 0.91537
+2023-04-10 13:07:37,537 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:07:45,671 INFO     Epoch[1] Complete. Time taken: 00:00:07.308
+2023-04-10 13:07:45,673 INFO     Engine run complete. Time taken: 00:00:08.135
+2023-04-10 13:07:45,883 INFO     ===Epoch 137===
+2023-04-10 13:07:45,883 INFO     Train | MSE: 0.88093 | RMSE: 0.93858 | MAE: 0.72454 | R2: 0.87592 | PCC: 0.93591 | SCC: 0.91124
+2023-04-10 13:07:45,883 INFO     Test  | MSE: 0.88800 | RMSE: 0.94234 | MAE: 0.69729 | R2: 0.87504 | PCC: 0.93559 | SCC: 0.91490
+2023-04-10 13:08:02,270 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:08:09,790 INFO     Epoch[1] Complete. Time taken: 00:00:06.686
+2023-04-10 13:08:09,792 INFO     Engine run complete. Time taken: 00:00:07.521
+2023-04-10 13:08:09,988 INFO     ===Epoch 138===
+2023-04-10 13:08:09,988 INFO     Train | MSE: 0.87350 | RMSE: 0.93461 | MAE: 0.72147 | R2: 0.87700 | PCC: 0.93649 | SCC: 0.91160
+2023-04-10 13:08:09,988 INFO     Test  | MSE: 0.88770 | RMSE: 0.94218 | MAE: 0.70113 | R2: 0.87484 | PCC: 0.93584 | SCC: 0.91536
+2023-04-10 13:08:26,758 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:08:34,654 INFO     Epoch[1] Complete. Time taken: 00:00:07.063
+2023-04-10 13:08:34,656 INFO     Engine run complete. Time taken: 00:00:07.897
+2023-04-10 13:08:34,844 INFO     ===Epoch 139===
+2023-04-10 13:08:34,844 INFO     Train | MSE: 0.86812 | RMSE: 0.93173 | MAE: 0.71886 | R2: 0.87775 | PCC: 0.93689 | SCC: 0.91215
+2023-04-10 13:08:34,844 INFO     Test  | MSE: 0.88740 | RMSE: 0.94202 | MAE: 0.70019 | R2: 0.87513 | PCC: 0.93555 | SCC: 0.91483
+2023-04-10 13:08:57,270 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:09:04,637 INFO     Epoch[1] Complete. Time taken: 00:00:06.514
+2023-04-10 13:09:04,640 INFO     Engine run complete. Time taken: 00:00:07.369
+2023-04-10 13:09:04,832 INFO     ===Epoch 140===
+2023-04-10 13:09:04,832 INFO     Train | MSE: 0.86870 | RMSE: 0.93204 | MAE: 0.72104 | R2: 0.87766 | PCC: 0.93684 | SCC: 0.91198
+2023-04-10 13:09:04,832 INFO     Test  | MSE: 0.88944 | RMSE: 0.94310 | MAE: 0.69909 | R2: 0.87522 | PCC: 0.93554 | SCC: 0.91455
+2023-04-10 13:09:21,118 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:09:27,839 INFO     Epoch[1] Complete. Time taken: 00:00:05.858
+2023-04-10 13:09:27,842 INFO     Engine run complete. Time taken: 00:00:06.723
+2023-04-10 13:09:28,039 INFO     ===Epoch 141===
+2023-04-10 13:09:28,040 INFO     Train | MSE: 0.87553 | RMSE: 0.93570 | MAE: 0.72382 | R2: 0.87670 | PCC: 0.93632 | SCC: 0.91138
+2023-04-10 13:09:28,040 INFO     Test  | MSE: 0.88240 | RMSE: 0.93936 | MAE: 0.69578 | R2: 0.87574 | PCC: 0.93584 | SCC: 0.91500
+2023-04-10 13:09:44,424 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:09:51,449 INFO     Epoch[1] Complete. Time taken: 00:00:06.187
+2023-04-10 13:09:51,452 INFO     Engine run complete. Time taken: 00:00:07.027
+2023-04-10 13:09:51,665 INFO     ===Epoch 142===
+2023-04-10 13:09:51,666 INFO     Train | MSE: 0.87611 | RMSE: 0.93601 | MAE: 0.72301 | R2: 0.87665 | PCC: 0.93630 | SCC: 0.91109
+2023-04-10 13:09:51,666 INFO     Test  | MSE: 0.88749 | RMSE: 0.94207 | MAE: 0.69731 | R2: 0.87498 | PCC: 0.93591 | SCC: 0.91511
+2023-04-10 13:10:08,300 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:10:14,261 INFO     Epoch[1] Complete. Time taken: 00:00:05.113
+2023-04-10 13:10:14,263 INFO     Engine run complete. Time taken: 00:00:05.963
+2023-04-10 13:10:14,466 INFO     ===Epoch 143===
+2023-04-10 13:10:14,466 INFO     Train | MSE: 0.86439 | RMSE: 0.92973 | MAE: 0.71801 | R2: 0.87828 | PCC: 0.93717 | SCC: 0.91193
+2023-04-10 13:10:14,466 INFO     Test  | MSE: 0.88658 | RMSE: 0.94158 | MAE: 0.69624 | R2: 0.87510 | PCC: 0.93563 | SCC: 0.91485
+2023-04-10 13:10:31,182 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:10:38,880 INFO     Epoch[1] Complete. Time taken: 00:00:06.847
+2023-04-10 13:10:38,882 INFO     Engine run complete. Time taken: 00:00:07.699
+2023-04-10 13:10:39,078 INFO     ===Epoch 144===
+2023-04-10 13:10:39,078 INFO     Train | MSE: 0.86511 | RMSE: 0.93012 | MAE: 0.71981 | R2: 0.87816 | PCC: 0.93711 | SCC: 0.91187
+2023-04-10 13:10:39,078 INFO     Test  | MSE: 0.87935 | RMSE: 0.93774 | MAE: 0.69492 | R2: 0.87617 | PCC: 0.93604 | SCC: 0.91548
+2023-04-10 13:10:55,520 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:11:01,762 INFO     Epoch[1] Complete. Time taken: 00:00:05.382
+2023-04-10 13:11:01,765 INFO     Engine run complete. Time taken: 00:00:06.244
+2023-04-10 13:11:01,983 INFO     ===Epoch 145===
+2023-04-10 13:11:01,983 INFO     Train | MSE: 0.86770 | RMSE: 0.93150 | MAE: 0.71937 | R2: 0.87778 | PCC: 0.93690 | SCC: 0.91211
+2023-04-10 13:11:01,983 INFO     Test  | MSE: 0.87854 | RMSE: 0.93730 | MAE: 0.69189 | R2: 0.87652 | PCC: 0.93640 | SCC: 0.91565
+2023-04-10 13:11:18,535 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:11:25,760 INFO     Epoch[1] Complete. Time taken: 00:00:06.354
+2023-04-10 13:11:25,762 INFO     Engine run complete. Time taken: 00:00:07.227
+2023-04-10 13:11:25,982 INFO     ===Epoch 146===
+2023-04-10 13:11:25,982 INFO     Train | MSE: 0.86207 | RMSE: 0.92848 | MAE: 0.71776 | R2: 0.87857 | PCC: 0.93732 | SCC: 0.91235
+2023-04-10 13:11:25,983 INFO     Test  | MSE: 0.88122 | RMSE: 0.93873 | MAE: 0.69274 | R2: 0.87633 | PCC: 0.93620 | SCC: 0.91561
+2023-04-10 13:11:42,936 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:11:50,417 INFO     Epoch[1] Complete. Time taken: 00:00:06.622
+2023-04-10 13:11:50,419 INFO     Engine run complete. Time taken: 00:00:07.483
+2023-04-10 13:11:50,613 INFO     ===Epoch 147===
+2023-04-10 13:11:50,613 INFO     Train | MSE: 0.86031 | RMSE: 0.92753 | MAE: 0.71756 | R2: 0.87885 | PCC: 0.93747 | SCC: 0.91305
+2023-04-10 13:11:50,613 INFO     Test  | MSE: 0.88856 | RMSE: 0.94264 | MAE: 0.70053 | R2: 0.87503 | PCC: 0.93610 | SCC: 0.91562
+2023-04-10 13:12:07,135 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:12:14,280 INFO     Epoch[1] Complete. Time taken: 00:00:06.279
+2023-04-10 13:12:14,282 INFO     Engine run complete. Time taken: 00:00:07.147
+2023-04-10 13:12:14,465 INFO     ===Epoch 148===
+2023-04-10 13:12:14,465 INFO     Train | MSE: 0.86043 | RMSE: 0.92760 | MAE: 0.71668 | R2: 0.87881 | PCC: 0.93745 | SCC: 0.91257
+2023-04-10 13:12:14,465 INFO     Test  | MSE: 0.88213 | RMSE: 0.93922 | MAE: 0.69527 | R2: 0.87600 | PCC: 0.93607 | SCC: 0.91514
+2023-04-10 13:12:30,720 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:12:37,988 INFO     Epoch[1] Complete. Time taken: 00:00:06.391
+2023-04-10 13:12:37,990 INFO     Engine run complete. Time taken: 00:00:07.269
+2023-04-10 13:12:38,196 INFO     ===Epoch 149===
+2023-04-10 13:12:38,197 INFO     Train | MSE: 0.86319 | RMSE: 0.92908 | MAE: 0.71806 | R2: 0.87842 | PCC: 0.93724 | SCC: 0.91219
+2023-04-10 13:12:38,197 INFO     Test  | MSE: 0.88191 | RMSE: 0.93910 | MAE: 0.69519 | R2: 0.87623 | PCC: 0.93613 | SCC: 0.91571
+2023-04-10 13:12:54,537 INFO     Engine run starting with max_epochs=1.
+2023-04-10 13:13:00,507 INFO     Epoch[1] Complete. Time taken: 00:00:05.092
+2023-04-10 13:13:00,509 INFO     Engine run complete. Time taken: 00:00:05.972
+2023-04-10 13:13:00,698 INFO     ===Epoch 150===
+2023-04-10 13:13:00,698 INFO     Train | MSE: 0.86958 | RMSE: 0.93251 | MAE: 0.72077 | R2: 0.87754 | PCC: 0.93677 | SCC: 0.91174
+2023-04-10 13:13:00,698 INFO     Test  | MSE: 0.88800 | RMSE: 0.94234 | MAE: 0.70012 | R2: 0.87481 | PCC: 0.93590 | SCC: 0.91514

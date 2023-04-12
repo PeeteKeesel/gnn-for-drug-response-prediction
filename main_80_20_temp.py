@@ -25,7 +25,7 @@ from ignite.handlers         import EarlyStopping
 from sklearn.model_selection import KFold, StratifiedKFold
 from sklearn.model_selection import train_test_split
 
-PERFORMANCES = 'performances/combined_score_threshs/'
+PERFORMANCES = 'performances/'
 
 
 def parse_args():
@@ -75,6 +75,8 @@ def parse_args():
                         help='path of the raw datasets')
     parser.add_argument('--processed_path', type=str, default='../data/processed/', 
                         help='path of the processed datasets')
+    parser.add_argument('--logging_path', type=str, default='',
+                        help='path for the logging results')    
     parser.add_argument('--early_stopping_threshold', type=float, default=20,
                         help='early stopping threshold')
     
@@ -124,6 +126,7 @@ def main():
     logging.basicConfig(
         level=logging.INFO, filemode="a+",
         filename=PERFORMANCES + \
+            args.logging_path + \
             f'logfile_model_{args.model.lower()}_{args.version}_{args.gdsc}_{args.combined_score_thresh}_{args.seed}_{args.file_ending}',
         format="%(asctime)-15s %(levelname)-8s %(message)s"
     )  
@@ -337,48 +340,78 @@ def main():
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         logging.info(f"device: {device}")
         
-        # Initialize model.
-        model = GraphTab(
-            dropout=args.dropout,
-            conv_type=args.conv_type,
-            conv_layers=args.conv_layers
-        ) 
+        combs = [
+            ['GCNConv', 2, 'mean'],
+            ['GCNConv', 3, 'mean'],
+            ['GATConv', 2, 'max'],
+            ['GATConv', 2, 'mean'],
+            ['GATConv', 3, 'max'],
+            ['GATConv', 3, 'mean']
+        ]
+        for comb in combs:
+            conv_type, conv_layers, global_pooling = comb
+            logging.info("\n\n\n")
+            logging.info(f"conv_type: {conv_type}")
+            logging.info(f"conv_layers: {conv_layers}")
+            logging.info(f"global_pooling: {global_pooling}")        
         
-        logging.info(f"Number of GPUs: {torch.cuda.device_count()}")
-        logging.info(f"GPU Usage: {torch.cuda.max_memory_allocated(device=device)}") 
-        
-        # Enable multi-GPU parallelization if feasible.
-        if torch.cuda.device_count() > 1:
-            model = nn.DataParallel(model).to(device)
-        else:
-            model =  model.to(device)            
-        
-        # Define loss function and optimizer.
-        loss_func = nn.MSELoss()
-        optimizer = torch.optim.Adam(
-            params=model.parameters(), 
-            lr=args.lr,
-            weight_decay=args.weight_decay
-        )            
-        
-        # Build the model.
-        build_model = BuildGraphTabModel(
-            model=model, 
-            criterion=loss_func, 
-            optimizer=optimizer,
-            num_epochs=args.num_epochs, 
-            train_loader=train_loader,
-            test_loader=test_loader,
-            early_stopping_threshold=args.early_stopping_threshold,            
-            device=device
-        )
-        logging.info(build_model.model)
-        
-        # Train the model on the training fold and evaluate on the test fold.
-        logging.info("TRAINING the model")
-        performance_stats = build_model.train(
-            build_model.train_loader
-        )           
+            # Initialize model.
+            model = GraphTab(
+                dropout=args.dropout,
+                conv_type=conv_type,
+                conv_layers=conv_layers,
+                global_pooling=global_pooling
+            )
+
+            logging.info(f"Number of GPUs: {torch.cuda.device_count()}")
+            logging.info(f"GPU Usage: {torch.cuda.max_memory_allocated(device=device)}") 
+
+            # Enable multi-GPU parallelization if feasible.
+            if torch.cuda.device_count() > 1:
+                model = nn.DataParallel(model).to(device)
+            else:
+                model =  model.to(device)            
+
+            # Define loss function and optimizer.
+            loss_func = nn.MSELoss()
+            optimizer = torch.optim.Adam(
+                params=model.parameters(), 
+                lr=args.lr,
+                weight_decay=args.weight_decay
+            )            
+
+            # Build the model.
+            build_model = BuildGraphTabModel(
+                model=model, 
+                criterion=loss_func, 
+                optimizer=optimizer,
+                num_epochs=args.num_epochs, 
+                train_loader=train_loader,
+                test_loader=test_loader,
+                early_stopping_threshold=args.early_stopping_threshold,            
+                device=device
+            )
+            logging.info(build_model.model)
+
+            # Train the model on the training fold and evaluate on the test fold.
+            logging.info("TRAINING the model")
+            performance_stats = build_model.train(
+                build_model.train_loader
+            )  
+            
+            torch.save({
+                'num_epochs': args.num_epochs,
+                'batch_size': args.batch_size,
+                'learning_rate': args.lr,
+                'train_ratio': args.train_ratio,
+                'test_ratio': args.test_ratio,
+                'early_stopping_thresh': args.early_stopping_threshold,
+                'model_state_dict': build_model.model.state_dict(),
+                'optimizer_state_dict': build_model.optimizer.state_dict(),
+                'performances': performance_stats
+            }, PERFORMANCES + args.logging_path + f'model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}_{args.seed}_{conv_type}_{conv_layers}Gin990{global_pooling}150.pth')
+            
+            
     #
     #
     # -------------------------------
@@ -498,9 +531,15 @@ def main():
         logging.info(f"device: {device}")
         
         combs = [
-#             ['GCNConv', 3, 'max'],
-#             ['GCNConv', 3, 'mean'],
-#             ['GATConv', 2, 'mean'],
+            # GCN
+            ['GCNConv', 2, 'max'],
+            ['GCNConv', 2, 'mean'],
+            ['GCNConv', 3, 'max'],
+            ['GCNConv', 3, 'mean'],
+            # GAT
+            ['GATConv', 2, 'max'],
+            ['GATConv', 2, 'mean'],
+            ['GATConv', 3, 'max'],
             ['GATConv', 3, 'mean']
         ]
         for comb in combs:
@@ -553,19 +592,31 @@ def main():
             performance_stats = build_model.train(
                 build_model.train_loader
             )
+            
+            torch.save({
+                'num_epochs': args.num_epochs,
+                'batch_size': args.batch_size,
+                'learning_rate': args.lr,
+                'train_ratio': args.train_ratio,
+                'test_ratio': args.test_ratio,
+                'early_stopping_thresh': args.early_stopping_threshold,
+                'model_state_dict': build_model.model.state_dict(),
+                'optimizer_state_dict': build_model.optimizer.state_dict(),
+                'performances': performance_stats
+            }, PERFORMANCES + args.logging_path + f'model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}_{args.seed}_{conv_type}_{conv_layers}Gin990{global_pooling}150.pth')            
         
         
-        torch.save({
-            'num_epochs': args.num_epochs,
-            'batch_size': args.batch_size,
-            'learning_rate': args.lr,
-            'train_ratio': args.train_ratio,
-            'test_ratio': args.test_ratio,
-            'early_stopping_thresh': args.early_stopping_threshold,
-            'model_state_dict': build_model.model.state_dict(),
-            'optimizer_state_dict': build_model.optimizer.state_dict(),
-            'performances': performance_stats
-        }, PERFORMANCES + f'model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}_{args.seed}_{conv_type}_{conv_layers}_{global_pooling}_{args.file_ending}.pth')
+#         torch.save({
+#             'num_epochs': args.num_epochs,
+#             'batch_size': args.batch_size,
+#             'learning_rate': args.lr,
+#             'train_ratio': args.train_ratio,
+#             'test_ratio': args.test_ratio,
+#             'early_stopping_thresh': args.early_stopping_threshold,
+#             'model_state_dict': build_model.model.state_dict(),
+#             'optimizer_state_dict': build_model.optimizer.state_dict(),
+#             'performances': performance_stats
+#         }, PERFORMANCES + f'model_performance_{args.model}_{args.version}_{args.gdsc.lower()}_{args.combined_score_thresh}_{args.seed}_{conv_type}_{conv_layers}_{global_pooling}_{args.file_ending}.pth')
         
 
 if __name__ == "__main__":

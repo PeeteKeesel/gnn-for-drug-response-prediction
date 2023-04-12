@@ -1,6 +1,7 @@
 import random
 import logging
 import pickle
+import copy
 import torch
 import torch.nn as nn
 import numpy    as np
@@ -8,8 +9,8 @@ import pandas   as pd
 
 from argparse                      import ArgumentParser
 from pathlib                       import Path
-from src.models.TabTab.tab_tab_early_stopping   import TabTabDataset, create_tt_loaders, BuildTabTabModel, TabTab
-from src.models.GraphTab.graph_tab_early_stopping import GraphTabDataset, create_gt_loaders, BuildGraphTabModel, GraphTab
+from src.models.TabTab.tab_tab_early_stopping         import TabTabDataset, create_tt_loaders, BuildTabTabModel, TabTab
+from src.models.GraphTab.graph_tab_early_stopping     import GraphTabDataset, create_gt_loaders, BuildGraphTabModel, GraphTab
 from src.models.GraphGraph.graph_graph_early_stopping import GraphGraphDataset, create_gg_loaders, BuildGraphGraphModel, GraphGraph
 
 # from src.models.TabTab.tab_tab     import TabTabDataset, create_tab_tab_datasets, BuildTabTabModel, TabTab_v1
@@ -70,6 +71,8 @@ def parse_args():
     parser.add_argument('--process', type=str, default='n', 
                         help="If data should be processed press either [`y`, `yes`, `1`]. " \
                            + "If no data should be processed press either [`n`, `no`, `0`]")   
+    parser.add_argument('--build_model', type=str, default='y', 
+                        help="If model should be build")       
     parser.add_argument('--raw_path', type=str, default='../data/raw/', 
                         help='path of the raw datasets')
     parser.add_argument('--processed_path', type=str, default='../data/processed/', 
@@ -78,6 +81,10 @@ def parse_args():
                         help='path for the logging results')
     parser.add_argument('--early_stopping_threshold', type=float, default=20,
                         help='early stopping threshold')
+    parser.add_argument('--ablation_subset', type=str, default='',
+                        help='node features for ablation studies in [gexpr, cnvg, cnvp, mut]')    
+    parser.add_argument('--nr_node_features', type=int, default=4,
+                        help='number of node features')
     
     # Additional optional parameters for processing.
     parser.add_argument('--combined_score_thresh', type=int, default=990,
@@ -147,6 +154,9 @@ def main():
         processor.create_processed_datasets()
         processor.create_gene_gene_interaction_graph()
         processor.create_drug_datasets()
+        
+    if not args.build_model:
+        return
 
     # -----------------------------------     
     # --- Drug response matrix import ---
@@ -237,79 +247,69 @@ def main():
         logging.info("Finished building TabTabDataset!")
         tab_tab_dataset.print_dataset_summary()   
 
-        # -------------------------
-        # --- Perform k-fold CV ---
-        # -------------------------        
-        kfold = KFold(
-            n_splits=args.kfolds, 
-            shuffle=True,
-            random_state=args.seed
+        drm_train, drm_test = train_test_split(
+            drm, 
+            test_size=args.test_ratio,
+            random_state=args.seed,
+            stratify=drm['CELL_LINE_NAME']
         )
-        k_performances = dict()
-
-        for i, (train_i, test_i) in enumerate(kfold.split(drm)):
-            logging.info(f"\n\n\n\n\nKFold iteration {i}")
-            drm_train = drm.iloc[train_i]
-            drm_test = drm.iloc[test_i]
             
-            # Create data loaders.
-            train_loader, test_loader = create_tt_loaders(
-                drm_train,
-                drm_test,
-                cl_gene_mat,
-                smiles_mat,
-                args
-            )
-            logging.info(f"{4*' '}Finished creating pytorch training datasets!")
-            logging.info(f"{4*' '}Number of batches per dataset:")
-            logging.info(f"{8*' '}train : {len(train_loader)}")      
-            logging.info(f"{8*' '}test  : {len(test_loader)}")
-            
-            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-            logging.info(f"device: {device}")
-            
-            # Initialize model.
-            model = TabTab(
-                cell_inp_dim=cl_gene_mat.shape[1],
-                dropout=args.dropout
-            )
-            logging.info(f"Number of GPUs: {torch.cuda.device_count()}")
-            logging.info(f"GPU Usage: {torch.cuda.max_memory_allocated(device=device)}")
-            
-            # Enable multi-GPU parallelization if feasible.
-            if torch.cuda.device_count() > 1:
-                model = nn.DataParallel(model).to(device)
-            else:
-                model =  model.to(device)
-            
-            # Define loss function and optimizer.
-            loss_func = nn.MSELoss()
-            optimizer = torch.optim.Adam(
-                params=model.parameters(), 
-                lr=args.lr,
-                weight_decay=args.weight_decay
-            )
-            
-            # Build the model.
-            build_model = BuildTabTabModel(
-                model=model, 
-                criterion=loss_func, 
-                optimizer=optimizer,
-                num_epochs=args.num_epochs, 
-                train_loader=train_loader,
-                test_loader=test_loader,
-                early_stopping_threshold=args.early_stopping_threshold,            
-                device=device
-            )
-            logging.info(build_model.model)
-            
-            # Train the model on the training fold and evaluate on the test fold.
-            logging.info("TRAINING the model")
-            performance_stats = build_model.train(
-                build_model.train_loader
-            )
-            
-            k_performances[i] = performance_stats   
+        # Create data loaders.
+        train_loader, test_loader = create_tt_loaders(
+            drm_train,
+            drm_test,
+            cl_gene_mat,
+            smiles_mat,
+            args
+        )
+        logging.info(f"{4*' '}Finished creating pytorch training datasets!")
+        logging.info(f"{4*' '}Number of batches per dataset:")
+        logging.info(f"{8*' '}train : {len(train_loader)}")      
+        logging.info(f"{8*' '}test  : {len(test_loader)}")
+        
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        logging.info(f"device: {device}")
+        
+        # Initialize model.
+        model = TabTab(
+            cell_inp_dim=cl_gene_mat.shape[1],
+            dropout=args.dropout
+        )
+        logging.info(f"Number of GPUs: {torch.cuda.device_count()}")
+        logging.info(f"GPU Usage: {torch.cuda.max_memory_allocated(device=device)}")
+        
+        # Enable multi-GPU parallelization if feasible.
+        if torch.cuda.device_count() > 1:
+            model = nn.DataParallel(model).to(device)
+        else:
+            model =  model.to(device)
+        
+        # Define loss function and optimizer.
+        loss_func = nn.MSELoss()
+        optimizer = torch.optim.Adam(
+            params=model.parameters(), 
+            lr=args.lr,
+            weight_decay=args.weight_decay
+        )
+        
+        # Build the model.
+        build_model = BuildTabTabModel(
+            model=model, 
+            criterion=loss_func, 
+            optimizer=optimizer,
+            num_epochs=args.num_epochs, 
+            train_loader=train_loader,
+            test_loader=test_loader,
+            early_stopping_threshold=args.early_stopping_threshold,            
+            device=device
+        )
+        logging.info(build_model.model)
+        
+        # Train the model on the training fold and evaluate on the test fold.
+        logging.info("TRAINING the model")
+        performance_stats = build_model.train(
+            build_model.train_loader
+        )    
     # 
     #
     # -------------------------------
@@ -353,7 +353,8 @@ def main():
         model = GraphTab(
             dropout=args.dropout,
             conv_type=args.conv_type,
-            conv_layers=args.conv_layers
+            conv_layers=args.conv_layers,
+            global_pooling=args.global_pooling
         ) 
         
         logging.info(f"Number of GPUs: {torch.cuda.device_count()}")
@@ -459,6 +460,27 @@ def main():
     # ---------------------------------   
     elif args.model in ['GraphGraph', 'graphgraph', 'GG', 'gg']:
         
+        # --- Perform ablation study if specified ---
+        if args.ablation_subset:
+            node_feature_mapping = {
+                'gexpr': 0,
+                'cnvg': 1,
+                'cnvp': 2,
+                'mut': 3
+            }
+            
+            logging.info(f"\n\nPerforming ablation study only for: {args.ablation_subset}!")
+            logging.info("============================================================")
+            idx = node_feature_mapping.get(args.ablation_subset)
+            cl_graphs_subset = {}
+
+            for cl, G in cl_graphs.items():
+                G_temp = copy.deepcopy(G)
+                G_temp.x = G_temp.x[:, idx].unsqueeze(dim=-1)
+                cl_graphs_subset[cl] = G_temp
+                
+            cl_graphs = cl_graphs_subset
+        
         graph_graph_dataset = GraphGraphDataset(
             cl_graphs, 
             drug_graphs, 
@@ -496,7 +518,8 @@ def main():
             dropout=args.dropout,
             conv_type=args.conv_type,
             conv_layers=args.conv_layers,
-            global_pooling=args.global_pooling
+            global_pooling=args.global_pooling,
+            nr_node_features=args.nr_node_features
         ) 
         
         logging.info(f"Number of GPUs: {torch.cuda.device_count()}")

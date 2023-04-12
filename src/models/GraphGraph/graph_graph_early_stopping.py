@@ -345,6 +345,48 @@ class BuildGraphGraphModel(Engine):
 
         return mse, rmse, mae, r2, pcc, scc, y_true, y_pred    
     
+    @torch.no_grad()
+    def validate_with_drugs(self, loader):
+        self.model.eval()
+        y_true, y_pred, smiles = [], [], []
+        total_loss = 0
+        with torch.no_grad():
+            for data in tqdm(loader, desc='Iteration (val)'):
+                sleep(0.01)
+                cl, dr, ic50 = data
+#                 dr = torch.stack(dr, 0).transpose(1, 0)
+                cl, dr, ic50 = cl.to(self.device), dr.to(self.device), ic50.to(self.device)
+
+                preds = self.model(cl.x.float(), 
+                                   cl.edge_index, 
+                                   cl.batch, 
+                                   dr.x.float(),
+                                   dr.edge_index,
+                                   dr.batch).unsqueeze(1)
+#                 ic50 = ic50.to(self.device)
+                total_loss += self.criterion(preds, ic50.view(-1,1).float())
+                # total_loss += F.mse_loss(preds, ic50.view(-1, 1).float(), reduction='sum')
+                y_true.append(ic50.view(-1, 1))
+                y_pred.append(preds)
+                smiles.extend(dr.smiles)
+        
+        y_true = torch.cat(y_true, dim=0)
+        y_pred = torch.cat(y_pred, dim=0)
+        
+        # Calculate performance metrics.        
+        mse = total_loss / len(loader)
+        rmse = torch.sqrt(mse)
+        mae = mean_absolute_error(y_true.detach().cpu(), 
+                                  y_pred.detach().cpu())
+        r2 = r2_score(y_true.detach().cpu(), 
+                      y_pred.detach().cpu())
+        pcc, _ = pearsonr(y_true.detach().cpu().numpy().flatten(), 
+                          y_pred.detach().cpu().numpy().flatten())
+        scc, _ = spearmanr(y_true.detach().cpu().numpy().flatten(), 
+                           y_pred.detach().cpu().numpy().flatten())        
+
+        return mse, rmse, mae, r2, pcc, scc, y_true, y_pred, smiles    
+    
 """
 GraphGraph model using 
     - GCNConv
@@ -421,7 +463,8 @@ class GraphGraph(torch.nn.Module):
                  dropout, 
                  conv_type='GCNConv', 
                  conv_layers=2, 
-                 global_pooling='max'):
+                 global_pooling='max',
+                 nr_node_features=4):
         super(GraphGraph, self).__init__()
 
         # Note: in_channels = number of features.
@@ -430,10 +473,12 @@ class GraphGraph(torch.nn.Module):
                 if conv_layers == 2:
                     self.cell_emb = Sequential('x, edge_index, batch', 
                         [
-                            (GCNConv(in_channels=4, out_channels=256), 'x, edge_index -> x1'),
+                            (GCNConv(in_channels=nr_node_features, out_channels=128), 'x, edge_index -> x1'),
+                            nn.BatchNorm1d(128),
                             nn.ReLU(inplace=True),
 #                             nn.Dropout(p=dropout),
-                            (GCNConv(in_channels=256, out_channels=128), 'x1, edge_index -> x2'),
+                            (GCNConv(in_channels=128, out_channels=128), 'x1, edge_index -> x2'),
+                            nn.BatchNorm1d(128),                            
 #                             nn.ReLU(inplace=True),                
                             (global_max_pool, 'x2, batch -> x3'), 
                             nn.Linear(128, 128),
@@ -467,12 +512,14 @@ class GraphGraph(torch.nn.Module):
                 elif conv_layers == 3:
                     self.cell_emb = Sequential('x, edge_index, batch', 
                         [
-                            (GCNConv(in_channels=4, out_channels=512), 'x, edge_index -> x1'),
+                            (GCNConv(in_channels=nr_node_features, out_channels=128), 'x, edge_index -> x1'),
+                            nn.BatchNorm1d(128),
                             nn.ReLU(inplace=True),
-                            (GCNConv(in_channels=512, out_channels=256), 'x1, edge_index -> x2'),
-                            nn.ReLU(inplace=True),  
-                            (GCNConv(in_channels=256, out_channels=128), 'x2, edge_index -> x3'),
-                            nn.ReLU(inplace=True),                        
+                            (GCNConv(in_channels=128, out_channels=128), 'x1, edge_index -> x2'),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(inplace=True),
+                            (GCNConv(in_channels=128, out_channels=128), 'x2, edge_index -> x3'),
+#                             nn.ReLU(inplace=True),                        
                             (global_max_pool, 'x3, batch -> x4'), 
                             nn.Linear(128, 128),
                             nn.BatchNorm1d(128),
@@ -486,11 +533,12 @@ class GraphGraph(torch.nn.Module):
                 if conv_layers == 2:
                     self.cell_emb = Sequential('x, edge_index, batch', 
                         [
-                            (GATConv(in_channels=4, out_channels=256), 'x, edge_index -> x1'),
+                            (GATConv(in_channels=nr_node_features, out_channels=128), 'x, edge_index -> x1'),
+                            nn.BatchNorm1d(128),
                             nn.ReLU(inplace=True),
-#                             nn.Dropout(p=dropout),
-                            (GATConv(in_channels=256, out_channels=128), 'x1, edge_index -> x2'),
-                            nn.ReLU(inplace=True),                
+                            (GATConv(in_channels=128, out_channels=128), 'x1, edge_index -> x2'),
+                            nn.BatchNorm1d(128),                            
+#                             nn.ReLU(inplace=True),                
                             (global_max_pool, 'x2, batch -> x3'), 
                             nn.Linear(128, 128),
                             nn.BatchNorm1d(128),
@@ -503,7 +551,7 @@ class GraphGraph(torch.nn.Module):
                 elif conv_layers == 3:
                     self.cell_emb = Sequential('x, edge_index, batch', 
                         [
-                            (GATConv(in_channels=4, out_channels=128), 'x, edge_index -> x1'),
+                            (GATConv(in_channels=nr_node_features, out_channels=128), 'x, edge_index -> x1'),
                             nn.BatchNorm1d(128),
                             nn.ReLU(inplace=True),
                             (GATConv(in_channels=128, out_channels=128), 'x1, edge_index -> x2'),
@@ -545,11 +593,12 @@ class GraphGraph(torch.nn.Module):
                 if conv_layers == 2:
                     self.cell_emb = Sequential('x, edge_index, batch', 
                         [
-                            (GCNConv(in_channels=4, out_channels=256), 'x, edge_index -> x1'),
+                            (GCNConv(in_channels=nr_node_features, out_channels=128), 'x, edge_index -> x1'),
+                            nn.BatchNorm1d(128),
                             nn.ReLU(inplace=True),
-                            nn.Dropout(p=dropout),
-                            (GCNConv(in_channels=256, out_channels=128), 'x1, edge_index -> x2'),
-                            nn.ReLU(inplace=True),                
+#                             nn.Dropout(p=dropout),
+                            (GCNConv(in_channels=128, out_channels=128), 'x1, edge_index -> x2'),
+#                             nn.ReLU(inplace=True),                
                             (global_mean_pool, 'x2, batch -> x3'), 
                             nn.Linear(128, 128),
                             nn.BatchNorm1d(128),
@@ -562,12 +611,15 @@ class GraphGraph(torch.nn.Module):
                 elif conv_layers == 3:
                     self.cell_emb = Sequential('x, edge_index, batch', 
                         [
-                            (GCNConv(in_channels=4, out_channels=512), 'x, edge_index -> x1'),
+                            (GCNConv(in_channels=nr_node_features, out_channels=128), 'x, edge_index -> x1'),
+                            nn.BatchNorm1d(128),
                             nn.ReLU(inplace=True),
-                            (GCNConv(in_channels=512, out_channels=256), 'x1, edge_index -> x2'),
-                            nn.ReLU(inplace=True),  
-                            (GCNConv(in_channels=256, out_channels=128), 'x2, edge_index -> x3'),
-                            nn.ReLU(inplace=True),                        
+                            (GCNConv(in_channels=128, out_channels=128), 'x1, edge_index -> x2'),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(inplace=True),
+                            (GCNConv(in_channels=128, out_channels=128), 'x2, edge_index -> x3'),
+                            nn.BatchNorm1d(128),                            
+#                             nn.ReLU(inplace=True),                        
                             (global_mean_pool, 'x3, batch -> x4'), 
                             nn.Linear(128, 128),
                             nn.BatchNorm1d(128),
@@ -581,11 +633,13 @@ class GraphGraph(torch.nn.Module):
                 if conv_layers == 2:
                     self.cell_emb = Sequential('x, edge_index, batch', 
                         [
-                            (GATConv(in_channels=4, out_channels=256), 'x, edge_index -> x1'),
+                            (GATConv(in_channels=nr_node_features, out_channels=128), 'x, edge_index -> x1'),
+                            nn.BatchNorm1d(128),
                             nn.ReLU(inplace=True),
-                            nn.Dropout(p=dropout),
-                            (GATConv(in_channels=256, out_channels=128), 'x1, edge_index -> x2'),
-                            nn.ReLU(inplace=True),                
+#                             nn.Dropout(p=dropout),
+                            (GATConv(in_channels=128, out_channels=128), 'x1, edge_index -> x2'),
+                            nn.BatchNorm1d(128),                            
+#                             nn.ReLU(inplace=True),                
                             (global_mean_pool, 'x2, batch -> x3'), 
                             nn.Linear(128, 128),
                             nn.BatchNorm1d(128),
@@ -598,12 +652,15 @@ class GraphGraph(torch.nn.Module):
                 elif conv_layers == 3:
                     self.cell_emb = Sequential('x, edge_index, batch', 
                         [
-                            (GATConv(in_channels=4, out_channels=512), 'x, edge_index -> x1'),
+                            (GATConv(in_channels=nr_node_features, out_channels=128), 'x, edge_index -> x1'),
+                            nn.BatchNorm1d(128),
                             nn.ReLU(inplace=True),
-                            (GATConv(in_channels=512, out_channels=256), 'x1, edge_index -> x2'),
-                            nn.ReLU(inplace=True),  
-                            (GATConv(in_channels=256, out_channels=128), 'x2, edge_index -> x3'),
-                            nn.ReLU(inplace=True),                
+                            (GATConv(in_channels=128, out_channels=128), 'x1, edge_index -> x2'),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(inplace=True),
+                            (GATConv(in_channels=128, out_channels=128), 'x2, edge_index -> x3'),
+                            nn.BatchNorm1d(128),                            
+#                             nn.ReLU(inplace=True),                
                             (global_mean_pool, 'x3, batch -> x4'), 
                             nn.Linear(128, 128),
                             nn.BatchNorm1d(128),

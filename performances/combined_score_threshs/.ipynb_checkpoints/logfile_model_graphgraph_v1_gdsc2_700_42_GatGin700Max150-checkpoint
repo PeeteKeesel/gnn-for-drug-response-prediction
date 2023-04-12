@@ -1,0 +1,181 @@
+2023-04-07 17:54:58,524 INFO     Finished reading drug response matrix: (137835, 9)
+2023-04-07 17:54:58,530 INFO     DRM Number of unique cell-lines: 856
+2023-04-07 17:54:58,884 INFO     Finished reading cell-line graphs: Data(x=[696, 4], edge_index=[2, 7794])
+2023-04-07 17:54:58,919 INFO     Finished reading drug SMILES graphs: Data(x=[26, 9], edge_index=[2, 60], edge_attr=[60, 3], smiles='CC[C@@]1(c2cc3c4c(cc5ccccc5n4)Cn3c(=O)c2COC1=O)O')
+2023-04-07 17:54:58,919 INFO     ARGUMENTS SUMMARY
+2023-04-07 17:54:58,919 INFO     =================
+2023-04-07 17:54:58,919 INFO     seed                     : 42
+2023-04-07 17:54:58,919 INFO     batch_size               : 128
+2023-04-07 17:54:58,919 INFO     lr                       : 0.0001
+2023-04-07 17:54:58,919 INFO     num_epochs               : 150
+2023-04-07 17:54:58,920 INFO     num_workers              : 8
+2023-04-07 17:54:58,920 INFO     dropout                  : 0.1
+2023-04-07 17:54:58,920 INFO     kfolds                   : 5
+2023-04-07 17:54:58,920 INFO     conv_type                : GATConv
+2023-04-07 17:54:58,920 INFO     conv_layers              : 3
+2023-04-07 17:54:58,920 INFO     global_pooling           : global_max_pooling
+2023-04-07 17:54:58,920 INFO     early_stopping_threshold : 20
+2023-04-07 17:54:58,920 INFO     combined_score_thresh    : 700
+2023-04-07 17:54:58,920 INFO     gdsc                     : gdsc2
+2023-04-07 17:54:58,920 INFO     file_ending              : GatGin700Max150
+2023-04-07 17:54:58,920 INFO     Finished building GraphGraphDataset!
+2023-04-07 17:54:58,920 INFO     GraphGraphDataset Summary
+2023-04-07 17:54:58,920 INFO     =======================
+2023-04-07 17:54:58,920 INFO     # observations : 137835
+2023-04-07 17:54:59,003 INFO     # cell-lines   : 856
+2023-04-07 17:54:59,068 INFO     # drugs        : 181
+2023-04-07 17:54:59,069 INFO     # genes        : 696
+2023-04-07 17:54:59,216 INFO             train shape: (110268, 9)
+2023-04-07 17:54:59,216 INFO             test  shape: (27567, 9)
+2023-04-07 17:54:59,217 INFO             train_dataset:
+2023-04-07 17:54:59,217 INFO     GraphGraphDataset Summary
+2023-04-07 17:54:59,217 INFO     =======================
+2023-04-07 17:54:59,217 INFO     # observations : 110268
+2023-04-07 17:54:59,281 INFO     # cell-lines   : 856
+2023-04-07 17:54:59,342 INFO     # drugs        : 181
+2023-04-07 17:54:59,342 INFO     # genes        : 696
+2023-04-07 17:54:59,342 INFO             test_dataset :
+2023-04-07 17:54:59,342 INFO     GraphGraphDataset Summary
+2023-04-07 17:54:59,342 INFO     =======================
+2023-04-07 17:54:59,342 INFO     # observations : 27567
+2023-04-07 17:54:59,358 INFO     # cell-lines   : 856
+2023-04-07 17:54:59,372 INFO     # drugs        : 181
+2023-04-07 17:54:59,372 INFO     # genes        : 696
+2023-04-07 17:54:59,373 INFO         Finished creating pytorch training datasets!
+2023-04-07 17:54:59,373 INFO         Number of batches per dataset:
+2023-04-07 17:54:59,373 INFO             train : 862
+2023-04-07 17:54:59,373 INFO             test  : 216
+2023-04-07 17:54:59,373 INFO     device: cuda
+2023-04-07 17:54:59,430 INFO     Number of GPUs: 1
+2023-04-07 17:54:59,430 INFO     GPU Usage: 0
+2023-04-07 17:55:01,852 INFO     GraphGraph(
+  (cell_emb): Sequential(
+    (0): GATConv(4, 128, heads=1)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU(inplace=True)
+    (3): GATConv(128, 128, heads=1)
+    (4): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (5): ReLU(inplace=True)
+    (6): GATConv(128, 128, heads=1)
+    (7): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): <function global_max_pool at 0x7faac79a8c10>
+    (9): Linear(in_features=128, out_features=128, bias=True)
+    (10): ReLU()
+    (11): Dropout(p=0.1, inplace=False)
+    (12): Linear(in_features=128, out_features=128, bias=True)
+    (13): ReLU()
+    (14): Dropout(p=0.1, inplace=False)
+  )
+  (drug_emb): Sequential(
+    (0): GINConv(nn=Sequential(
+    (0): Linear(in_features=9, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Linear(in_features=128, out_features=128, bias=True)
+  ))
+    (1): ReLU(inplace=True)
+    (2): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): GINConv(nn=Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Linear(in_features=128, out_features=128, bias=True)
+  ))
+    (4): ReLU(inplace=True)
+    (5): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): <function global_max_pool at 0x7faac79a8c10>
+    (7): Linear(in_features=128, out_features=128, bias=True)
+    (8): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (9): ReLU()
+    (10): Dropout(p=0.1, inplace=False)
+    (11): Linear(in_features=128, out_features=128, bias=True)
+    (12): ReLU()
+  )
+  (fcn): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): Dropout(p=0.1, inplace=False)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ELU(alpha=1.0)
+    (7): Dropout(p=0.1, inplace=False)
+    (8): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+2023-04-07 17:55:01,852 INFO     TRAINING the model
+2023-04-07 17:57:29,174 INFO     ===Epoch 001===
+2023-04-07 17:57:29,175 INFO     Train | MSE: 6.77538 | RMSE: 2.60296 | MAE: 2.19820 | R2: 0.04575 | PCC: 0.78065 | SCC: 0.72818
+2023-04-07 17:57:29,175 INFO     Test  | MSE: 3.51594 | RMSE: 1.87508 | MAE: 1.52431 | R2: 0.50553 | PCC: 0.84851 | SCC: 0.81936
+2023-04-07 17:59:58,437 INFO     ===Epoch 002===
+2023-04-07 17:59:58,437 INFO     Train | MSE: 2.66839 | RMSE: 1.63352 | MAE: 1.27672 | R2: 0.62422 | PCC: 0.83358 | SCC: 0.79765
+2023-04-07 17:59:58,437 INFO     Test  | MSE: 1.79130 | RMSE: 1.33839 | MAE: 0.99827 | R2: 0.74781 | PCC: 0.86801 | SCC: 0.84028
+2023-04-07 18:02:27,470 INFO     ===Epoch 003===
+2023-04-07 18:02:27,471 INFO     Train | MSE: 1.96057 | RMSE: 1.40020 | MAE: 1.06545 | R2: 0.72384 | PCC: 0.85200 | SCC: 0.82006
+2023-04-07 18:02:27,471 INFO     Test  | MSE: 1.63885 | RMSE: 1.28017 | MAE: 0.94205 | R2: 0.76910 | PCC: 0.87720 | SCC: 0.85287
+2023-04-07 18:04:56,677 INFO     ===Epoch 004===
+2023-04-07 18:04:56,677 INFO     Train | MSE: 1.83223 | RMSE: 1.35360 | MAE: 1.02652 | R2: 0.74198 | PCC: 0.86170 | SCC: 0.83052
+2023-04-07 18:04:56,677 INFO     Test  | MSE: 1.59077 | RMSE: 1.26126 | MAE: 0.92886 | R2: 0.77624 | PCC: 0.88118 | SCC: 0.85712
+2023-04-07 18:07:25,881 INFO     ===Epoch 005===
+2023-04-07 18:07:25,882 INFO     Train | MSE: 1.77994 | RMSE: 1.33414 | MAE: 1.01063 | R2: 0.74935 | PCC: 0.86588 | SCC: 0.83512
+2023-04-07 18:07:25,882 INFO     Test  | MSE: 1.56375 | RMSE: 1.25050 | MAE: 0.92600 | R2: 0.77986 | PCC: 0.88388 | SCC: 0.85749
+2023-04-07 18:09:55,088 INFO     ===Epoch 006===
+2023-04-07 18:09:55,088 INFO     Train | MSE: 1.75192 | RMSE: 1.32360 | MAE: 1.00296 | R2: 0.75331 | PCC: 0.86814 | SCC: 0.83655
+2023-04-07 18:09:55,088 INFO     Test  | MSE: 1.54112 | RMSE: 1.24142 | MAE: 0.91308 | R2: 0.78285 | PCC: 0.88612 | SCC: 0.86242
+2023-04-07 18:12:24,827 INFO     ===Epoch 007===
+2023-04-07 18:12:24,827 INFO     Train | MSE: 1.72431 | RMSE: 1.31313 | MAE: 0.99487 | R2: 0.75713 | PCC: 0.87034 | SCC: 0.83926
+2023-04-07 18:12:24,827 INFO     Test  | MSE: 1.55730 | RMSE: 1.24792 | MAE: 0.92252 | R2: 0.78130 | PCC: 0.88670 | SCC: 0.86158
+2023-04-07 18:14:54,570 INFO     ===Epoch 008===
+2023-04-07 18:14:54,570 INFO     Train | MSE: 1.69745 | RMSE: 1.30286 | MAE: 0.98578 | R2: 0.76098 | PCC: 0.87250 | SCC: 0.84141
+2023-04-07 18:14:54,570 INFO     Test  | MSE: 1.49510 | RMSE: 1.22274 | MAE: 0.90397 | R2: 0.78953 | PCC: 0.88893 | SCC: 0.86330
+2023-04-07 18:17:24,268 INFO     ===Epoch 009===
+2023-04-07 18:17:24,268 INFO     Train | MSE: 1.67448 | RMSE: 1.29402 | MAE: 0.97839 | R2: 0.76433 | PCC: 0.87443 | SCC: 0.84327
+2023-04-07 18:17:24,268 INFO     Test  | MSE: 1.53315 | RMSE: 1.23820 | MAE: 0.91059 | R2: 0.78413 | PCC: 0.88631 | SCC: 0.86179
+2023-04-07 18:19:52,662 INFO     ===Epoch 010===
+2023-04-07 18:19:52,662 INFO     Train | MSE: 1.66196 | RMSE: 1.28917 | MAE: 0.97504 | R2: 0.76593 | PCC: 0.87531 | SCC: 0.84451
+2023-04-07 18:19:52,662 INFO     Test  | MSE: 1.47410 | RMSE: 1.21412 | MAE: 0.89785 | R2: 0.79287 | PCC: 0.89069 | SCC: 0.86614
+2023-04-07 18:22:19,220 INFO     ===Epoch 011===
+2023-04-07 18:22:19,220 INFO     Train | MSE: 1.64331 | RMSE: 1.28192 | MAE: 0.96946 | R2: 0.76859 | PCC: 0.87682 | SCC: 0.84574
+2023-04-07 18:22:19,220 INFO     Test  | MSE: 1.49590 | RMSE: 1.22307 | MAE: 0.89368 | R2: 0.78988 | PCC: 0.88972 | SCC: 0.86480
+2023-04-07 18:24:47,513 INFO     ===Epoch 012===
+2023-04-07 18:24:47,514 INFO     Train | MSE: 1.63288 | RMSE: 1.27784 | MAE: 0.96538 | R2: 0.77012 | PCC: 0.87766 | SCC: 0.84706
+2023-04-07 18:24:47,514 INFO     Test  | MSE: 1.50714 | RMSE: 1.22765 | MAE: 0.90102 | R2: 0.78795 | PCC: 0.88980 | SCC: 0.86503
+2023-04-07 18:27:17,034 INFO     ===Epoch 013===
+2023-04-07 18:27:17,034 INFO     Train | MSE: 1.62222 | RMSE: 1.27366 | MAE: 0.96162 | R2: 0.77158 | PCC: 0.87853 | SCC: 0.84787
+2023-04-07 18:27:17,034 INFO     Test  | MSE: 1.48764 | RMSE: 1.21969 | MAE: 0.89570 | R2: 0.79050 | PCC: 0.88984 | SCC: 0.86456
+2023-04-07 18:29:46,531 INFO     ===Epoch 014===
+2023-04-07 18:29:46,531 INFO     Train | MSE: 1.60109 | RMSE: 1.26534 | MAE: 0.95525 | R2: 0.77449 | PCC: 0.88017 | SCC: 0.85010
+2023-04-07 18:29:46,532 INFO     Test  | MSE: 1.46495 | RMSE: 1.21035 | MAE: 0.89080 | R2: 0.79362 | PCC: 0.89096 | SCC: 0.86742
+2023-04-07 18:32:15,908 INFO     ===Epoch 015===
+2023-04-07 18:32:15,908 INFO     Train | MSE: 1.60374 | RMSE: 1.26639 | MAE: 0.95593 | R2: 0.77420 | PCC: 0.87997 | SCC: 0.84913
+2023-04-07 18:32:15,909 INFO     Test  | MSE: 1.46866 | RMSE: 1.21188 | MAE: 0.89747 | R2: 0.79313 | PCC: 0.89118 | SCC: 0.86614
+2023-04-07 18:34:45,353 INFO     ===Epoch 016===
+2023-04-07 18:34:45,354 INFO     Train | MSE: 1.59349 | RMSE: 1.26233 | MAE: 0.95212 | R2: 0.77559 | PCC: 0.88077 | SCC: 0.85074
+2023-04-07 18:34:45,354 INFO     Test  | MSE: 1.48839 | RMSE: 1.21999 | MAE: 0.89902 | R2: 0.79033 | PCC: 0.89044 | SCC: 0.86531
+2023-04-07 18:37:14,771 INFO     ===Epoch 017===
+2023-04-07 18:37:14,772 INFO     Train | MSE: 1.58092 | RMSE: 1.25735 | MAE: 0.94899 | R2: 0.77737 | PCC: 0.88177 | SCC: 0.85116
+2023-04-07 18:37:14,772 INFO     Test  | MSE: 1.45229 | RMSE: 1.20511 | MAE: 0.88363 | R2: 0.79565 | PCC: 0.89293 | SCC: 0.86905
+2023-04-07 18:39:44,109 INFO     ===Epoch 018===
+2023-04-07 18:39:44,109 INFO     Train | MSE: 1.57273 | RMSE: 1.25409 | MAE: 0.94647 | R2: 0.77851 | PCC: 0.88241 | SCC: 0.85225
+2023-04-07 18:39:44,109 INFO     Test  | MSE: 1.46641 | RMSE: 1.21095 | MAE: 0.89929 | R2: 0.79331 | PCC: 0.89126 | SCC: 0.86693
+2023-04-07 18:42:13,899 INFO     ===Epoch 019===
+2023-04-07 18:42:13,900 INFO     Train | MSE: 1.56775 | RMSE: 1.25210 | MAE: 0.94459 | R2: 0.77922 | PCC: 0.88281 | SCC: 0.85267
+2023-04-07 18:42:13,900 INFO     Test  | MSE: 1.45782 | RMSE: 1.20740 | MAE: 0.89601 | R2: 0.79458 | PCC: 0.89285 | SCC: 0.86832
+2023-04-07 18:44:43,240 INFO     ===Epoch 020===
+2023-04-07 18:44:43,240 INFO     Train | MSE: 1.55326 | RMSE: 1.24630 | MAE: 0.93911 | R2: 0.78127 | PCC: 0.88396 | SCC: 0.85486
+2023-04-07 18:44:43,241 INFO     Test  | MSE: 1.45984 | RMSE: 1.20824 | MAE: 0.89332 | R2: 0.79473 | PCC: 0.89197 | SCC: 0.86710
+2023-04-07 18:47:09,925 INFO     ===Epoch 021===
+2023-04-07 18:47:09,925 INFO     Train | MSE: 1.54934 | RMSE: 1.24472 | MAE: 0.93906 | R2: 0.78176 | PCC: 0.88424 | SCC: 0.85438
+2023-04-07 18:47:09,925 INFO     Test  | MSE: 1.42944 | RMSE: 1.19559 | MAE: 0.88020 | R2: 0.79928 | PCC: 0.89418 | SCC: 0.86913
+2023-04-07 18:49:37,701 INFO     ===Epoch 022===
+2023-04-07 18:49:37,701 INFO     Train | MSE: 1.54424 | RMSE: 1.24267 | MAE: 0.93711 | R2: 0.78250 | PCC: 0.88466 | SCC: 0.85448
+2023-04-07 18:49:37,701 INFO     Test  | MSE: 1.42934 | RMSE: 1.19555 | MAE: 0.87730 | R2: 0.79862 | PCC: 0.89381 | SCC: 0.86973
+2023-04-07 18:52:07,003 INFO     ===Epoch 023===
+2023-04-07 18:52:07,003 INFO     Train | MSE: 1.53729 | RMSE: 1.23988 | MAE: 0.93696 | R2: 0.78349 | PCC: 0.88522 | SCC: 0.85516
+2023-04-07 18:52:07,003 INFO     Test  | MSE: 1.43746 | RMSE: 1.19894 | MAE: 0.88461 | R2: 0.79761 | PCC: 0.89382 | SCC: 0.87031
+2023-04-07 18:54:33,829 INFO     ===Epoch 024===
+2023-04-07 18:54:33,829 INFO     Train | MSE: 1.53614 | RMSE: 1.23941 | MAE: 0.93480 | R2: 0.78361 | PCC: 0.88527 | SCC: 0.85545
+2023-04-07 18:54:33,830 INFO     Test  | MSE: 1.41700 | RMSE: 1.19038 | MAE: 0.88019 | R2: 0.80072 | PCC: 0.89492 | SCC: 0.87043
+2023-04-07 18:57:02,527 INFO     ===Epoch 025===
+2023-04-07 18:57:02,527 INFO     Train | MSE: 1.52858 | RMSE: 1.23636 | MAE: 0.93182 | R2: 0.78471 | PCC: 0.88589 | SCC: 0.85642
+2023-04-07 18:57:02,527 INFO     Test  | MSE: 1.46259 | RMSE: 1.20937 | MAE: 0.89283 | R2: 0.79387 | PCC: 0.89309 | SCC: 0.86952

@@ -240,15 +240,15 @@ class BuildTabTabModel(Engine):
             y_true = torch.cat(y_true, dim=0)
             y_pred = torch.cat(y_pred, dim=0)
             train_mse = train_epoch_losses[-1]
-            train_epoch_rmse.append(torch.sqrt(train_mse))
+            train_epoch_rmse.append(torch.sqrt(train_mse).item())
             train_epoch_mae.append(mean_absolute_error(y_true.detach().cpu(), 
                                                        y_pred.detach().cpu()))
             train_epoch_r2.append(r2_score(y_true.detach().cpu(), 
                                            y_pred.detach().cpu()))
             train_epoch_pcc.append(pearsonr(y_true.detach().cpu().numpy().flatten(), 
-                                            y_pred.detach().cpu().numpy().flatten()))
+                                            y_pred.detach().cpu().numpy().flatten()).statistic)
             train_epoch_scc.append(spearmanr(y_true.detach().cpu().numpy().flatten(),
-                                             y_pred.detach().cpu().numpy().flatten()))            
+                                             y_pred.detach().cpu().numpy().flatten()).statistic)   
 
             self.evaluator.state.metrics["total_loss"] = 0
             self.y_true, self.y_pred = [], []        
@@ -270,9 +270,9 @@ class BuildTabTabModel(Engine):
             
             train_epoch_time.append(time.time() - tic)
 
-            logging.info(f"=====Epoch {epoch}")
-            logging.info(f"Train | MSE: {train_mse:2.5f}")
-            logging.info(f"Test  | MSE: {mse:2.5f}")
+            logging.info(f"===Epoch {epoch:03.0f}===")
+            logging.info(f"Train | MSE: {train_mse:2.5f} | RMSE: {train_epoch_rmse[-1]:2.5f} | MAE: {train_epoch_mae[-1]:2.5f} | R2: {train_epoch_r2[-1]:2.5f} | PCC: {train_epoch_pcc[-1]:2.5f} | SCC: {train_epoch_scc[-1]:2.5f}")
+            logging.info(f"Test  | MSE: {mse:2.5f} | RMSE: {test_epoch_rmse[-1]:2.5f} | MAE: {test_epoch_mae[-1]:2.5f} | R2: {test_epoch_r2[-1]:2.5f} | PCC: {test_epoch_pcc[-1]:2.5f} | SCC: {test_epoch_scc[-1]:2.5f}")
             
             # Check early stopping criteria
             if mse < best_loss:
@@ -375,15 +375,15 @@ class TabTab(torch.nn.Module):
         super(TabTab, self).__init__()
 
         self.cell_emb = nn.Sequential(
-            nn.Linear(cell_inp_dim, 516),
-            nn.BatchNorm1d(516),
+            nn.Linear(cell_inp_dim, 128),
+            nn.BatchNorm1d(128),
             nn.ReLU(),
             nn.Dropout(p=dropout),
-            nn.Linear(516, 256),
-            nn.BatchNorm1d(256),
+            nn.Linear(128, 128),
+            nn.BatchNorm1d(128),
             nn.ReLU(),
             nn.Dropout(p=dropout),
-            nn.Linear(256, 128),
+            nn.Linear(128, 128),
             nn.BatchNorm1d(128),
             nn.ReLU()         
         )
