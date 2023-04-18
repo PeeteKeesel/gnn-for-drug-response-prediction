@@ -1,0 +1,20 @@
+2023-04-17 19:30:35,787 INFO     Finished reading drug response matrix: (137835, 9)
+2023-04-17 19:30:35,793 INFO     DRM Number of unique cell-lines: 856
+2023-04-17 19:30:35,796 INFO     Finished reading cell-line gene matrix: (856, 1173)
+2023-04-17 19:30:36,081 INFO     Finished reading drug SMILES graphs: Data(x=[26, 9], edge_index=[2, 60], edge_attr=[60, 3], smiles='CC[C@@]1(c2cc3c4c(cc5ccccc5n4)Cn3c(=O)c2COC1=O)O')
+2023-04-17 19:30:36,081 INFO     ARGUMENTS SUMMARY
+2023-04-17 19:30:36,081 INFO     =================
+2023-04-17 19:30:36,081 INFO     seed                     : 42
+2023-04-17 19:30:36,081 INFO     batch_size               : 128
+2023-04-17 19:30:36,081 INFO     lr                       : 0.0001
+2023-04-17 19:30:36,081 INFO     num_epochs               : 150
+2023-04-17 19:30:36,081 INFO     num_workers              : 8
+2023-04-17 19:30:36,081 INFO     dropout                  : 0.1
+2023-04-17 19:30:36,081 INFO     kfolds                   : 5
+2023-04-17 19:30:36,081 INFO     conv_type                : GATConv
+2023-04-17 19:30:36,081 INFO     conv_layers              : 3
+2023-04-17 19:30:36,081 INFO     global_pooling           : global_max_pooling
+2023-04-17 19:30:36,082 INFO     early_stopping_threshold : 20
+2023-04-17 19:30:36,082 INFO     combined_score_thresh    : 990
+2023-04-17 19:30:36,082 INFO     gdsc                     : gdsc2
+2023-04-17 19:30:36,082 INFO     file_ending              : TabGin990Max150
